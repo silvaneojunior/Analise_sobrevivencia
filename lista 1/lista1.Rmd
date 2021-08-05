@@ -1,0 +1,249 @@
+---
+title: "Lista 1"
+author: "Daniel Barreto e Silvaneo Junior"
+date: "8/1/2021"
+output: pdf_document
+header-includes:
+    - \usepackage{caption}
+---
+\captionsetup[table]{labelformat=empty}
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(ggplot2)
+library(survival)
+library(latex2exp)
+library(kableExtra)
+```
+
+## Questão 1.2
+
+Temos que:
+
+$$
+\begin{aligned}
+\lambda(t):=&\lim_{\Delta t\rightarrow0}\frac{\mathbb{P}(t\leq T<t+\Delta t|T\ge t)}{\Delta t}\\
+S(t):=&\mathbb{P}(T\ge t)=1-F(t)
+\end{aligned}
+$$
+
+Para todo $\Delta t>0$, vale que:
+
+$$
+\begin{aligned}
+\frac{\mathbb{P}(t\leq T<t+\Delta t|T\ge t)}{\Delta t}=&\frac{\mathbb{P}(t\leq T<t+\Delta t)}{\Delta t \mathbb{P}(T\ge t))}=\frac{\mathbb{P}(T<t+\Delta t)-\mathbb{P}(T\le t)}{\Delta t \mathbb{P}(T\ge t))}
+=\frac{F(t+\Delta t)-F(t)}{\Delta t (1-F(t))}\\
+=&\frac{F(t+\Delta t)-F(t)}{\Delta t}\frac{1}{S(t)}=\left(\frac{d}{dt}F(t)\ \right) \frac{1}{S(t)}\\
+=&\frac{f(t)}{S(t)}
+\end{aligned}
+$$
+
+Ademais, temos que:
+
+$$
+\begin{aligned}
+-\frac{d}{dt}\left(\log S(t)\right)=-\frac{d}{dS(t)}(\log S(t))\times \frac{d}{dt}S(t)=\frac{-1}{S(t)}\times -f(t)=\frac{f(t)}{S(t)}=\lambda(t)
+\end{aligned}
+$$
+
+## Questão 1.4
+
+Lembremos que:
+
+$$
+\text{vmr}(t):=\frac{\int_t^\infty S(u)du}{S(t)}
+$$
+
+Observe que:
+
+$$
+\frac{d}{dt}\ln\left(\int_t^\infty S(u)du\right)=\frac{1}{\int_t^\infty S(u)du}\times(-S(t))=-vmr(t)
+$$
+Assim, pelo Teorema Fundamental do Cálculo:
+
+$$
+\int_0^t\frac{-du}{vmr(u)}=\ln\left(\int_t^\infty S(u)du\right)-\ln\left(\int_0^\infty S(u)du\right)
+$$
+
+Com isto, vale que:
+
+$$
+\begin{aligned}
+\frac{vmr(0)}{vmr(t)}\exp \left\{ -\int_0^t\frac{du}{vmr(u)} \right\}=&\frac{vmr(0)}{vmr(t)}\exp\left \{\ln\left(\int_t^\infty S(u)du\right)-\ln\left(\int_0^\infty S(u)du\right)\right \}\\
+=&\frac{\frac{\int_0^\infty S(u)du}{S(0)}}{\frac{\int_t^\infty S(u)du}{S(t)}}\frac{ \int_t^\infty S(u)du}{ \int_0^\infty S(u)du}=\frac{S(t)}{S(0)}
+\end{aligned}
+$$
+
+Como a variável aleatória $T$ (tempo até a falha) é não negativa,temos que $F(0)=0$, logo $S(0)=1$, daí:
+
+$$
+\frac{vmr(0)}{vmr(t)}\exp \left\{ -\int_0^t\frac{du}{vmr(u)} \right\}=S(t)
+$$
+
+## Questão 1.5
+
+Como $\lambda(t)=\beta_0+\beta_1 t$, temos que:
+
+$$
+-\frac{d}{dt}(\ln S(t))=\lambda(t)=\beta_0+\beta_1 t
+$$
+
+Integrando em $t$ em ambos os lados da igualdade, temos que:
+
+$$
+-\ln S(t)=\beta_0t+\frac{\beta_1}{2} t^2 + c
+$$
+
+Daí:
+
+$$
+S(t)=\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2 - c \right \}=k\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2\right \}
+$$
+
+Vale que $k=1$, pois $S(0)=1$, pois, novamente, o tempo até a falha é não negativo, assim:
+
+$$
+S(t)=\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2\right \}
+$$
+
+Por último:
+
+$$
+\begin{aligned}
+f(t)= S(t)\lambda (t)=\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2\right \}\left (\beta_0+\beta_1 t \right )
+\end{aligned}
+$$
+
+## Questão 1.6
+
+Primeiro veja que:
+
+$$
+-\int_0^t\frac{1}{t+10}du=ln(10)-ln(t+10)
+$$
+
+Com isto:
+
+$$
+S(t)=\frac{vmr(0)}{vmr(t)}\exp \left \{ -\int_0^t\frac{1}{vmr(t)}du \right \}=\frac{10}{t+10}\exp \left \{ ln(10)-ln(t+10) \right \} = \frac{100}{(t+10)^2}
+$$
+Daí:
+
+$$
+\lambda (t)= -\frac{d}{dt}S(t)=-\frac{200}{(t+10)^3}
+$$
+
+Por último, como $T$ é uma v.a. não negativa, vale que:
+
+$$
+\begin{aligned}
+\mathbb{E}[T]=&\int_0^\infty 1-F(t) dt=\int_0^\infty S(t) dt = \int_0^\infty  \frac{100}{(t+10)^2} dt\\
+=&\left (-\frac{100}{t+10}\right)_0^\infty=\lim_{t \rightarrow\infty}\left(-\frac{100}{t+10}\right)+10\\
+=&10
+\end{aligned}
+$$
+
+## 2.3
+
+### a)
+
+```{r}
+falhas=c(7,34,42,63,64,83,84,91,108,112,129,133,133,139,140,140,146,149,154,157,160,160,165,173,176,218,225,241,248,273,277,297,405,417,420,440,523,583,594,1101,1146,1417)
+censuras=c(74,185,279,319,523,1116,1226,1349,1412)
+dados=c(falhas,censuras)
+status=c(falhas**0,censuras*0)
+
+ref_data=Surv(dados,status)
+kp_est=survfit(ref_data~1)
+nelson_est=survfit(coxph(Surv(dados,status)~1,method="breslow"))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time,y=kp_est$surv,color='Kaplan-Meier'))+
+  pammtools::geom_stepribbon(aes(x=kp_est$time,ymin=kp_est$lower,ymax=kp_est$upper,fill='Kaplan-Meier'),alpha=0.1)+
+  geom_step(aes(x=nelson_est$time,y=nelson_est$surv,color='Nelson-Aalen'))+
+  pammtools::geom_stepribbon(aes(x=nelson_est$time,ymin=nelson_est$lower,ymax=nelson_est$upper,fill='Nelson-Aalen'),alpha=0.1)+
+  scale_color_hue('Estimador')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  guides(fill='none')+
+  theme_bw()
+```
+
+```{r}
+intervalos=paste0('[',sort(c(0,kp_est$time))[-length(dados)],',',c(sort(kp_est$time),'$\\infty$'),')')
+
+tabela=data.frame(Intervalo=intervalos,
+                  'Kaplan-Meier'=c(kp_est$surv,0),
+                  'Nelson-Aalen'=c(nelson_est$surv,0)
+                  )
+
+kable(tabela,
+      format="latex",
+      align = "c",
+      booktabs=T,
+      escape=F,
+      caption = "Probabilidade de sobrevivência",
+      col.names = c("Intervalo",
+                    "Kaplan-Meier",
+                           "Nelson-Aalen"
+                    )
+      ) %>%
+  kable_styling(position = "center")
+```
+
+### b)
+
+```{r eval=FALSE, include=FALSE}
+# Mediana Kaplan-Meier
+-(0.5-0.5073785)*(185-176)/(0.5073785-0.4866721)+185
+# Mediana Nelson-Aalen
+-(0.5-0.5010893)*(185-176)/(0.5010893-0.4802106)+185
+
+# Média Kaplan-Meier
+sum(kp_est$surv*(kp_est$time-c(0,kp_est$time[-length(kp_est$time)])))
+# Média Nelson-Aalen
+sum(nelson_est$surv*(nelson_est$time-c(0,nelson_est$time[-length(nelson_est$time)])))
+```
+
+Comecemos estimando as estatísticas em questão através do estimador de Kaplan-Meier.
+
+Obsever na tabela anterior que $\widehat{S}(176)=0.5010893$ e $\widehat{S}(185)=0.4802106$, desta forma, devemos podemos interpolar os valores de de $\widehat{S}(176)$ e $\widehat{S}(185)$ para obter uma estimativa da mediana do tempo até a falha ($\widehat{M}$):
+
+$$\widehat{M}=\frac{185-176}{0.5010893-0.4802106}(0.5-0.5010893)+185=\frac{-9}{0.0208787}0.0010893+185=184.5304$$
+
+Ademais, podemos estimar o tempo médio de vida ($\widehat{\mu}$) da seguinte forma:
+
+$$\widehat{\mu}=\sum_{i=1}^n\widehat{S}(T_i)T_i=394.9987$$
+
+De forma análoga ao que foi feito, podemos obter as seguintes estimativas usando o estimador de Nelson-Aalen:
+
+$$\widehat{M}=\frac{185-176}{0.5073785-0.4866721}(0.5-0.5073785)+185=\frac{-9}{0.0207064}0.0073785+185=181.7929$$
+
+$$\widehat{\mu}=\sum_{i=1}^n\widehat{S}(T_i)T_i=407.7941$$
+
+### c)
+
+Primeiro apresentaremos as estimativas obtidas usando o estimador de Kaplan-Meier.
+
+Trivilamente, para o item $i)$, basta usar $\widehat{S}(42)=0.9215686$. Para os outros itens, interpolaremos os dois pontos mais próximos do tempo solicitado:
+
+$$
+\begin{aligned}
+i)\quad & \widehat{S}(42) &=0.9215686\\
+ii)\quad &\frac{0.8017429-0.8217865}{108-91}(100-91)+0.8217865 &=0.8111752\\
+iii)\quad &\frac{0.3301294-0.3537101}{319-297}(300-297)+0.3537101 &=0.3504946\\
+iv)\quad &\frac{0.1257636-0.1572045}{1116-594}(1000-594)+0.1572045 &=0.1327505
+\end{aligned}
+$$
+
+De forma análoga, para usando o estimador de Nelson-Aalen:
+
+$$
+\begin{aligned}
+i)\quad & \widehat{S}(42) &=0.9223326\\
+ii)\quad &\frac{0.8036986-0.8235420}{108-91}(100-91)+0.8235420 &=0.8130367\\
+iii)\quad &\frac{0.3379564-0.3612548}{319-297}(300-297)+0.3612548 &=0.3580777\\
+iv)\quad &\frac{0.1371883-0.1675622}{1116-594}(1000-594)+0.1675622 &=0.1439381
+\end{aligned}
+$$
+
