@@ -1,3 +1,5 @@
 
 *.pdf
 *.log
+.Rproj.user
+Lista 1/.Rhistory
