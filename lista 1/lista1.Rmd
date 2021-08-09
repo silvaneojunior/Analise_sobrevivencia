@@ -1,7 +1,7 @@
 ---
 title: "Lista 1"
-author: "Daniel Barreto e Silvaneo Junior"
-date: "8/1/2021"
+author: ""
+date: ""
 output: pdf_document
 header-includes:
     - \usepackage{caption}
@@ -330,4 +330,40 @@ O tempo mediano (verdadeiro, não o estimado) de vida é o tempo no qual, em mé
 
 O tempo médio (verdadeiro, não o estimado) de vida é o tempo que leva, em média, para que a falha ocorra, isto é, em média os pacientes sobrevivem até $394.9987$ pelo estimador de Kaplan-Meier e $407.7941$ pelo estimador de Nelson-Aalen.
 
-No item $b)$, cada uma das probabilidades 
+No item $b)$, cada uma das probabilidades pode ser interpretada como a proporção de indivíduos com cancer que sobreviverão, respectivamente, $42$ dias, $100$ dias, $300$ dias e $1000$ dias.
+
+Por último, no item $d)$, temos que, em média, os pacientes que sobreviveram $1000$ dias sobreviverão $325.4$ dias adicionais ($332.3489$ pelo estimador de Nelson-Aalen).
+
+### f)
+
+Observando a tabela com as probabilidade de sobrevivência de cada estimador e interpolando os dois valores mais próximo do desejado, podemos obter as seguintes estimativas:
+
+```{r}
+meier=c(
+  (108-112)/(0.8017429-0.7816993)*(0.8-0.7816993)+112,
+  (405-417)/(0.3065488-0.2829681)*(0.3-0.2829681)+417,
+  (1349-1412)/(0.1257636-0)*(0.1-0)+1412)
+
+aalen=c(
+  (108-112)/(0.8036986-0.7838552)*(0.8-0.7838552)+112,
+  (405-417)/(0.3146586-0.2913617)*(0.3-0.2913617)+417,
+  (1349-1412)/(0.1371883-0.0504688)*(0.1-0.0504688)+1412)
+
+
+tabela=data.frame(Intervalo=c('80\\%','30\\%','10\\%'),
+                  'Kaplan-Meier'=meier,
+                  'Nelson-Aalen'=aalen
+                  )
+
+kable(tabela,
+      format="latex",
+      align = "c",
+      booktabs=T,
+      escape=F,
+      col.names = c("Probabilidade de sobrevivência",
+                    "Kaplan-Meier",
+                           "Nelson-Aalen"
+                    )
+      ) %>%
+  kable_styling(position = "center",latex_options = "HOLD_position")
+```
