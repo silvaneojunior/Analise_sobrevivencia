@@ -143,7 +143,7 @@ $$
 \end{aligned}
 $$
 
-## 2.3
+## Questão 2.3
 
 ### a)
 
@@ -195,9 +195,9 @@ kable(tabela,
 
 ```{r eval=FALSE, include=FALSE}
 # Mediana Kaplan-Meier
--(0.5-0.5073785)*(185-176)/(0.5073785-0.4866721)+185
+(0.5-0.5010893)*(185-176)/(0.4802106-0.5010893)+176
 # Mediana Nelson-Aalen
--(0.5-0.5010893)*(185-176)/(0.5010893-0.4802106)+185
+(0.5-0.5073785)*(185-176)/(0.4866721-0.5073785)+176
 
 # Média Kaplan-Meier
 sum(kp_est$surv*(kp_est$time-c(0,kp_est$time[-length(kp_est$time)])))
@@ -209,7 +209,7 @@ Comecemos estimando as estatísticas em questão através do estimador de Kaplan
 
 Obseve na tabela anterior que $\widehat{S}(176)=0.5010893$ e $\widehat{S}(185)=0.4802106$, desta forma, devemos podemos interpolar os valores de de $\widehat{S}(176)$ e $\widehat{S}(185)$ para obter uma estimativa da mediana do tempo até a falha ($\widehat{M}$):
 
-$$\widehat{M}=\frac{185-176}{0.5010893-0.4802106}(0.5-0.5010893)+185=\frac{-9}{0.0208787}0.0010893+185=184.5304$$
+$$\widehat{M}=\frac{185-176}{0.4802106-0.5010893}(0.5-0.5010893)+176=\frac{9}{0.0208787}0.0010893+176=176.4696$$
 
 Ademais, podemos estimar o tempo médio de vida ($\widehat{\mu}$) da seguinte forma:
 
@@ -217,7 +217,7 @@ $$\widehat{\mu}=\sum_{i=1}^n\widehat{S}(T_i)T_i=394.9987$$
 
 De forma análoga ao que foi feito, podemos obter as seguintes estimativas usando o estimador de Nelson-Aalen:
 
-$$\widehat{M}=\frac{185-176}{0.5073785-0.4866721}(0.5-0.5073785)+185=\frac{-9}{0.0207064}0.0073785+185=181.7929$$
+$$\widehat{M}=\frac{185-176}{0.5073785-0.4866721}(0.5-0.5073785)+185=\frac{9}{0.0207064}0.0073785+176=179.2071$$
 
 $$\widehat{\mu}=\sum_{i=1}^n\widehat{S}(T_i)T_i=407.7941$$
 
@@ -369,9 +369,11 @@ kable(tabela,
 ```
 
 
-## 2.4
+## Questão 2.4
 
-a) Segue a abaixo o gráfico referente às estimativas das funções de sobrevivência para os diferentes grupos considerando o estimador de Kaplan-Meier.
+### a)
+
+Segue a abaixo o gráfico referente às estimativas das funções de sobrevivência para os diferentes grupos considerando o estimador de Kaplan-Meier.
 
 ```{r}
 
@@ -408,7 +410,9 @@ ggplot()+
 ```
 
 
-b) Segue a abaixo o gráfico referente às estimativas das funções de sobrevivência para os diferentes grupos considerando o estimador de Nelson-Aalen.
+### b)
+
+Segue a abaixo o gráfico referente às estimativas das funções de sobrevivência para os diferentes grupos considerando o estimador de Nelson-Aalen.
 
 ```{r}
 
@@ -426,7 +430,9 @@ ggplot()+
 
 ```
 
-c) Sejam $S_{1}$ e $S_{2}$ as funções de sobrevivência para os grupos $1$ e $2$, respectivamente. Gostaríamos de realizar os seguintes testes de hipótese:
+### c)
+
+Sejam $S_{1}$ e $S_{2}$ as funções de sobrevivência para os grupos $1$ e $2$, respectivamente. Gostaríamos de realizar os seguintes testes de hipótese:
 $$ H_{0}: S_{1}(180) = S_{2}(180); \ \ \ H_{1}: S_{1}(180) \neq S_{2}(180)$$
 $$ H_{0}: S_{1}(540) = S_{2}(540); \ \ \ H_{1}: S_{1}(540) \neq S_{2}(540)$$
 Note que aqui estamos utilizando a aproximação de que um mês possui aproximadamente $30$ dias. Idealmente precisaríamos obter uma região de confiança para as funções de sobrevivência estimadas $\hat{S}_{1}(t_{0})$ e $\hat{S}_{2}(t_{0})$ por Kaplan-Meier para cada um dos grupos, fixado um instante de tempo $t_{0}$. Assim, rejeitaríamos a hipótese nula caso a região de confiança conjunta não contivesse nenhuma ponto da reta identidade. Por questões de limitações técnicas, iremos reformular os testes e hipótese de acordo com as estimativas obtidas. Assim, iremos testar as seguintes hipóteses:
@@ -480,7 +486,9 @@ Como o intervalo de $95\%$ de confiança para $\hat{S}_{1}(180)$ contém o valor
 Já no outro caso, como o intervalo de $95\%$ de confiança para $\hat{S}_{1}(540)$ não contém o valor de $\hat{S}_{2}(540)$, rejeitamos a hipótese nula ao nível de significância de $\alpha = 5\%$, ou seja, temos evidêcia para dizer que as funções de sobrevivência são diferentes para $t = 18$ meses.
 
 
-d) Agora queremos testar se as funções de sobrevivência dos grupos são distintas. Sendo assim, iremos realizar o seguinte teste de hipótese:
+### d)
+
+Agora queremos testar se as funções de sobrevivência dos grupos são distintas. Sendo assim, iremos realizar o seguinte teste de hipótese:
 
 $$H_{0}: S_{1} = S_{2}; \ \ \ H_{1}: S_{1} \neq S_{2}$$
 
@@ -537,4 +545,385 @@ kable_styling(
 
 Com isso, olhando para o $p$-valor de ambos os testes é possível concluir que ao nível de significância da $5\%$ o primeiro teste rejeita a hipótese nula e o segundo não rejeita a hipótese nula. Isso se deve, provavelmente, pelo fato de que o segundo teste dá mais peso para a parte da função de sobrevivência que possui maior valor. Assim, ele tende a despresar as diferenças nas caudas, sendo exatamente essa a região de maior divergência entre as funções de sobrevivência estimadas.
 
-e) Todos os valores foram obtidos utilizando o software R, a partir do pacote 'survival'.
+### e)
+
+Todos os valores foram obtidos utilizando o software R, a partir do pacote 'survival' e os códigos utilizados podem ser encontrados no apêndice.
+
+\pagebreak
+
+## Apêndice
+
+### Códigos
+
+#### Questão 2.3
+
+##### a)
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+falhas=c(7,34,42,63,64,83,84,91,108,112,
+         129,133,133,139,140,140,146,149,154,157,
+         160,160,165,173,176,218,225,241,248,273,
+         277,297,405,417,420,440,523,583,594,1101,
+         1146,1417)
+censuras=c(74,185,279,319,523,1116,1226,1349,1412)
+dados=c(falhas,censuras)
+status=c(falhas**0,censuras*0)
+
+ref_data=Surv(dados,status)
+kp_est=survfit(ref_data~1)
+nelson_est=survfit(coxph(Surv(dados,status)~1,method="breslow"))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time,y=kp_est$surv,color='Kaplan-Meier'))+
+  pammtools::geom_stepribbon(aes(x=kp_est$time,
+                                 ymin=kp_est$lower,
+                                 ymax=kp_est$upper,
+                                 fill='Kaplan-Meier'),
+                             alpha=0.1)+
+  geom_step(aes(x=nelson_est$time,y=nelson_est$surv,color='Nelson-Aalen'))+
+  pammtools::geom_stepribbon(aes(x=nelson_est$time,
+                                 ymin=nelson_est$lower,
+                                 ymax=nelson_est$upper,
+                                 fill='Nelson-Aalen'),
+                             alpha=0.1)+
+  scale_color_hue('Estimador')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  guides(fill='none')+
+  theme_bw()
+```
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+intervalos=paste0('[',
+                  sort(c(0,kp_est$time))[-length(dados)],
+                  ',',
+                  c(sort(kp_est$time),'$\\infty$'),
+                  ')')
+
+tabela=data.frame(Intervalo=intervalos,
+                  'Kaplan-Meier'=c(kp_est$surv,0),
+                  'Nelson-Aalen'=c(nelson_est$surv,0)
+                  )
+
+kable(tabela,
+      format="latex",
+      align = "c",
+      booktabs=T,
+      escape=F,
+      caption = "Probabilidade de sobrevivência",
+      col.names = c("Intervalo",
+                    "Kaplan-Meier",
+                    "Nelson-Aalen"
+                    )
+      ) %>%
+  kable_styling(position = "center",
+                latex_options = "HOLD_position")
+```
+
+##### b)
+
+\hspace{2 pt}
+
+```{r eval=FALSE, echo=TRUE}
+# Mediana Kaplan-Meier
+print((0.5-0.5010893)*(185-176)/(0.4802106-0.5010893)+176)
+# Mediana Nelson-Aalen
+print((0.5-0.5073785)*(185-176)/(0.4866721-0.5073785)+176)
+
+# Média Kaplan-Meier
+sum(kp_est$surv*(kp_est$time-c(0,kp_est$time[-length(kp_est$time)])))
+# Média Nelson-Aalen
+sum(nelson_est$surv*(nelson_est$time-c(0,nelson_est$time[-length(nelson_est$time)])))
+```
+
+##### d)
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+falhas=c(7,34,42,63,64,83,84,91,108,112,
+         129,133,133,139,140,140,146,149,154,157,
+         160,160,165,173,176,218,225,241,248,273,
+         277,297,405,417,420,440,523,583,594,1101,
+         1146,1417)
+censuras=c(74,185,279,319,523,1116,1226,1349,1412)
+dados=c(falhas,censuras)
+status=c(falhas**0,censuras*0)
+
+ref_data=Surv(dados,status)
+kp_est=survfit(ref_data~1)
+nelson_est=survfit(coxph(Surv(dados,status)~1,method="breslow"))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time,y=kp_est$surv,color='Estimador de\nKaplan-Meier'))+
+  pammtools::geom_stepribbon(
+    aes(x=c(1000,kp_est$time[kp_est$time>1000]),
+        ymin=0,
+        ymax=c(kp_est$surv[40],kp_est$surv[kp_est$time>1000]),
+        fill='Área da curva'),
+    alpha=0.5)+
+  geom_vline(xintercept=1000,linetype='dashed')+
+  scale_color_hue('')+
+  scale_fill_hue('')+
+  scale_y_continuous('Probabilidade de sobrevivência',
+                     expand=c(0,0),
+                     limits=c(0,1))+
+  scale_x_continuous('Tempo',expand=c(0,0,0.1,0))+
+  theme_bw()
+```
+
+```{r eval=FALSE, echo=TRUE}
+## Estimador de Kaplan-Meier
+
+# Probabilidades acima de 1000
+probs=kp_est$surv[40:46]
+# Probabilidade no 1000
+prob_1000=kp_est$surv[40]
+# Tamanho dos intervalos
+inter=(kp_est$time[41:47]-c(1000,kp_est$time[41:46]))
+# Valor esperado
+sum(probs/prob_1000*inter)
+```
+
+```{r eval=FALSE, echo=TRUE}
+## Estimador de Nelson-Aalen
+
+# Probabilidades acima de 1000
+probs=nelson_est$surv[40:46]
+# Probabilidade no 1000
+prob_1000=nelson_est$surv[40]
+# Tamanho dos intervalos
+inter=(nelson_est$time[41:47]-c(1000,nelson_est$time[41:46]))
+# Valor esperado
+sum(probs/prob_1000*inter)
+```
+
+##### f)
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+meier=c(
+  (108-112)/(0.8017429-0.7816993)*(0.8-0.7816993)+112,
+  (405-417)/(0.3065488-0.2829681)*(0.3-0.2829681)+417,
+  (1349-1412)/(0.1257636-0)*(0.1-0)+1412)
+
+aalen=c(
+  (108-112)/(0.8036986-0.7838552)*(0.8-0.7838552)+112,
+  (405-417)/(0.3146586-0.2913617)*(0.3-0.2913617)+417,
+  (1349-1412)/(0.1371883-0.0504688)*(0.1-0.0504688)+1412)
+
+
+tabela=data.frame(Intervalo=c('80\\%','30\\%','10\\%'),
+                  'Kaplan-Meier'=meier,
+                  'Nelson-Aalen'=aalen
+                  )
+
+kable(tabela,
+      format="latex",
+      align = "c",
+      booktabs=T,
+      escape=F,
+      col.names = c("Probabilidade de sobrevivência",
+                    "Kaplan-Meier",
+                           "Nelson-Aalen"
+                    )
+      ) %>%
+  kable_styling(position = "center",latex_options = "HOLD_position")
+```
+
+\pagebreak
+
+#### Questão 2.4
+
+##### a) 
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+
+falhas1   = c(28, 89, 175, 195, 309, 462)
+censuras1 = c(377, 393, 421, 447, 709, 744, 770, 1106, 1206)
+dados1    = c(falhas1,    censuras1)
+status1   = c(falhas1**0, censuras1*0)
+
+falhas2   = c(34, 88, 137, 199, 280,
+              291, 309, 351, 358, 369,
+              369, 370, 375, 382, 392,
+              451)
+
+censuras2 = c(299, 300, 429, 1119)
+dados2    = c(falhas2,    censuras2)
+status2   = c(falhas2**0, censuras2*0)
+
+ref_data1   = Surv(dados1, status1)
+kp_est1     = survfit(ref_data1 ~ 1, conf.type = "log-log")
+nelson_est1 = survfit(coxph(Surv(dados1, status1) ~ 1,
+                            method = "breslow"),
+                      conf.type = "log-log")
+
+ref_data2   = Surv(dados2, status2)
+kp_est2     = survfit(ref_data2 ~ 1, conf.type = "log-log")
+nelson_est2 = survfit(coxph(Surv(dados2, status2) ~ 1,
+                            method = "breslow"),
+                      conf.type = "log-log")
+
+ggplot()+
+  geom_step(aes(x = kp_est1$time, y = kp_est1$surv, color = '1 - Tumor Grande')) +
+  pammtools::geom_stepribbon(aes(x = kp_est1$time,
+                                 ymin = kp_est1$lower,
+                                 ymax = kp_est1$upper,
+                                 fill = 'Grupo 1: Tumor Grande'),
+                             alpha = 0.1) +
+  geom_step(aes(x = kp_est2$time, y = kp_est2$surv, color = '2 - Tumor Pequeno')) +
+  pammtools::geom_stepribbon(aes(x = kp_est2$time,
+                                 ymin = kp_est2$lower,
+                                 ymax = kp_est2$upper,
+                                 fill = 'Grupo 2: Tumor Pequeno'),
+                             alpha = 0.1) +
+  scale_color_hue('Grupo') +
+  scale_y_continuous('Probabilidade de sobrevivência') +
+  scale_x_continuous('Tempo em dias') +
+  guides(fill='none') +
+  ggtitle('Estimativas das Funções de Sobrevivência por Kaplan-Meier') +
+  theme_bw()
+
+```
+
+##### b)
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+
+ggplot()+
+  geom_step(aes(x = nelson_est1$time,
+                y = nelson_est1$surv,
+                color = '1 - Tumor Grande')) +
+  pammtools::geom_stepribbon(aes(x = nelson_est1$time,
+                                 ymin = nelson_est1$lower,
+                                 ymax = nelson_est1$upper,
+                                 fill = 'Grupo 1: Tumor Grande'),
+                             alpha = 0.1) +
+  geom_step(aes(x = nelson_est2$time,
+                y = nelson_est2$surv,
+                color = '2 - Tumor Pequeno')) +
+  pammtools::geom_stepribbon(aes(x = nelson_est2$time,
+                                 ymin = nelson_est2$lower,
+                                 ymax = nelson_est2$upper,
+                                 fill = 'Grupo 2: Tumor Pequeno'),
+                             alpha = 0.1) +
+  scale_color_hue('Grupo') +
+  scale_y_continuous('Probabilidade de sobrevivência') +
+  scale_x_continuous('Tempo em dias') +
+  guides(fill='none') +
+  ggtitle('Estimativas das Funções de Sobrevivência por Nelson-Aalen') +
+  theme_bw()
+
+```
+
+##### c)
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+
+tabela <- data.frame()
+tabela[1:2,1:5] <- NA
+colnames(tabela) <- c("$t_{0}$",
+                      "$\\hat{S}_{1}(t_{0})$",
+                      "$\\hat{S}_{2}(t_{0})$",
+                      "$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ inferior",
+                      "$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ superior")
+
+tabela["$t_{0}$"] <- c(180, 540)
+tabela["$\\hat{S}_{1}(t_{0})$"] <- c(
+  approx(kp_est1$time[c(3, 4)], kp_est1$surv[c(3, 4)], xout = 180)$y,
+  approx(kp_est1$time[c(9,15)], kp_est1$surv[c(9,15)], xout = 540)$y
+)
+tabela["$\\hat{S}_{2}(t_{0})$"] <- c(
+  approx(kp_est2$time[c( 3, 4)], kp_est2$surv[c( 3, 4)], xout = 180)$y,
+  approx(kp_est2$time[c(17,19)], kp_est2$surv[c(17,19)], xout = 540)$y
+)
+tabela["$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ inferior"] <- c(
+  approx(kp_est1$time[c(3, 4)], kp_est1$lower[c(3, 4)], xout = 180)$y,
+  approx(kp_est1$time[c(9,15)], kp_est1$lower[c(9,15)], xout = 540)$y
+)
+tabela["$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ superior"] <- c(
+  approx(kp_est1$time[c(3, 4)], kp_est1$upper[c(3, 4)], xout = 180)$y,
+  approx(kp_est1$time[c(9,15)], kp_est1$upper[c(9,15)], xout = 540)$y
+)
+
+kable(
+  tabela,
+  format    = "latex",
+  align     = "c",
+  digits    = 3, 
+  booktabs  = T,
+  escape    = F,
+  col.names = colnames(tabela)
+) %>% 
+
+kable_styling(
+  position = "center",
+  latex_options = "HOLD_position"
+)
+
+```
+
+##### d
+
+\hspace{2 pt}
+
+```{r echo=TRUE}
+
+falhas1   = c(28, 89, 175, 195, 309, 462)
+censuras1 = c(377, 393, 421, 447, 709, 744, 770, 1106, 1206)
+dados1    = c(falhas1,    censuras1)
+status1   = c(falhas1**0, censuras1*0)
+
+falhas2   = c(34, 88, 137, 199, 280,
+              291, 309, 351, 358, 369,
+              369, 370, 375, 382, 392,
+              451)
+censuras2 = c(299, 300, 429, 1119)
+dados2    = c(falhas2,    censuras2)
+status2   = c(falhas2**0, censuras2*0)
+
+dados  <- c( dados1,  dados2)
+status <- c(status1, status2)
+grupos <- c(rep(1, length(dados1)), rep(2, length(dados2)))
+
+ref_data <- Surv(dados, status)
+teste1   <- survdiff(ref_data ~ grupos, rho = 0)
+teste2   <- survdiff(ref_data ~ grupos, rho = 1)
+
+tabela          <- data.frame()
+tabela[1:2,1:3] <- NA
+colnames(tabela) <- c("Teste", "Estatística", "$p$-valor")
+
+tabela["Teste"]       <- c("logrank", "Harrington-Fleming")
+tabela["Estatística"] <- c(teste1$chisq, teste2$chisq)
+tabela["$p$-valor"]   <- c(1-pchisq(teste1$chisq, 1),
+                           1-pchisq(teste2$chisq, 1))
+
+kable(
+  tabela,
+  format    = "latex",
+  align     = "c",
+  digits    = 3, 
+  booktabs  = T,
+  escape    = F,
+  col.names = colnames(tabela)
+) %>% 
+
+kable_styling(
+  position = "center",
+  latex_options = "HOLD_position"
+)
+
+```
