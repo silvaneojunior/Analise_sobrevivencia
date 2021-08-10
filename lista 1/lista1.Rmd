@@ -119,18 +119,18 @@ $$
 Primeiro veja que:
 
 $$
--\int_0^t\frac{1}{t+10}du=ln(10)-ln(t+10)
+-\int_0^t\frac{1}{u+10}du=ln(10)-ln(t+10)
 $$
 
 Com isto:
 
 $$
-S(t)=\frac{vmr(0)}{vmr(t)}\exp \left \{ -\int_0^t\frac{1}{vmr(t)}du \right \}=\frac{10}{t+10}\exp \left \{ ln(10)-ln(t+10) \right \} = \frac{100}{(t+10)^2}
+S(t)=\frac{vmr(0)}{vmr(t)}\exp \left \{ -\int_0^t\frac{1}{vmr(u)}du \right \}=\frac{10}{t+10}\exp \left \{ ln(10)-ln(t+10) \right \} = \frac{100}{(t+10)^2}
 $$
 Daí:
 
 $$
-\lambda (t)= -\frac{d}{dt}S(t)=-\frac{200}{(t+10)^3}
+f (t)= -\frac{d}{dt}S(t)=\frac{200}{(t+10)^3} \Longrightarrow \lambda(t) = \dfrac{f(t)}{S(t)} = \dfrac{\dfrac{200}{(t+10)^{3}}}{\dfrac{100}{(t+10)^{2}}} = \dfrac{2}{t+10}
 $$
 
 Por último, como $T$ é uma v.a. não negativa, vale que:
@@ -185,10 +185,10 @@ kable(tabela,
       caption = "Probabilidade de sobrevivência",
       col.names = c("Intervalo",
                     "Kaplan-Meier",
-                           "Nelson-Aalen"
+                    "Nelson-Aalen"
                     )
-      ) %>%
-  kable_styling(position = "center")
+      ) %>% kable_styling(position = "center")
+
 ```
 
 ### b)
@@ -207,7 +207,7 @@ sum(nelson_est$surv*(nelson_est$time-c(0,nelson_est$time[-length(nelson_est$time
 
 Comecemos estimando as estatísticas em questão através do estimador de Kaplan-Meier.
 
-Obsever na tabela anterior que $\widehat{S}(176)=0.5010893$ e $\widehat{S}(185)=0.4802106$, desta forma, devemos podemos interpolar os valores de de $\widehat{S}(176)$ e $\widehat{S}(185)$ para obter uma estimativa da mediana do tempo até a falha ($\widehat{M}$):
+Obseve na tabela anterior que $\widehat{S}(176)=0.5010893$ e $\widehat{S}(185)=0.4802106$, desta forma, devemos podemos interpolar os valores de de $\widehat{S}(176)$ e $\widehat{S}(185)$ para obter uma estimativa da mediana do tempo até a falha ($\widehat{M}$):
 
 $$\widehat{M}=\frac{185-176}{0.5010893-0.4802106}(0.5-0.5010893)+185=\frac{-9}{0.0208787}0.0010893+185=184.5304$$
 
@@ -367,3 +367,174 @@ kable(tabela,
       ) %>%
   kable_styling(position = "center",latex_options = "HOLD_position")
 ```
+
+
+## 2.4
+
+a) Segue a abaixo o gráfico referente às estimativas das funções de sobrevivência para os diferentes grupos considerando o estimador de Kaplan-Meier.
+
+```{r}
+
+falhas1   = c(28, 89, 175, 195, 309, 462)
+censuras1 = c(377, 393, 421, 447, 709, 744, 770, 1106, 1206)
+dados1    = c(falhas1,    censuras1)
+status1   = c(falhas1**0, censuras1*0)
+
+falhas2   = c(34, 88, 137, 199, 280, 291, 309, 351, 358, 369, 369, 370, 375, 382, 392, 451)
+censuras2 = c(299, 300, 429, 1119)
+dados2    = c(falhas2,    censuras2)
+status2   = c(falhas2**0, censuras2*0)
+
+ref_data1   = Surv(dados1, status1)
+kp_est1     = survfit(ref_data1 ~ 1, conf.type = "log-log")
+nelson_est1 = survfit(coxph(Surv(dados1, status1) ~ 1, method = "breslow"), conf.type = "log-log")
+
+ref_data2   = Surv(dados2, status2)
+kp_est2     = survfit(ref_data2 ~ 1, conf.type = "log-log")
+nelson_est2 = survfit(coxph(Surv(dados2, status2) ~ 1, method = "breslow"), conf.type = "log-log")
+
+ggplot()+
+  geom_step(aes(x = kp_est1$time, y = kp_est1$surv, color = '1 - Tumor Grande')) +
+  pammtools::geom_stepribbon(aes(x = kp_est1$time, ymin = kp_est1$lower, ymax = kp_est1$upper, fill = 'Grupo 1: Tumor Grande'), alpha = 0.1) +
+  geom_step(aes(x = kp_est2$time, y = kp_est2$surv, color = '2 - Tumor Pequeno')) +
+  pammtools::geom_stepribbon(aes(x = kp_est2$time, ymin = kp_est2$lower, ymax = kp_est2$upper, fill = 'Grupo 2: Tumor Pequeno'), alpha = 0.1) +
+  scale_color_hue('Grupo') +
+  scale_y_continuous('Probabilidade de sobrevivência') +
+  scale_x_continuous('Tempo em dias') +
+  guides(fill='none') +
+  ggtitle('Estimativas das Funções de Sobrevivência por Kaplan-Meier') +
+  theme_bw()
+
+```
+
+
+b) Segue a abaixo o gráfico referente às estimativas das funções de sobrevivência para os diferentes grupos considerando o estimador de Nelson-Aalen.
+
+```{r}
+
+ggplot()+
+  geom_step(aes(x = nelson_est1$time, y = nelson_est1$surv, color = '1 - Tumor Grande')) +
+  pammtools::geom_stepribbon(aes(x = nelson_est1$time, ymin = nelson_est1$lower, ymax = nelson_est1$upper, fill = 'Grupo 1: Tumor Grande'), alpha = 0.1) +
+  geom_step(aes(x = nelson_est2$time, y = nelson_est2$surv, color = '2 - Tumor Pequeno')) +
+  pammtools::geom_stepribbon(aes(x = nelson_est2$time, ymin = nelson_est2$lower, ymax = nelson_est2$upper, fill = 'Grupo 2: Tumor Pequeno'), alpha = 0.1) +
+  scale_color_hue('Grupo') +
+  scale_y_continuous('Probabilidade de sobrevivência') +
+  scale_x_continuous('Tempo em dias') +
+  guides(fill='none') +
+  ggtitle('Estimativas das Funções de Sobrevivência por Nelson-Aalen') +
+  theme_bw()
+
+```
+
+c) Sejam $S_{1}$ e $S_{2}$ as funções de sobrevivência para os grupos $1$ e $2$, respectivamente. Gostaríamos de realizar os seguintes testes de hipótese:
+$$ H_{0}: S_{1}(180) = S_{2}(180); \ \ \ H_{1}: S_{1}(180) \neq S_{2}(180)$$
+$$ H_{0}: S_{1}(540) = S_{2}(540); \ \ \ H_{1}: S_{1}(540) \neq S_{2}(540)$$
+Note que aqui estamos utilizando a aproximação de que um mês possui aproximadamente $30$ dias. Idealmente precisaríamos obter uma região de confiança para as funções de sobrevivência estimadas $\hat{S}_{1}(t_{0})$ e $\hat{S}_{2}(t_{0})$ por Kaplan-Meier para cada um dos grupos, fixado um instante de tempo $t_{0}$. Assim, rejeitaríamos a hipótese nula caso a região de confiança conjunta não contivesse nenhuma ponto da reta identidade. Por questões de limitações técnicas, iremos reformular os testes e hipótese de acordo com as estimativas obtidas. Assim, iremos testar as seguintes hipóteses:
+$$ H_{0}: S_{1}(180) = \hat{S}_{2}(180); \ \ \ H_{1}: S_{1}(180) \neq \hat{S}_{2}(180) $$
+$$ H_{0}: S_{1}(540) = \hat{S}_{2}(540); \ \ \ H_{1}: S_{1}(540) \neq \hat{S}_{2}(540) $$
+Utilizando as aproximações assintóticas para os intervalos de confiança das estimativas das funções de sobrevivência e realizando interpolação linear para obter aproximações nos pontos de interesse obtemos os seguintes resultados:
+
+```{r}
+
+tabela <- data.frame()
+tabela[1:2,1:5] <- NA
+colnames(tabela) <- c("$t_{0}$", "$\\hat{S}_{1}(t_{0})$", "$\\hat{S}_{2}(t_{0})$", "$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ inferior", "$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ superior")
+
+tabela["$t_{0}$"] <- c(180, 540)
+tabela["$\\hat{S}_{1}(t_{0})$"] <- c(
+  approx(kp_est1$time[c(3, 4)], kp_est1$surv[c(3, 4)], xout = 180)$y,
+  approx(kp_est1$time[c(9,15)], kp_est1$surv[c(9,15)], xout = 540)$y
+)
+tabela["$\\hat{S}_{2}(t_{0})$"] <- c(
+  approx(kp_est2$time[c( 3, 4)], kp_est2$surv[c( 3, 4)], xout = 180)$y,
+  approx(kp_est2$time[c(17,19)], kp_est2$surv[c(17,19)], xout = 540)$y
+)
+tabela["$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ inferior"] <- c(
+  approx(kp_est1$time[c(3, 4)], kp_est1$lower[c(3, 4)], xout = 180)$y,
+  approx(kp_est1$time[c(9,15)], kp_est1$lower[c(9,15)], xout = 540)$y
+)
+tabela["$IC(\\hat{S}_{1}(t_{0}), 95\\%)$ superior"] <- c(
+  approx(kp_est1$time[c(3, 4)], kp_est1$upper[c(3, 4)], xout = 180)$y,
+  approx(kp_est1$time[c(9,15)], kp_est1$upper[c(9,15)], xout = 540)$y
+)
+
+kable(
+  tabela,
+  format    = "latex",
+  align     = "c",
+  digits    = 3, 
+  booktabs  = T,
+  escape    = F,
+  col.names = colnames(tabela)
+) %>% 
+
+kable_styling(
+  position = "center",
+  latex_options = "HOLD_position"
+)
+
+```
+
+Como o intervalo de $95\%$ de confiança para $\hat{S}_{1}(180)$ contém o valor de $\hat{S}_{2}(180)$, não rejeitamos a hipótese nula ao nível de significância de $\alpha = 5\%$, ou seja, não temos evidêcia para dizer que as funções de sobrevivência são diferentes para $t = 6$ meses.
+
+Já no outro caso, como o intervalo de $95\%$ de confiança para $\hat{S}_{1}(540)$ não contém o valor de $\hat{S}_{2}(540)$, rejeitamos a hipótese nula ao nível de significância de $\alpha = 5\%$, ou seja, temos evidêcia para dizer que as funções de sobrevivência são diferentes para $t = 18$ meses.
+
+
+d) Agora queremos testar se as funções de sobrevivência dos grupos são distintas. Sendo assim, iremos realizar o seguinte teste de hipótese:
+
+$$H_{0}: S_{1} = S_{2}; \ \ \ H_{1}: S_{1} \neq S_{2}$$
+
+Para testar a hipótes acima iremos utilizar dois testes: o teste de logrank e o teste de Harrington-Fleming com $\rho = 1$. Para isso precisamos obter as estatísticas:
+$$ T = \dfrac{\displaystyle \Bigg[\sum_{j = 1}^{k}(d_{2j}-w_{2j}) \Bigg]^{2}}{\displaystyle \sum_{j=1}^{k}(V_{j})_{2}}; \ \ \ S =  \dfrac{\displaystyle \Bigg[\sum_{j = 1}^{k}\hat{S}(t_{j-1})(d_{2j}-w_{2j}) \Bigg]^{2}}{\displaystyle \sum_{j=1}^{k}\bigg[\hat{S}(t_{j-1})\bigg]^{2}(V_{j})_{2}}$$
+Onde $d_{ij}$ e $n_{ij}$ representam o número de falhas no tempo $t_{j}$ e número de indivíduos que estão sob risco em um tempo imediatamente inferior a $t_{j}$ para o $i$-ésimo grupo. Além disso $w_{2j} = n_{2j}d_{j}n_{j}^{-1}$ e $(V_{j})_{2} = n_{2j}(n_{j}-n_{2j})d_{j}(n_{j}-d_{j})n_{j}^{-2}(n_{j}-1)^{-1}$.
+
+Assim, calculando as estaíticas e os $p$-valores dos testes obtemos:
+
+```{r}
+
+falhas1   = c(28, 89, 175, 195, 309, 462)
+censuras1 = c(377, 393, 421, 447, 709, 744, 770, 1106, 1206)
+dados1    = c(falhas1,    censuras1)
+status1   = c(falhas1**0, censuras1*0)
+
+falhas2   = c(34, 88, 137, 199, 280, 291, 309, 351, 358, 369, 369, 370, 375, 382, 392, 451)
+censuras2 = c(299, 300, 429, 1119)
+dados2    = c(falhas2,    censuras2)
+status2   = c(falhas2**0, censuras2*0)
+
+dados  <- c( dados1,  dados2)
+status <- c(status1, status2)
+grupos <- c(rep(1, length(dados1)), rep(2, length(dados2)))
+
+ref_data <- Surv(dados, status)
+teste1   <- survdiff(ref_data ~ grupos, rho = 0)
+teste2   <- survdiff(ref_data ~ grupos, rho = 1)
+
+tabela          <- data.frame()
+tabela[1:2,1:3] <- NA
+colnames(tabela) <- c("Teste", "Estatística", "$p$-valor")
+
+tabela["Teste"]       <- c("logrank", "Harrington-Fleming")
+tabela["Estatística"] <- c(teste1$chisq, teste2$chisq)
+tabela["$p$-valor"]   <- c(1-pchisq(teste1$chisq, 1), 1-pchisq(teste2$chisq, 1))
+
+kable(
+  tabela,
+  format    = "latex",
+  align     = "c",
+  digits    = 3, 
+  booktabs  = T,
+  escape    = F,
+  col.names = colnames(tabela)
+) %>% 
+
+kable_styling(
+  position = "center",
+  latex_options = "HOLD_position"
+)
+
+```
+
+Com isso, olhando para o $p$-valor de ambos os testes é possível concluir que ao nível de significância da $5\%$ o primeiro teste rejeita a hipótese nula e o segundo não rejeita a hipótese nula. Isso se deve, provavelmente, pelo fato de que o segundo teste dá mais peso para a parte da função de sobrevivência que possui maior valor. Assim, ele tende a despresar as diferenças nas caudas, sendo exatamente essa a região de maior divergência entre as funções de sobrevivência estimadas.
+
+e) Todos os valores foram obtidos utilizando o software R, a partir do pacote 'survival'.
