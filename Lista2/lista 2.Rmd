@@ -1,0 +1,326 @@
+---
+title: "Lista 2"
+author: ''
+date: ''
+output: pdf_document
+header-includes: \usepackage{caption}
+---
+\captionsetup[table]{labelformat=empty}
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = T)
+library(ggplot2)
+library(survival)
+library(latex2exp)
+library(kableExtra)
+```
+
+## Questão 4.1
+
+### 1
+
+Vamos supor que no tempo $25$, onde há um $*$, o autor quis dizer que houve censura.
+
+```{r}
+obs1=c(1,2,2,2,6,8,8,9,13,16,17,29,34,36)
+cen1=c(2,9,13,22,25,43,45)
+
+obs2=c(1,2,5,7,12,19,22,30,39,42,46,55)
+cen2=c(7,11,35)
+
+obs=c(obs1,obs2,cen1,cen2)
+cen=c(rep(0,length(obs1)+length(obs2)),
+          rep(1,length(cen1)+length(cen2)))
+trat=c(rep(0,length(obs1)),
+       rep(1,length(obs2)),
+       rep(0,length(cen1)),
+       rep(1,length(cen2)))
+
+times=c(0:max(obs))
+
+kp_est=survfit(Surv(obs,cen)~trat)
+kp_est_full=survfit(Surv(obs,cen)~1)
+```
+
+Primeiramente, como uma análise preliminar, avaliaremos visualmente os três modelos em questão (Exponencial, Weibull e Log-Normal) junto ao estimador de Kaplan-Meier, sem diferenciar os tratamentos $A$ e $B$:
+
+```{r}
+reg_exp=survreg(Surv(obs,cen)~1,dist='exponential')
+
+p_exp=pexp(times,1/exp(4.212128 ))
+
+reg_weibull=survreg(Surv(obs,cen)~1,dist='weibull')
+
+p_weibull=pweibull(times,shape=1/(0.7120545),scale=exp(3.968099))
+
+reg_lnorm=survreg(Surv(obs,cen)~1,dist='lognormal')
+
+p_lnorm=plnorm(times,3.784683 ,1.201686)
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],y=kp_est$surv[1:15],color='Kaplan-Meier'))+
+  geom_line(aes(x=times,y=1-p_exp,color='Modelo exponencial'))+
+  geom_line(aes(x=times,y=1-p_weibull,color='Modelo Weibull'))+
+  geom_line(aes(x=times,y=1-p_lnorm,color='Modelo Log-Normal'))+
+  scale_color_hue('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+Podemos observar que as curvas de sobrevência dos modelos Exponencial e Log-Normal são bem próximas, o que favorece a escolha do modelo Exponencial em detrimento do Log-Normal, por ser um modelo mais simples (com apenas um parâmetro). A diante verificaremos as funções de sobreviência de cada modelo, desta vez utilizando os tratamentos como covariável:
+
+```{r}
+reg_exp=survreg(Surv(obs,cen)~trat,dist='exponential')
+
+p_exp1=pexp(times,1/exp(3.8889006))
+p_exp2=pexp(times,1/exp(3.8889006+0.8206296))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],
+                y=kp_est$surv[1:15],
+                color='A',
+                linetype='Kaplan-Meier'))+
+  geom_step(aes(x=kp_est$time[16:29],
+                y=kp_est$surv[16:29],
+                color='B',
+                linetype='Kaplan-Meier'))+
+  geom_line(aes(x=times,
+                y=1-p_exp1,
+                color='A',
+                linetype='Modelo exponencial'))+
+  geom_line(aes(x=times,
+                y=1-p_exp2,
+                color='B',
+                linetype='Modelo exponencial'))+
+  scale_color_hue('Tratamento')+
+  scale_linetype('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+```{r}
+reg_weibull=survreg(Surv(obs,cen)~trat,dist='weibull')
+
+# Nas duas linhas a seguir, os parâmetros passados para a função pweibull
+# Foram convertidos seguindo as intruções do help da função survreg:
+## There are multiple ways to parameterize a Weibull distribution. The survreg 
+## function embeds it in a general location-scale family, which is a 
+## different parameterization than the rweibull function, and often leads
+## to confusion.
+##   survreg's scale  =    1/(rweibull shape)
+##   survreg's intercept = log(rweibull scale)
+##   For the log-likelihood all parameterizations lead to the same value.
+p_weibull1=pweibull(times,shape=1/(0.6781842),scale=exp(3.6817645))
+p_weibull2=pweibull(times,shape=1/(0.6781842),exp(3.6817645+0.6396505))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],
+                y=kp_est$surv[1:15],
+                color='A',
+                linetype='Kaplan-Meier'))+
+  geom_step(aes(x=kp_est$time[16:29],
+                y=kp_est$surv[16:29],
+                color='B',
+                linetype='Kaplan-Meier'))+
+  geom_line(aes(x=times,
+                y=1-p_weibull1,
+                color='A',
+                linetype='Modelo Weibull'))+
+  geom_line(aes(x=times,
+                y=1-p_weibull2,
+                color='B',
+                linetype='Modelo Weibull'))+
+  scale_color_hue('Tratamento')+
+  scale_linetype('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+```{r}
+reg_lnorm=survreg(Surv(obs,cen)~trat,dist='lognormal')
+
+p_lnorm1=plnorm(times,3.5137704,1.167061)
+p_lnorm2=plnorm(times,3.5137704+0.6196506,1.167061)
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],
+                y=kp_est$surv[1:15],
+                color='A',
+                linetype='Kaplan-Meier'))+
+  geom_step(aes(x=kp_est$time[16:29],
+                y=kp_est$surv[16:29],
+                color='B',
+                linetype='Kaplan-Meier'))+
+  geom_line(aes(x=times,
+                y=1-p_lnorm1,
+                color='A',
+                linetype='Modelo Log-Normal'))+
+  geom_line(aes(x=times,
+                y=1-p_lnorm2,
+                color='B',
+                linetype='Modelo Log-Normal'))+
+  scale_color_hue('Tratamento')+
+  scale_linetype('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+Por fim, faremos um teste de hipótese para a seleção do modelo final. Como o modelo Log-Normal produz um resultado razoavelmente próximo do modelo Exponencial, descartaremos esse modelo, restando agora apenas escolher entre os modelo Weibull e Exponencial. Observe que o modelo Exponencial é um caso particular do modelo Weibull, o que nos permite usar o teste da razão de verossimilhança. Faremos o teste com $5\%$ de significânica e usaremos como estatística de teste:
+
+$$
+TRV=-2\log\frac{L(\widehat{\theta}_{Exp})}{L(\widehat{\theta}_{Wei})}=2*(51.35089-50.31234)=2.0771
+$$
+
+Onde $L(\widehat{\theta}_{Exp})$ é a verossimilhança do estimador de máxima verossimilhança para o modelo exponencial e $L(\widehat{\theta}_{Wei})$ é o valor análogo para o modelo Weibull.
+
+Vale destacar que os valores acima foram obtidos com auxílio da função *survreg* do pacote *Survival* do *R*, sendo que os modelos foram ajustados com a covariável tratamento.
+
+Sob a hipótese nula de que o modelo Exponencial é modelo "correto" (no sentido de que os dados se comportam como é descrito no modelo Exponencial, sendo que estamos supondo que os dados necessariamente podem ser descritos pelo modelo Weibull), temos que $TRV\sim\chi^2_1$, daí, sob hipótese nula:
+
+$$
+\mathbb{P}(TRV\le2.2)=0.850476
+$$
+
+Com isto, temos que o *p-valor* do teste é $1-0.850476=0.149524>0.05$, logo, aceitamos a hipótese nula, daí, aceitaremos o Modelo Exponencial como modelo final.
+
+Os parâmetros do modelo final podem ser vizualidos a seguir:
+
+```{r}
+reg_exp
+```
+
+Vale destacar que o a variável $trat$ é $0$ para o tratamento $A$ e $1$ para o tratamento $B$, daí, o intercepto para o tratamento $A$ é $3.8889006$ e o para o tratamento $B$ é $4.70953$. Mais detalhes sobre a diferença entre os tratamentos podem ser encontrados no item $2$.
+
+### 2
+
+Sob a hipótese de que não há diferença entre os tratamos, o modelo ajustado passa a ser:
+
+```{r}
+survreg(Surv(obs,cen)~1,dist='exponential')
+```
+
+Repetindo o procedimento do item anterior para o Teste de Razão de Máxima Verossimilhança e adotando, novamente, um nível de significância de $5\%$, obtemos que a estatística de teste é $TRV=1.54078$ e que o *p-valor* é $1-0.7854983=0.2145017>0.05$, logo, aceitamos a hipótese de que não há diferença entre os tratamentos.
+
+Vale destacar que verificamos em todos os modelos (Exponencial, Weibull e Log-Normal) que a hipóse de que não há diferença entre os tratamentos é aceita.
+
+```{r}
+times=c(1:100)
+reg_exp_pura=survreg(Surv(obs,cen)~1,dist='exponential')
+
+p_exp1=pexp(times,1/exp(3.8889006))
+p_exp2=pexp(times,1/exp(3.8889006+0.8206296))
+p_exp_pura=pexp(times,1/exp(4.212128))
+
+ggplot()+
+  geom_line(aes(x=times,y=1-p_exp1,color='Exp. - Trat. A'))+
+  geom_line(aes(x=times,y=1-p_exp2,color='Exp. - Trat. B'))+
+  geom_line(aes(x=times,y=1-p_exp_pura,color='Exp. - Sem trat.'))+
+  scale_color_hue('Modelo')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+### 3
+
+A curva de sobrevivência estimada pode ser observada no gráfico a seguir:
+
+```{r}
+times=c(1:200)
+p_exp_pura=pexp(times,1/exp(4.212128))
+
+ggplot()+
+  geom_line(aes(x=times,y=1-p_exp_pura,color='Modelo final'))+
+  scale_color_manual('',values='black')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+Começaremos a análise dos resíduos pelos resíduos de Cox-Snell, definidos como:
+
+$$
+\widehat{e}_i=\widehat{\Lambda}(t_i|x_i)
+$$
+
+Sendo que, no nosso caso, não há covariáveis, logo:
+
+$$
+\widehat{e}_i=\widehat{\Lambda}(t_i)
+$$
+
+Os resíduos Cox-Snell podem ser usados para avaliar se o nosso modelo se ajusta bem aos dados. No caso do modelo exponencial, para que consideremos que o ajuste foi bom, o gráfico $\widehat{e}_i \times -\log(\widehat{S}(\widehat{e}_i))$ deve ser aproximadamente uma reta com inclinação $1$:
+
+```{r}
+res=obs*exp(-4.212128)
+kp_est=survfit(formula = Surv(res,cen) ~ 1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara))+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous(TeX('$\\widehat{e}_i$'))+
+  scale_y_continuous(TeX('$-\\log(\\widehat{S}(\\widehat{e}_i))$'))+
+  theme_bw()
+```
+
+A reta tracejado no gráfico acima tem inclinação $1$, assim, temos que o modelo Exponencial parece se adequar bem aos dados observados (ao menos olhando para os resíduos de Cox-Sneal).
+
+Como pode ser visto na sessão $4.3.2$ do livro-texto, examinar o ajuste do modelo por meio dos resíduos de Cox-Snell é equivalente a fazer uso dos resíduos padronizados, por tanto, não parece ser necessário a análise destes resíduos, pois já analisamos os resíduos de Cox-Snell.
+
+O próximo resíduo a ser analisado seria o resíduo Martigale, porém nosso modelo não possue covariáveis (e mesmo se possuisse, seria uma covariável binária), desta forma, não há necessidade de avaliar estes resíduos afim de examinar a melhor forma funcional para o modelo, ademais, a verificação do modelo ajustado e a detecção de observações atípicas podem ser realizadas com os resíduos Deviance. Como teremos de calcular os resíduos Mantigale para a análise dos resíduos Deviance, mostraremos adiante os resíduos Martigale contra o tempo, lembrando que os resíduos Martingale são definidos como:
+
+$$
+\widehat{m}_i=\delta_i-\widehat{e}_i
+$$
+Onde $\delta_i$ é a variável indicadora de censura e os $\widehat{e}_i$'s são os resíduos de Cox-Snell definidos anteriormente.
+
+```{r}
+m=cen-res
+
+ggplot()+
+  geom_point(aes(x=obs,y=m))+
+  scale_x_continuous('Tempo')+
+  scale_y_continuous(TeX('$\\widehat{m}_i$'))+
+  theme_bw()
+```
+
+Por último, analisaremos os resíduos Deviance, definidos como:
+
+$$
+\widehat{d}_i=sinal(\widehat{m}_i)\left[-2\left(\widehat{m}_i+\delta_i\log(\delta_i-\widehat{m}_i)\right)\right]^{1/2}
+$$
+
+```{r}
+d=sign(m)*sqrt(-2*(m+cen*log(cen-m)))
+
+ggplot()+
+  geom_point(aes(x=obs,y=cen-res))+
+  scale_x_continuous('Tempo')+
+  scale_y_continuous(TeX('\\widehat{d}_i'))+
+  theme_bw()
+```
+
+Os gráficos dos resíduos Deviance e Mantigale podem ser usados para detectar pontos atípicos e a adequação do modelo ajustado, como não detectamos evidências significativas de anomalias em ambos os gráficos, podemos concluir que não há outliers e que o modelo se adequa bem aos dados.
+
+### 4
+
+A partir do modelo ajustado, podemos obter que:
+
+$$
+\widehat{\mathbb{P}}(T\le40)=0.5528921
+$$
+
+Este valor nos diz que, segundo o modelo, cerca de $55.29\%$ dos pacientes sobrevivem até o 40º mês após o início do acompanhamento. 

@@ -1,0 +1,1108 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Lista 1},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{caption}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+
+\title{Lista 1}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+\captionsetup[table]{labelformat=empty}
+
+\hypertarget{questuxe3o-1.2}{%
+\subsection{Questão 1.2}\label{questuxe3o-1.2}}
+
+Temos que:
+
+\[
+\begin{aligned}
+\lambda(t):=&\lim_{\Delta t\rightarrow0}\frac{\mathbb{P}(t\leq T<t+\Delta t|T\ge t)}{\Delta t}\\
+S(t):=&\mathbb{P}(T\ge t)=1-F(t)
+\end{aligned}
+\]
+
+Para todo \(\Delta t>0\), vale que:
+
+\[
+\begin{aligned}
+\frac{\mathbb{P}(t\leq T<t+\Delta t|T\ge t)}{\Delta t}=&\frac{\mathbb{P}(t\leq T<t+\Delta t)}{\Delta t \mathbb{P}(T\ge t))}=\frac{\mathbb{P}(T<t+\Delta t)-\mathbb{P}(T\le t)}{\Delta t \mathbb{P}(T\ge t))}
+=\frac{F(t+\Delta t)-F(t)}{\Delta t (1-F(t))}\\
+=&\frac{F(t+\Delta t)-F(t)}{\Delta t}\frac{1}{S(t)}=\left(\frac{d}{dt}F(t)\ \right) \frac{1}{S(t)}\\
+=&\frac{f(t)}{S(t)}
+\end{aligned}
+\]
+
+Ademais, temos que:
+
+\[
+\begin{aligned}
+-\frac{d}{dt}\left(\log S(t)\right)=-\frac{d}{dS(t)}(\log S(t))\times \frac{d}{dt}S(t)=\frac{-1}{S(t)}\times -f(t)=\frac{f(t)}{S(t)}=\lambda(t)
+\end{aligned}
+\]
+
+\hypertarget{questuxe3o-1.4}{%
+\subsection{Questão 1.4}\label{questuxe3o-1.4}}
+
+Lembremos que:
+
+\[
+\text{vmr}(t):=\frac{\int_t^\infty S(u)du}{S(t)}
+\]
+
+Observe que:
+
+\[
+\frac{d}{dt}\ln\left(\int_t^\infty S(u)du\right)=\frac{1}{\int_t^\infty S(u)du}\times(-S(t))=-\frac{1}{vmr(t)}
+\] Assim, pelo Teorema Fundamental do Cálculo:
+
+\[
+\int_0^t\frac{-du}{vmr(u)}=\ln\left(\int_t^\infty S(u)du\right)-\ln\left(\int_0^\infty S(u)du\right)
+\]
+
+Com isto, vale que:
+
+\[
+\begin{aligned}
+\frac{vmr(0)}{vmr(t)}\exp \left\{ -\int_0^t\frac{du}{vmr(u)} \right\}=&\frac{vmr(0)}{vmr(t)}\exp\left \{\ln\left(\int_t^\infty S(u)du\right)-\ln\left(\int_0^\infty S(u)du\right)\right \}\\
+=&\frac{\frac{\int_0^\infty S(u)du}{S(0)}}{\frac{\int_t^\infty S(u)du}{S(t)}}\frac{ \int_t^\infty S(u)du}{ \int_0^\infty S(u)du}=\frac{S(t)}{S(0)}
+\end{aligned}
+\]
+
+Como a variável aleatória \(T\) (tempo até a falha) é não negativa,temos
+que \(F(0)=0\), logo \(S(0)=1\), daí:
+
+\[
+\frac{vmr(0)}{vmr(t)}\exp \left\{ -\int_0^t\frac{du}{vmr(u)} \right\}=S(t)
+\]
+
+\hypertarget{questuxe3o-1.5}{%
+\subsection{Questão 1.5}\label{questuxe3o-1.5}}
+
+Como \(\lambda(t)=\beta_0+\beta_1 t\), temos que:
+
+\[
+-\frac{d}{dt}(\ln S(t))=\lambda(t)=\beta_0+\beta_1 t
+\]
+
+Integrando em \(t\) em ambos os lados da igualdade, temos que:
+
+\[
+-\ln S(t)=\beta_0t+\frac{\beta_1}{2} t^2 + c
+\]
+
+Daí:
+
+\[
+S(t)=\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2 - c \right \}=k\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2\right \}
+\]
+
+Vale que \(k=1\), pois \(S(0)=1\), pois, novamente, o tempo até a falha
+é não negativo, assim:
+
+\[
+S(t)=\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2\right \}
+\]
+
+Por último:
+
+\[
+\begin{aligned}
+f(t)= S(t)\lambda (t)=\exp \left \{ -\beta_0t-\frac{\beta_1}{2} t^2\right \}\left (\beta_0+\beta_1 t \right )
+\end{aligned}
+\]
+
+\hypertarget{questuxe3o-1.6}{%
+\subsection{Questão 1.6}\label{questuxe3o-1.6}}
+
+Primeiro veja que:
+
+\[
+-\int_0^t\frac{1}{u+10}du=ln(10)-ln(t+10)
+\]
+
+Com isto:
+
+\[
+S(t)=\frac{vmr(0)}{vmr(t)}\exp \left \{ -\int_0^t\frac{1}{vmr(u)}du \right \}=\frac{10}{t+10}\exp \left \{ ln(10)-ln(t+10) \right \} = \frac{100}{(t+10)^2}
+\] Daí:
+
+\[
+f (t)= -\frac{d}{dt}S(t)=\frac{200}{(t+10)^3} \Longrightarrow \lambda(t) = \dfrac{f(t)}{S(t)} = \dfrac{\dfrac{200}{(t+10)^{3}}}{\dfrac{100}{(t+10)^{2}}} = \dfrac{2}{t+10}
+\]
+
+Por último, como \(T\) é uma v.a. não negativa, vale que:
+
+\[
+\begin{aligned}
+\mathbb{E}[T]=&\int_0^\infty 1-F(t) dt=\int_0^\infty S(t) dt = \int_0^\infty  \frac{100}{(t+10)^2} dt\\
+=&\left (-\frac{100}{t+10}\right)_0^\infty=\lim_{t \rightarrow\infty}\left(-\frac{100}{t+10}\right)+10\\
+=&10
+\end{aligned}
+\]
+
+\hypertarget{questuxe3o-2.3}{%
+\subsection{Questão 2.3}\label{questuxe3o-2.3}}
+
+\hypertarget{a}{%
+\subsubsection{a)}\label{a}}
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{table}
+
+\caption{\label{tab:unnamed-chunk-2}Probabilidade de sobrevivência}
+\centering
+\begin{tabular}[t]{ccc}
+\toprule
+Intervalo & Kaplan-Meier & Nelson-Aalen\\
+\midrule
+{}[0,7) & 0.9803922 & 0.9805831\\
+{}[7,34) & 0.9607843 & 0.9611663\\
+{}[34,42) & 0.9411765 & 0.9417495\\
+{}[42,63) & 0.9215686 & 0.9223326\\
+{}[63,64) & 0.9019608 & 0.9029158\\
+\addlinespace
+{}[64,74) & 0.9019608 & 0.9029158\\
+{}[74,83) & 0.8819172 & 0.8830723\\
+{}[83,84) & 0.8618736 & 0.8632289\\
+{}[84,91) & 0.8418301 & 0.8433854\\
+{}[91,108) & 0.8217865 & 0.8235420\\
+\addlinespace
+{}[108,112) & 0.8017429 & 0.8036986\\
+{}[112,129) & 0.7816993 & 0.7838552\\
+{}[129,133) & 0.7416122 & 0.7446708\\
+{}[133,139) & 0.7215686 & 0.7248141\\
+{}[139,140) & 0.6814815 & 0.6856447\\
+\addlinespace
+{}[140,146) & 0.6614379 & 0.6657724\\
+{}[146,149) & 0.6413943 & 0.6459001\\
+{}[149,154) & 0.6213508 & 0.6260278\\
+{}[154,157) & 0.6013072 & 0.6061556\\
+{}[157,160) & 0.5612200 & 0.5670628\\
+\addlinespace
+{}[160,165) & 0.5411765 & 0.5471680\\
+{}[165,173) & 0.5211329 & 0.5272732\\
+{}[173,176) & 0.5010893 & 0.5073785\\
+{}[176,185) & 0.5010893 & 0.5073785\\
+{}[185,218) & 0.4802106 & 0.4866721\\
+\addlinespace
+{}[218,225) & 0.4593319 & 0.4659658\\
+{}[225,241) & 0.4384532 & 0.4452597\\
+{}[241,248) & 0.4175744 & 0.4245538\\
+{}[248,273) & 0.3966957 & 0.4038481\\
+{}[273,277) & 0.3758170 & 0.3831426\\
+\addlinespace
+{}[277,279) & 0.3758170 & 0.3831426\\
+{}[279,297) & 0.3537101 & 0.3612548\\
+{}[297,319) & 0.3537101 & 0.3612548\\
+{}[319,405) & 0.3301294 & 0.3379564\\
+{}[405,417) & 0.3065488 & 0.3146586\\
+\addlinespace
+{}[417,420) & 0.2829681 & 0.2913617\\
+{}[420,440) & 0.2593874 & 0.2680657\\
+{}[440,523) & 0.2358067 & 0.2447710\\
+{}[523,583) & 0.2096060 & 0.2190307\\
+{}[583,594) & 0.1834052 & 0.1932939\\
+\addlinespace
+{}[594,1101) & 0.1572045 & 0.1675622\\
+{}[1101,1116) & 0.1572045 & 0.1675622\\
+{}[1116,1146) & 0.1257636 & 0.1371883\\
+{}[1146,1226) & 0.1257636 & 0.1371883\\
+{}[1226,1349) & 0.1257636 & 0.1371883\\
+\addlinespace
+{}[1349,1412) & 0.1257636 & 0.1371883\\
+{}[1412,1417) & 0.0000000 & 0.0504688\\
+{}[1417,$\infty$) & 0.0000000 & 0.0000000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{b}{%
+\subsubsection{b)}\label{b}}
+
+Comecemos estimando as estatísticas em questão através do estimador de
+Kaplan-Meier.
+
+Obseve na tabela anterior que \(\widehat{S}(176)=0.5010893\) e
+\(\widehat{S}(185)=0.4802106\), desta forma, devemos podemos interpolar
+os valores de de \(\widehat{S}(176)\) e \(\widehat{S}(185)\) para obter
+uma estimativa da mediana do tempo até a falha (\(\widehat{M}\)):
+
+\[\widehat{M}=\frac{185-176}{0.4802106-0.5010893}(0.5-0.5010893)+176=\frac{9}{0.0208787}0.0010893+176=176.4696\]
+
+Ademais, podemos estimar o tempo médio de vida (\(\widehat{\mu}\)) da
+seguinte forma:
+
+\[\widehat{\mu}=\sum_{i=1}^n\widehat{S}(T_i)T_i=394.9987\]
+
+De forma análoga ao que foi feito, podemos obter as seguintes
+estimativas usando o estimador de Nelson-Aalen:
+
+\[\widehat{M}=\frac{185-176}{0.5073785-0.4866721}(0.5-0.5073785)+185=\frac{9}{0.0207064}0.0073785+176=179.2071\]
+
+\[\widehat{\mu}=\sum_{i=1}^n\widehat{S}(T_i)T_i=407.7941\]
+
+\hypertarget{c}{%
+\subsubsection{c)}\label{c}}
+
+Primeiro apresentaremos as estimativas obtidas usando o estimador de
+Kaplan-Meier.
+
+Trivilamente, para o item \(i)\), basta usar
+\(\widehat{S}(42)=0.9215686\). Para os outros itens, interpolaremos os
+dois pontos mais próximos do tempo solicitado:
+
+\[
+\begin{aligned}
+i)\quad & \widehat{S}(42) &=0.9215686\\
+ii)\quad &\frac{0.8017429-0.8217865}{108-91}(100-91)+0.8217865 &=0.8111752\\
+iii)\quad &\frac{0.3301294-0.3537101}{319-297}(300-297)+0.3537101 &=0.3504946\\
+iv)\quad &\frac{0.1257636-0.1572045}{1116-594}(1000-594)+0.1572045 &=0.1327505
+\end{aligned}
+\]
+
+De forma análoga, para usando o estimador de Nelson-Aalen:
+
+\[
+\begin{aligned}
+i)\quad & \widehat{S}(42) &=0.9223326\\
+ii)\quad &\frac{0.8036986-0.8235420}{108-91}(100-91)+0.8235420 &=0.8130367\\
+iii)\quad &\frac{0.3379564-0.3612548}{319-297}(300-297)+0.3612548 &=0.3580777\\
+iv)\quad &\frac{0.1371883-0.1675622}{1116-594}(1000-594)+0.1675622 &=0.1439381
+\end{aligned}
+\]
+
+\hypertarget{d}{%
+\subsubsection{d)}\label{d}}
+
+Queremos estimar \(\mathbb{E}[T-1000|T>1000]\), isto é, o tempo médio de
+vida restante dos pacientes que sobreviveram \(1000\) dias. Chamemos
+\(K=T-1000|T>1000\), assim, \(K\) é não negativa, logo, podemos
+escrever:
+
+\[
+\mathbb{E}[K]=\begin{cases}
+\int_{0}^{\infty}1-\mathbb{P}(K \le k)dk,\text{ se }K\text{ é contínua}.\\
+\sum_{k=0}^{\infty}1-\mathbb{P}(K \le k),\text{ se }K\text{ é discreta}.\\
+\end{cases}
+\]
+
+Ademais:
+
+\[
+\begin{aligned}
+\mathbb{P}(K \le k)=&\mathbb{P}(T-1000 \le k|T>1000)=1-\mathbb{P}(T-1000 \ge k|T>1000)=1-\frac{\mathbb{P}(T \ge k+1000, T>1000)}{\mathbb{P}(T>1000)}\\
+=&1-\frac{\mathbb{P}(T \ge k+1000)}{\mathbb{P}(T>1000)}=\frac{S(k+1000)}{S(1000)}, \forall k\ge 0
+\end{aligned}
+\]
+
+Podemos então estimar \(\mathbb{E}[T-1000|T>1000]\) como a área em azul
+no gráfico a seguir normalizada por \(\widehat{S}(1000)\):
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+Assim, para o estimador de Kaplan-Meier, temos:
+
+\[
+\widehat{\mathbb{E}}[T-1000|T>1000]=\frac{1}{\widehat{S}(1000)}\sum_{t=1000}^{1417}\widehat{S}(t)=325.4.
+\]
+
+E para o estimador de Nelson-Aalen, temos:
+
+\[
+\widehat{\mathbb{E}}[T-1000|T>1000]=\frac{1}{\widehat{S}(1000)}\sum_{t=1000}^{1417}\widehat{S}(t)= 332.3489.
+\]
+
+\hypertarget{e}{%
+\subsubsection{e)}\label{e}}
+
+O tempo mediano (verdadeiro, não o estimado) de vida é o tempo no qual,
+em média, metade das falhas ocorreram, isto é, a probabilidade de que um
+paciente sobreviva até o tempo mediano é de \(50\%\).
+
+O tempo médio (verdadeiro, não o estimado) de vida é o tempo que leva,
+em média, para que a falha ocorra, isto é, em média os pacientes
+sobrevivem até \(394.9987\) pelo estimador de Kaplan-Meier e
+\(407.7941\) pelo estimador de Nelson-Aalen.
+
+No item \(b)\), cada uma das probabilidades pode ser interpretada como a
+proporção de indivíduos com cancer que sobreviverão, respectivamente,
+\(42\) dias, \(100\) dias, \(300\) dias e \(1000\) dias.
+
+Por último, no item \(d)\), temos que, em média, os pacientes que
+sobreviveram \(1000\) dias sobreviverão \(325.4\) dias adicionais
+(\(332.3489\) pelo estimador de Nelson-Aalen).
+
+\hypertarget{f}{%
+\subsubsection{f)}\label{f}}
+
+Observando a tabela com as probabilidade de sobrevivência de cada
+estimador e interpolando os dois valores mais próximo do desejado,
+podemos obter as seguintes estimativas:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccc}
+\toprule
+Probabilidade de sobrevivência & Kaplan-Meier & Nelson-Aalen\\
+\midrule
+80\% & 108.3478 & 108.7456\\
+30\% & 408.3326 & 412.5505\\
+10\% & 1361.9060 & 1376.0166\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{questuxe3o-2.4}{%
+\subsection{Questão 2.4}\label{questuxe3o-2.4}}
+
+\hypertarget{a-1}{%
+\subsubsection{a)}\label{a-1}}
+
+Segue a abaixo o gráfico referente às estimativas das funções de
+sobrevivência para os diferentes grupos considerando o estimador de
+Kaplan-Meier.
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-8-1.pdf}
+
+\hypertarget{b-1}{%
+\subsubsection{b)}\label{b-1}}
+
+Segue a abaixo o gráfico referente às estimativas das funções de
+sobrevivência para os diferentes grupos considerando o estimador de
+Nelson-Aalen.
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-9-1.pdf}
+
+\hypertarget{c-1}{%
+\subsubsection{c)}\label{c-1}}
+
+Sejam \(S_{1}\) e \(S_{2}\) as funções de sobrevivência para os grupos
+\(1\) e \(2\), respectivamente. Gostaríamos de realizar os seguintes
+testes de hipótese:
+\[ H_{0}: S_{1}(180) = S_{2}(180); \ \ \ H_{1}: S_{1}(180) \neq S_{2}(180)\]
+\[ H_{0}: S_{1}(540) = S_{2}(540); \ \ \ H_{1}: S_{1}(540) \neq S_{2}(540)\]
+Note que aqui estamos utilizando a aproximação de que um mês possui
+aproximadamente \(30\) dias. Idealmente precisaríamos obter uma região
+de confiança para as funções de sobrevivência estimadas
+\(\hat{S}_{1}(t_{0})\) e \(\hat{S}_{2}(t_{0})\) por Kaplan-Meier para
+cada um dos grupos, fixado um instante de tempo \(t_{0}\). Assim,
+rejeitaríamos a hipótese nula caso a região de confiança conjunta não
+contivesse nenhuma ponto da reta identidade. Por questões de limitações
+técnicas, iremos reformular os testes e hipótese de acordo com as
+estimativas obtidas. Assim, iremos testar as seguintes hipóteses:
+\[ H_{0}: S_{1}(180) = \hat{S}_{2}(180); \ \ \ H_{1}: S_{1}(180) \neq \hat{S}_{2}(180) \]
+\[ H_{0}: S_{1}(540) = \hat{S}_{2}(540); \ \ \ H_{1}: S_{1}(540) \neq \hat{S}_{2}(540) \]
+Utilizando as aproximações assintóticas para os intervalos de confiança
+das estimativas das funções de sobrevivência e realizando interpolação
+linear para obter aproximações nos pontos de interesse obtemos os
+seguintes resultados:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+$t_{0}$ & $\hat{S}_{1}(t_{0})$ & $\hat{S}_{2}(t_{0})$ & $IC(\hat{S}_{1}(t_{0}), 95\%)$ inferior & $IC(\hat{S}_{1}(t_{0}), 95\%)$ superior\\
+\midrule
+180 & 0.783 & 0.815 & 0.484 & 0.921\\
+540 & 0.653 & 0.161 & 0.360 & 0.838\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Como o intervalo de \(95\%\) de confiança para \(\hat{S}_{1}(180)\)
+contém o valor de \(\hat{S}_{2}(180)\), não rejeitamos a hipótese nula
+ao nível de significância de \(\alpha = 5\%\), ou seja, não temos
+evidêcia para dizer que as funções de sobrevivência são diferentes para
+\(t = 6\) meses.
+
+Já no outro caso, como o intervalo de \(95\%\) de confiança para
+\(\hat{S}_{1}(540)\) não contém o valor de \(\hat{S}_{2}(540)\),
+rejeitamos a hipótese nula ao nível de significância de
+\(\alpha = 5\%\), ou seja, temos evidêcia para dizer que as funções de
+sobrevivência são diferentes para \(t = 18\) meses.
+
+\hypertarget{d-1}{%
+\subsubsection{d)}\label{d-1}}
+
+Agora queremos testar se as funções de sobrevivência dos grupos são
+distintas. Sendo assim, iremos realizar o seguinte teste de hipótese:
+
+\[H_{0}: S_{1} = S_{2}; \ \ \ H_{1}: S_{1} \neq S_{2}\]
+
+Para testar a hipótes acima iremos utilizar dois testes: o teste de
+logrank e o teste de Harrington-Fleming com \(\rho = 1\). Para isso
+precisamos obter as estatísticas:
+\[ T = \dfrac{\displaystyle \Bigg[\sum_{j = 1}^{k}(d_{2j}-w_{2j}) \Bigg]^{2}}{\displaystyle \sum_{j=1}^{k}(V_{j})_{2}}; \ \ \ S =  \dfrac{\displaystyle \Bigg[\sum_{j = 1}^{k}\hat{S}(t_{j-1})(d_{2j}-w_{2j}) \Bigg]^{2}}{\displaystyle \sum_{j=1}^{k}\bigg[\hat{S}(t_{j-1})\bigg]^{2}(V_{j})_{2}}\]
+Onde \(d_{ij}\) e \(n_{ij}\) representam o número de falhas no tempo
+\(t_{j}\) e número de indivíduos que estão sob risco em um tempo
+imediatamente inferior a \(t_{j}\) para o \(i\)-ésimo grupo. Além disso
+\(w_{2j} = n_{2j}d_{j}n_{j}^{-1}\) e
+\((V_{j})_{2} = n_{2j}(n_{j}-n_{2j})d_{j}(n_{j}-d_{j})n_{j}^{-2}(n_{j}-1)^{-1}\).
+
+Assim, calculando as estaíticas e os \(p\)-valores dos testes obtemos:
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccc}
+\toprule
+Teste & Estatística & $p$-valor\\
+\midrule
+logrank & 5.566 & 0.018\\
+Harrington-Fleming & 2.741 & 0.098\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Com isso, olhando para o \(p\)-valor de ambos os testes é possível
+concluir que ao nível de significância da \(5\%\) o primeiro teste
+rejeita a hipótese nula e o segundo não rejeita a hipótese nula. Isso se
+deve, provavelmente, pelo fato de que o segundo teste dá mais peso para
+a parte da função de sobrevivência que possui maior valor. Assim, ele
+tende a despresar as diferenças nas caudas, sendo exatamente essa a
+região de maior divergência entre as funções de sobrevivência estimadas.
+
+\hypertarget{e-1}{%
+\subsubsection{e)}\label{e-1}}
+
+Todos os valores foram obtidos utilizando o software R, a partir do
+pacote `survival' e os códigos utilizados podem ser encontrados no
+apêndice.
+
+\pagebreak
+
+\hypertarget{apuxeandice}{%
+\subsection{Apêndice}\label{apuxeandice}}
+
+\hypertarget{cuxf3digos}{%
+\subsubsection{Códigos}\label{cuxf3digos}}
+
+\hypertarget{questuxe3o-2.3-1}{%
+\paragraph{Questão 2.3}\label{questuxe3o-2.3-1}}
+
+\hypertarget{a-2}{%
+\subparagraph{a)}\label{a-2}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{falhas}\OtherTok{=}\FunctionTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{34}\NormalTok{,}\DecValTok{42}\NormalTok{,}\DecValTok{63}\NormalTok{,}\DecValTok{64}\NormalTok{,}\DecValTok{83}\NormalTok{,}\DecValTok{84}\NormalTok{,}\DecValTok{91}\NormalTok{,}\DecValTok{108}\NormalTok{,}\DecValTok{112}\NormalTok{,}
+         \DecValTok{129}\NormalTok{,}\DecValTok{133}\NormalTok{,}\DecValTok{133}\NormalTok{,}\DecValTok{139}\NormalTok{,}\DecValTok{140}\NormalTok{,}\DecValTok{140}\NormalTok{,}\DecValTok{146}\NormalTok{,}\DecValTok{149}\NormalTok{,}\DecValTok{154}\NormalTok{,}\DecValTok{157}\NormalTok{,}
+         \DecValTok{160}\NormalTok{,}\DecValTok{160}\NormalTok{,}\DecValTok{165}\NormalTok{,}\DecValTok{173}\NormalTok{,}\DecValTok{176}\NormalTok{,}\DecValTok{218}\NormalTok{,}\DecValTok{225}\NormalTok{,}\DecValTok{241}\NormalTok{,}\DecValTok{248}\NormalTok{,}\DecValTok{273}\NormalTok{,}
+         \DecValTok{277}\NormalTok{,}\DecValTok{297}\NormalTok{,}\DecValTok{405}\NormalTok{,}\DecValTok{417}\NormalTok{,}\DecValTok{420}\NormalTok{,}\DecValTok{440}\NormalTok{,}\DecValTok{523}\NormalTok{,}\DecValTok{583}\NormalTok{,}\DecValTok{594}\NormalTok{,}\DecValTok{1101}\NormalTok{,}
+         \DecValTok{1146}\NormalTok{,}\DecValTok{1417}\NormalTok{)}
+\NormalTok{censuras}\OtherTok{=}\FunctionTok{c}\NormalTok{(}\DecValTok{74}\NormalTok{,}\DecValTok{185}\NormalTok{,}\DecValTok{279}\NormalTok{,}\DecValTok{319}\NormalTok{,}\DecValTok{523}\NormalTok{,}\DecValTok{1116}\NormalTok{,}\DecValTok{1226}\NormalTok{,}\DecValTok{1349}\NormalTok{,}\DecValTok{1412}\NormalTok{)}
+\NormalTok{dados}\OtherTok{=}\FunctionTok{c}\NormalTok{(falhas,censuras)}
+\NormalTok{status}\OtherTok{=}\FunctionTok{c}\NormalTok{(falhas}\SpecialCharTok{**}\DecValTok{0}\NormalTok{,censuras}\SpecialCharTok{*}\DecValTok{0}\NormalTok{)}
+
+\NormalTok{ref\_data}\OtherTok{=}\FunctionTok{Surv}\NormalTok{(dados,status)}
+\NormalTok{kp\_est}\OtherTok{=}\FunctionTok{survfit}\NormalTok{(ref\_data}\SpecialCharTok{\textasciitilde{}}\DecValTok{1}\NormalTok{)}
+\NormalTok{nelson\_est}\OtherTok{=}\FunctionTok{survfit}\NormalTok{(}\FunctionTok{coxph}\NormalTok{(}\FunctionTok{Surv}\NormalTok{(dados,status)}\SpecialCharTok{\textasciitilde{}}\DecValTok{1}\NormalTok{,}\AttributeTok{method=}\StringTok{"breslow"}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{time,}\AttributeTok{y=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{surv,}\AttributeTok{color=}\StringTok{\textquotesingle{}Kaplan{-}Meier\textquotesingle{}}\NormalTok{))}\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{time,}
+                                 \AttributeTok{ymin=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{lower,}
+                                 \AttributeTok{ymax=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{upper,}
+                                 \AttributeTok{fill=}\StringTok{\textquotesingle{}Kaplan{-}Meier\textquotesingle{}}\NormalTok{),}
+                             \AttributeTok{alpha=}\FloatTok{0.1}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{time,}\AttributeTok{y=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{surv,}\AttributeTok{color=}\StringTok{\textquotesingle{}Nelson{-}Aalen\textquotesingle{}}\NormalTok{))}\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{time,}
+                                 \AttributeTok{ymin=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{lower,}
+                                 \AttributeTok{ymax=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{upper,}
+                                 \AttributeTok{fill=}\StringTok{\textquotesingle{}Nelson{-}Aalen\textquotesingle{}}\NormalTok{),}
+                             \AttributeTok{alpha=}\FloatTok{0.1}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_hue}\NormalTok{(}\StringTok{\textquotesingle{}Estimador\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Probabilidade de sobrevivência\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Tempo\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill=}\StringTok{\textquotesingle{}none\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{intervalos}\OtherTok{=}\FunctionTok{paste0}\NormalTok{(}\StringTok{\textquotesingle{}[\textquotesingle{}}\NormalTok{,}
+                  \FunctionTok{sort}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,kp\_est}\SpecialCharTok{$}\NormalTok{time))[}\SpecialCharTok{{-}}\FunctionTok{length}\NormalTok{(dados)],}
+                  \StringTok{\textquotesingle{},\textquotesingle{}}\NormalTok{,}
+                  \FunctionTok{c}\NormalTok{(}\FunctionTok{sort}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{time),}\StringTok{\textquotesingle{}$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{infty$\textquotesingle{}}\NormalTok{),}
+                  \StringTok{\textquotesingle{})\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{tabela}\OtherTok{=}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Intervalo=}\NormalTok{intervalos,}
+                  \StringTok{\textquotesingle{}Kaplan{-}Meier\textquotesingle{}}\OtherTok{=}\FunctionTok{c}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{surv,}\DecValTok{0}\NormalTok{),}
+                  \StringTok{\textquotesingle{}Nelson{-}Aalen\textquotesingle{}}\OtherTok{=}\FunctionTok{c}\NormalTok{(nelson\_est}\SpecialCharTok{$}\NormalTok{surv,}\DecValTok{0}\NormalTok{)}
+\NormalTok{                  )}
+
+\FunctionTok{kable}\NormalTok{(tabela,}
+      \AttributeTok{format=}\StringTok{"latex"}\NormalTok{,}
+      \AttributeTok{align =} \StringTok{"c"}\NormalTok{,}
+      \AttributeTok{booktabs=}\NormalTok{T,}
+      \AttributeTok{escape=}\NormalTok{F,}
+      \AttributeTok{caption =} \StringTok{"Probabilidade de sobrevivência"}\NormalTok{,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Intervalo"}\NormalTok{,}
+                    \StringTok{"Kaplan{-}Meier"}\NormalTok{,}
+                    \StringTok{"Nelson{-}Aalen"}
+\NormalTok{                    )}
+\NormalTok{      ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{position =} \StringTok{"center"}\NormalTok{,}
+                \AttributeTok{latex\_options =} \StringTok{"HOLD\_position"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+
+\caption{\label{tab:unnamed-chunk-13}Probabilidade de sobrevivência}
+\centering
+\begin{tabular}[t]{ccc}
+\toprule
+Intervalo & Kaplan-Meier & Nelson-Aalen\\
+\midrule
+{}[0,7) & 0.9803922 & 0.9805831\\
+{}[7,34) & 0.9607843 & 0.9611663\\
+{}[34,42) & 0.9411765 & 0.9417495\\
+{}[42,63) & 0.9215686 & 0.9223326\\
+{}[63,64) & 0.9019608 & 0.9029158\\
+\addlinespace
+{}[64,74) & 0.9019608 & 0.9029158\\
+{}[74,83) & 0.8819172 & 0.8830723\\
+{}[83,84) & 0.8618736 & 0.8632289\\
+{}[84,91) & 0.8418301 & 0.8433854\\
+{}[91,108) & 0.8217865 & 0.8235420\\
+\addlinespace
+{}[108,112) & 0.8017429 & 0.8036986\\
+{}[112,129) & 0.7816993 & 0.7838552\\
+{}[129,133) & 0.7416122 & 0.7446708\\
+{}[133,139) & 0.7215686 & 0.7248141\\
+{}[139,140) & 0.6814815 & 0.6856447\\
+\addlinespace
+{}[140,146) & 0.6614379 & 0.6657724\\
+{}[146,149) & 0.6413943 & 0.6459001\\
+{}[149,154) & 0.6213508 & 0.6260278\\
+{}[154,157) & 0.6013072 & 0.6061556\\
+{}[157,160) & 0.5612200 & 0.5670628\\
+\addlinespace
+{}[160,165) & 0.5411765 & 0.5471680\\
+{}[165,173) & 0.5211329 & 0.5272732\\
+{}[173,176) & 0.5010893 & 0.5073785\\
+{}[176,185) & 0.5010893 & 0.5073785\\
+{}[185,218) & 0.4802106 & 0.4866721\\
+\addlinespace
+{}[218,225) & 0.4593319 & 0.4659658\\
+{}[225,241) & 0.4384532 & 0.4452597\\
+{}[241,248) & 0.4175744 & 0.4245538\\
+{}[248,273) & 0.3966957 & 0.4038481\\
+{}[273,277) & 0.3758170 & 0.3831426\\
+\addlinespace
+{}[277,279) & 0.3758170 & 0.3831426\\
+{}[279,297) & 0.3537101 & 0.3612548\\
+{}[297,319) & 0.3537101 & 0.3612548\\
+{}[319,405) & 0.3301294 & 0.3379564\\
+{}[405,417) & 0.3065488 & 0.3146586\\
+\addlinespace
+{}[417,420) & 0.2829681 & 0.2913617\\
+{}[420,440) & 0.2593874 & 0.2680657\\
+{}[440,523) & 0.2358067 & 0.2447710\\
+{}[523,583) & 0.2096060 & 0.2190307\\
+{}[583,594) & 0.1834052 & 0.1932939\\
+\addlinespace
+{}[594,1101) & 0.1572045 & 0.1675622\\
+{}[1101,1116) & 0.1572045 & 0.1675622\\
+{}[1116,1146) & 0.1257636 & 0.1371883\\
+{}[1146,1226) & 0.1257636 & 0.1371883\\
+{}[1226,1349) & 0.1257636 & 0.1371883\\
+\addlinespace
+{}[1349,1412) & 0.1257636 & 0.1371883\\
+{}[1412,1417) & 0.0000000 & 0.0504688\\
+{}[1417,$\infty$) & 0.0000000 & 0.0000000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{b-2}{%
+\subparagraph{b)}\label{b-2}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# Mediana Kaplan{-}Meier}
+\FunctionTok{print}\NormalTok{((}\FloatTok{0.5{-}0.5010893}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{185{-}176}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.4802106{-}0.5010893}\NormalTok{)}\SpecialCharTok{+}\DecValTok{176}\NormalTok{)}
+\CommentTok{\# Mediana Nelson{-}Aalen}
+\FunctionTok{print}\NormalTok{((}\FloatTok{0.5{-}0.5073785}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{185{-}176}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.4866721{-}0.5073785}\NormalTok{)}\SpecialCharTok{+}\DecValTok{176}\NormalTok{)}
+
+\CommentTok{\# Média Kaplan{-}Meier}
+\FunctionTok{sum}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{surv}\SpecialCharTok{*}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{time}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,kp\_est}\SpecialCharTok{$}\NormalTok{time[}\SpecialCharTok{{-}}\FunctionTok{length}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{time)])))}
+\CommentTok{\# Média Nelson{-}Aalen}
+\FunctionTok{sum}\NormalTok{(nelson\_est}\SpecialCharTok{$}\NormalTok{surv}\SpecialCharTok{*}\NormalTok{(nelson\_est}\SpecialCharTok{$}\NormalTok{time}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,nelson\_est}\SpecialCharTok{$}\NormalTok{time[}\SpecialCharTok{{-}}\FunctionTok{length}\NormalTok{(nelson\_est}\SpecialCharTok{$}\NormalTok{time)])))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{d-2}{%
+\subparagraph{d)}\label{d-2}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{falhas}\OtherTok{=}\FunctionTok{c}\NormalTok{(}\DecValTok{7}\NormalTok{,}\DecValTok{34}\NormalTok{,}\DecValTok{42}\NormalTok{,}\DecValTok{63}\NormalTok{,}\DecValTok{64}\NormalTok{,}\DecValTok{83}\NormalTok{,}\DecValTok{84}\NormalTok{,}\DecValTok{91}\NormalTok{,}\DecValTok{108}\NormalTok{,}\DecValTok{112}\NormalTok{,}
+         \DecValTok{129}\NormalTok{,}\DecValTok{133}\NormalTok{,}\DecValTok{133}\NormalTok{,}\DecValTok{139}\NormalTok{,}\DecValTok{140}\NormalTok{,}\DecValTok{140}\NormalTok{,}\DecValTok{146}\NormalTok{,}\DecValTok{149}\NormalTok{,}\DecValTok{154}\NormalTok{,}\DecValTok{157}\NormalTok{,}
+         \DecValTok{160}\NormalTok{,}\DecValTok{160}\NormalTok{,}\DecValTok{165}\NormalTok{,}\DecValTok{173}\NormalTok{,}\DecValTok{176}\NormalTok{,}\DecValTok{218}\NormalTok{,}\DecValTok{225}\NormalTok{,}\DecValTok{241}\NormalTok{,}\DecValTok{248}\NormalTok{,}\DecValTok{273}\NormalTok{,}
+         \DecValTok{277}\NormalTok{,}\DecValTok{297}\NormalTok{,}\DecValTok{405}\NormalTok{,}\DecValTok{417}\NormalTok{,}\DecValTok{420}\NormalTok{,}\DecValTok{440}\NormalTok{,}\DecValTok{523}\NormalTok{,}\DecValTok{583}\NormalTok{,}\DecValTok{594}\NormalTok{,}\DecValTok{1101}\NormalTok{,}
+         \DecValTok{1146}\NormalTok{,}\DecValTok{1417}\NormalTok{)}
+\NormalTok{censuras}\OtherTok{=}\FunctionTok{c}\NormalTok{(}\DecValTok{74}\NormalTok{,}\DecValTok{185}\NormalTok{,}\DecValTok{279}\NormalTok{,}\DecValTok{319}\NormalTok{,}\DecValTok{523}\NormalTok{,}\DecValTok{1116}\NormalTok{,}\DecValTok{1226}\NormalTok{,}\DecValTok{1349}\NormalTok{,}\DecValTok{1412}\NormalTok{)}
+\NormalTok{dados}\OtherTok{=}\FunctionTok{c}\NormalTok{(falhas,censuras)}
+\NormalTok{status}\OtherTok{=}\FunctionTok{c}\NormalTok{(falhas}\SpecialCharTok{**}\DecValTok{0}\NormalTok{,censuras}\SpecialCharTok{*}\DecValTok{0}\NormalTok{)}
+
+\NormalTok{ref\_data}\OtherTok{=}\FunctionTok{Surv}\NormalTok{(dados,status)}
+\NormalTok{kp\_est}\OtherTok{=}\FunctionTok{survfit}\NormalTok{(ref\_data}\SpecialCharTok{\textasciitilde{}}\DecValTok{1}\NormalTok{)}
+\NormalTok{nelson\_est}\OtherTok{=}\FunctionTok{survfit}\NormalTok{(}\FunctionTok{coxph}\NormalTok{(}\FunctionTok{Surv}\NormalTok{(dados,status)}\SpecialCharTok{\textasciitilde{}}\DecValTok{1}\NormalTok{,}\AttributeTok{method=}\StringTok{"breslow"}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{time,}\AttributeTok{y=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{surv,}\AttributeTok{color=}\StringTok{\textquotesingle{}Estimador de}\SpecialCharTok{\textbackslash{}n}\StringTok{Kaplan{-}Meier\textquotesingle{}}\NormalTok{))}\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}
+    \FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\FunctionTok{c}\NormalTok{(}\DecValTok{1000}\NormalTok{,kp\_est}\SpecialCharTok{$}\NormalTok{time[kp\_est}\SpecialCharTok{$}\NormalTok{time}\SpecialCharTok{\textgreater{}}\DecValTok{1000}\NormalTok{]),}
+        \AttributeTok{ymin=}\DecValTok{0}\NormalTok{,}
+        \AttributeTok{ymax=}\FunctionTok{c}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{surv[}\DecValTok{40}\NormalTok{],kp\_est}\SpecialCharTok{$}\NormalTok{surv[kp\_est}\SpecialCharTok{$}\NormalTok{time}\SpecialCharTok{\textgreater{}}\DecValTok{1000}\NormalTok{]),}
+        \AttributeTok{fill=}\StringTok{\textquotesingle{}Área da curva\textquotesingle{}}\NormalTok{),}
+    \AttributeTok{alpha=}\FloatTok{0.5}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{geom\_vline}\NormalTok{(}\AttributeTok{xintercept=}\DecValTok{1000}\NormalTok{,}\AttributeTok{linetype=}\StringTok{\textquotesingle{}dashed\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_hue}\NormalTok{(}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_hue}\NormalTok{(}\StringTok{\textquotesingle{}\textquotesingle{}}\NormalTok{)}\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Probabilidade de sobrevivência\textquotesingle{}}\NormalTok{,}
+                     \AttributeTok{expand=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{),}
+                     \AttributeTok{limits=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{))}\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Tempo\textquotesingle{}}\NormalTok{,}\AttributeTok{expand=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.1}\NormalTok{,}\DecValTok{0}\NormalTok{))}\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-15-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Estimador de Kaplan{-}Meier}
+
+\CommentTok{\# Probabilidades acima de 1000}
+\NormalTok{probs}\OtherTok{=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{surv[}\DecValTok{40}\SpecialCharTok{:}\DecValTok{46}\NormalTok{]}
+\CommentTok{\# Probabilidade no 1000}
+\NormalTok{prob\_1000}\OtherTok{=}\NormalTok{kp\_est}\SpecialCharTok{$}\NormalTok{surv[}\DecValTok{40}\NormalTok{]}
+\CommentTok{\# Tamanho dos intervalos}
+\NormalTok{inter}\OtherTok{=}\NormalTok{(kp\_est}\SpecialCharTok{$}\NormalTok{time[}\DecValTok{41}\SpecialCharTok{:}\DecValTok{47}\NormalTok{]}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{1000}\NormalTok{,kp\_est}\SpecialCharTok{$}\NormalTok{time[}\DecValTok{41}\SpecialCharTok{:}\DecValTok{46}\NormalTok{]))}
+\CommentTok{\# Valor esperado}
+\FunctionTok{sum}\NormalTok{(probs}\SpecialCharTok{/}\NormalTok{prob\_1000}\SpecialCharTok{*}\NormalTok{inter)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DocumentationTok{\#\# Estimador de Nelson{-}Aalen}
+
+\CommentTok{\# Probabilidades acima de 1000}
+\NormalTok{probs}\OtherTok{=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{surv[}\DecValTok{40}\SpecialCharTok{:}\DecValTok{46}\NormalTok{]}
+\CommentTok{\# Probabilidade no 1000}
+\NormalTok{prob\_1000}\OtherTok{=}\NormalTok{nelson\_est}\SpecialCharTok{$}\NormalTok{surv[}\DecValTok{40}\NormalTok{]}
+\CommentTok{\# Tamanho dos intervalos}
+\NormalTok{inter}\OtherTok{=}\NormalTok{(nelson\_est}\SpecialCharTok{$}\NormalTok{time[}\DecValTok{41}\SpecialCharTok{:}\DecValTok{47}\NormalTok{]}\SpecialCharTok{{-}}\FunctionTok{c}\NormalTok{(}\DecValTok{1000}\NormalTok{,nelson\_est}\SpecialCharTok{$}\NormalTok{time[}\DecValTok{41}\SpecialCharTok{:}\DecValTok{46}\NormalTok{]))}
+\CommentTok{\# Valor esperado}
+\FunctionTok{sum}\NormalTok{(probs}\SpecialCharTok{/}\NormalTok{prob\_1000}\SpecialCharTok{*}\NormalTok{inter)}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{f-1}{%
+\subparagraph{f)}\label{f-1}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{meier}\OtherTok{=}\FunctionTok{c}\NormalTok{(}
+\NormalTok{  (}\DecValTok{108{-}112}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.8017429{-}0.7816993}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FloatTok{0.8{-}0.7816993}\NormalTok{)}\SpecialCharTok{+}\DecValTok{112}\NormalTok{,}
+\NormalTok{  (}\DecValTok{405{-}417}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.3065488{-}0.2829681}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FloatTok{0.3{-}0.2829681}\NormalTok{)}\SpecialCharTok{+}\DecValTok{417}\NormalTok{,}
+\NormalTok{  (}\DecValTok{1349{-}1412}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.1257636}\DecValTok{{-}0}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FloatTok{0.1}\DecValTok{{-}0}\NormalTok{)}\SpecialCharTok{+}\DecValTok{1412}\NormalTok{)}
+
+\NormalTok{aalen}\OtherTok{=}\FunctionTok{c}\NormalTok{(}
+\NormalTok{  (}\DecValTok{108{-}112}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.8036986{-}0.7838552}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FloatTok{0.8{-}0.7838552}\NormalTok{)}\SpecialCharTok{+}\DecValTok{112}\NormalTok{,}
+\NormalTok{  (}\DecValTok{405{-}417}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.3146586{-}0.2913617}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FloatTok{0.3{-}0.2913617}\NormalTok{)}\SpecialCharTok{+}\DecValTok{417}\NormalTok{,}
+\NormalTok{  (}\DecValTok{1349{-}1412}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(}\FloatTok{0.1371883{-}0.0504688}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\FloatTok{0.1{-}0.0504688}\NormalTok{)}\SpecialCharTok{+}\DecValTok{1412}\NormalTok{)}
+
+
+\NormalTok{tabela}\OtherTok{=}\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{Intervalo=}\FunctionTok{c}\NormalTok{(}\StringTok{\textquotesingle{}80}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}30}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%\textquotesingle{}}\NormalTok{,}\StringTok{\textquotesingle{}10}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%\textquotesingle{}}\NormalTok{),}
+                  \StringTok{\textquotesingle{}Kaplan{-}Meier\textquotesingle{}}\OtherTok{=}\NormalTok{meier,}
+                  \StringTok{\textquotesingle{}Nelson{-}Aalen\textquotesingle{}}\OtherTok{=}\NormalTok{aalen}
+\NormalTok{                  )}
+
+\FunctionTok{kable}\NormalTok{(tabela,}
+      \AttributeTok{format=}\StringTok{"latex"}\NormalTok{,}
+      \AttributeTok{align =} \StringTok{"c"}\NormalTok{,}
+      \AttributeTok{booktabs=}\NormalTok{T,}
+      \AttributeTok{escape=}\NormalTok{F,}
+      \AttributeTok{col.names =} \FunctionTok{c}\NormalTok{(}\StringTok{"Probabilidade de sobrevivência"}\NormalTok{,}
+                    \StringTok{"Kaplan{-}Meier"}\NormalTok{,}
+                           \StringTok{"Nelson{-}Aalen"}
+\NormalTok{                    )}
+\NormalTok{      ) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{kable\_styling}\NormalTok{(}\AttributeTok{position =} \StringTok{"center"}\NormalTok{,}\AttributeTok{latex\_options =} \StringTok{"HOLD\_position"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccc}
+\toprule
+Probabilidade de sobrevivência & Kaplan-Meier & Nelson-Aalen\\
+\midrule
+80\% & 108.3478 & 108.7456\\
+30\% & 408.3326 & 412.5505\\
+10\% & 1361.9060 & 1376.0166\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\pagebreak
+
+\hypertarget{questuxe3o-2.4-1}{%
+\paragraph{Questão 2.4}\label{questuxe3o-2.4-1}}
+
+\hypertarget{a-3}{%
+\subparagraph{a)}\label{a-3}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{falhas1   }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{28}\NormalTok{, }\DecValTok{89}\NormalTok{, }\DecValTok{175}\NormalTok{, }\DecValTok{195}\NormalTok{, }\DecValTok{309}\NormalTok{, }\DecValTok{462}\NormalTok{)}
+\NormalTok{censuras1 }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{377}\NormalTok{, }\DecValTok{393}\NormalTok{, }\DecValTok{421}\NormalTok{, }\DecValTok{447}\NormalTok{, }\DecValTok{709}\NormalTok{, }\DecValTok{744}\NormalTok{, }\DecValTok{770}\NormalTok{, }\DecValTok{1106}\NormalTok{, }\DecValTok{1206}\NormalTok{)}
+\NormalTok{dados1    }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas1,    censuras1)}
+\NormalTok{status1   }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas1}\SpecialCharTok{**}\DecValTok{0}\NormalTok{, censuras1}\SpecialCharTok{*}\DecValTok{0}\NormalTok{)}
+
+\NormalTok{falhas2   }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{34}\NormalTok{, }\DecValTok{88}\NormalTok{, }\DecValTok{137}\NormalTok{, }\DecValTok{199}\NormalTok{, }\DecValTok{280}\NormalTok{,}
+              \DecValTok{291}\NormalTok{, }\DecValTok{309}\NormalTok{, }\DecValTok{351}\NormalTok{, }\DecValTok{358}\NormalTok{, }\DecValTok{369}\NormalTok{,}
+              \DecValTok{369}\NormalTok{, }\DecValTok{370}\NormalTok{, }\DecValTok{375}\NormalTok{, }\DecValTok{382}\NormalTok{, }\DecValTok{392}\NormalTok{,}
+              \DecValTok{451}\NormalTok{)}
+
+\NormalTok{censuras2 }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{299}\NormalTok{, }\DecValTok{300}\NormalTok{, }\DecValTok{429}\NormalTok{, }\DecValTok{1119}\NormalTok{)}
+\NormalTok{dados2    }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas2,    censuras2)}
+\NormalTok{status2   }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas2}\SpecialCharTok{**}\DecValTok{0}\NormalTok{, censuras2}\SpecialCharTok{*}\DecValTok{0}\NormalTok{)}
+
+\NormalTok{ref\_data1   }\OtherTok{=} \FunctionTok{Surv}\NormalTok{(dados1, status1)}
+\NormalTok{kp\_est1     }\OtherTok{=} \FunctionTok{survfit}\NormalTok{(ref\_data1 }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{conf.type =} \StringTok{"log{-}log"}\NormalTok{)}
+\NormalTok{nelson\_est1 }\OtherTok{=} \FunctionTok{survfit}\NormalTok{(}\FunctionTok{coxph}\NormalTok{(}\FunctionTok{Surv}\NormalTok{(dados1, status1) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{,}
+                            \AttributeTok{method =} \StringTok{"breslow"}\NormalTok{),}
+                      \AttributeTok{conf.type =} \StringTok{"log{-}log"}\NormalTok{)}
+
+\NormalTok{ref\_data2   }\OtherTok{=} \FunctionTok{Surv}\NormalTok{(dados2, status2)}
+\NormalTok{kp\_est2     }\OtherTok{=} \FunctionTok{survfit}\NormalTok{(ref\_data2 }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{, }\AttributeTok{conf.type =} \StringTok{"log{-}log"}\NormalTok{)}
+\NormalTok{nelson\_est2 }\OtherTok{=} \FunctionTok{survfit}\NormalTok{(}\FunctionTok{coxph}\NormalTok{(}\FunctionTok{Surv}\NormalTok{(dados2, status2) }\SpecialCharTok{\textasciitilde{}} \DecValTok{1}\NormalTok{,}
+                            \AttributeTok{method =} \StringTok{"breslow"}\NormalTok{),}
+                      \AttributeTok{conf.type =} \StringTok{"log{-}log"}\NormalTok{)}
+
+\FunctionTok{ggplot}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ kp\_est1}\SpecialCharTok{$}\NormalTok{time, }\AttributeTok{y =}\NormalTok{ kp\_est1}\SpecialCharTok{$}\NormalTok{surv, }\AttributeTok{color =} \StringTok{\textquotesingle{}1 {-} Tumor Grande\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ kp\_est1}\SpecialCharTok{$}\NormalTok{time,}
+                                 \AttributeTok{ymin =}\NormalTok{ kp\_est1}\SpecialCharTok{$}\NormalTok{lower,}
+                                 \AttributeTok{ymax =}\NormalTok{ kp\_est1}\SpecialCharTok{$}\NormalTok{upper,}
+                                 \AttributeTok{fill =} \StringTok{\textquotesingle{}Grupo 1: Tumor Grande\textquotesingle{}}\NormalTok{),}
+                             \AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ kp\_est2}\SpecialCharTok{$}\NormalTok{time, }\AttributeTok{y =}\NormalTok{ kp\_est2}\SpecialCharTok{$}\NormalTok{surv, }\AttributeTok{color =} \StringTok{\textquotesingle{}2 {-} Tumor Pequeno\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ kp\_est2}\SpecialCharTok{$}\NormalTok{time,}
+                                 \AttributeTok{ymin =}\NormalTok{ kp\_est2}\SpecialCharTok{$}\NormalTok{lower,}
+                                 \AttributeTok{ymax =}\NormalTok{ kp\_est2}\SpecialCharTok{$}\NormalTok{upper,}
+                                 \AttributeTok{fill =} \StringTok{\textquotesingle{}Grupo 2: Tumor Pequeno\textquotesingle{}}\NormalTok{),}
+                             \AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_hue}\NormalTok{(}\StringTok{\textquotesingle{}Grupo\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Probabilidade de sobrevivência\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Tempo em dias\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill=}\StringTok{\textquotesingle{}none\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{\textquotesingle{}Estimativas das Funções de Sobrevivência por Kaplan{-}Meier\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-19-1.pdf}
+
+\hypertarget{b-3}{%
+\subparagraph{b)}\label{b-3}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{ggplot}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ nelson\_est1}\SpecialCharTok{$}\NormalTok{time,}
+                \AttributeTok{y =}\NormalTok{ nelson\_est1}\SpecialCharTok{$}\NormalTok{surv,}
+                \AttributeTok{color =} \StringTok{\textquotesingle{}1 {-} Tumor Grande\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ nelson\_est1}\SpecialCharTok{$}\NormalTok{time,}
+                                 \AttributeTok{ymin =}\NormalTok{ nelson\_est1}\SpecialCharTok{$}\NormalTok{lower,}
+                                 \AttributeTok{ymax =}\NormalTok{ nelson\_est1}\SpecialCharTok{$}\NormalTok{upper,}
+                                 \AttributeTok{fill =} \StringTok{\textquotesingle{}Grupo 1: Tumor Grande\textquotesingle{}}\NormalTok{),}
+                             \AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{geom\_step}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ nelson\_est2}\SpecialCharTok{$}\NormalTok{time,}
+                \AttributeTok{y =}\NormalTok{ nelson\_est2}\SpecialCharTok{$}\NormalTok{surv,}
+                \AttributeTok{color =} \StringTok{\textquotesingle{}2 {-} Tumor Pequeno\textquotesingle{}}\NormalTok{)) }\SpecialCharTok{+}
+\NormalTok{  pammtools}\SpecialCharTok{::}\FunctionTok{geom\_stepribbon}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ nelson\_est2}\SpecialCharTok{$}\NormalTok{time,}
+                                 \AttributeTok{ymin =}\NormalTok{ nelson\_est2}\SpecialCharTok{$}\NormalTok{lower,}
+                                 \AttributeTok{ymax =}\NormalTok{ nelson\_est2}\SpecialCharTok{$}\NormalTok{upper,}
+                                 \AttributeTok{fill =} \StringTok{\textquotesingle{}Grupo 2: Tumor Pequeno\textquotesingle{}}\NormalTok{),}
+                             \AttributeTok{alpha =} \FloatTok{0.1}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_hue}\NormalTok{(}\StringTok{\textquotesingle{}Grupo\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Probabilidade de sobrevivência\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{scale\_x\_continuous}\NormalTok{(}\StringTok{\textquotesingle{}Tempo em dias\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{guides}\NormalTok{(}\AttributeTok{fill=}\StringTok{\textquotesingle{}none\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ggtitle}\NormalTok{(}\StringTok{\textquotesingle{}Estimativas das Funções de Sobrevivência por Nelson{-}Aalen\textquotesingle{}}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{lista1_files/figure-latex/unnamed-chunk-20-1.pdf}
+
+\hypertarget{c-2}{%
+\subparagraph{c)}\label{c-2}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tabela }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\NormalTok{tabela[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{5}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\FunctionTok{colnames}\NormalTok{(tabela) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"$t\_\{0\}$"}\NormalTok{,}
+                      \StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{1\}(t\_\{0\})$"}\NormalTok{,}
+                      \StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{2\}(t\_\{0\})$"}\NormalTok{,}
+                      \StringTok{"$IC(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{1\}(t\_\{0\}), 95}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%)$ inferior"}\NormalTok{,}
+                      \StringTok{"$IC(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{1\}(t\_\{0\}), 95}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%)$ superior"}\NormalTok{)}
+
+\NormalTok{tabela[}\StringTok{"$t\_\{0\}$"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{180}\NormalTok{, }\DecValTok{540}\NormalTok{)}
+\NormalTok{tabela[}\StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{1\}(t\_\{0\})$"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \FunctionTok{approx}\NormalTok{(kp\_est1}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], kp\_est1}\SpecialCharTok{$}\NormalTok{surv[}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{180}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y,}
+  \FunctionTok{approx}\NormalTok{(kp\_est1}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{,}\DecValTok{15}\NormalTok{)], kp\_est1}\SpecialCharTok{$}\NormalTok{surv[}\FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{,}\DecValTok{15}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{540}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{)}
+\NormalTok{tabela[}\StringTok{"$}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{2\}(t\_\{0\})$"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \FunctionTok{approx}\NormalTok{(kp\_est2}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{( }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], kp\_est2}\SpecialCharTok{$}\NormalTok{surv[}\FunctionTok{c}\NormalTok{( }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{180}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y,}
+  \FunctionTok{approx}\NormalTok{(kp\_est2}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{17}\NormalTok{,}\DecValTok{19}\NormalTok{)], kp\_est2}\SpecialCharTok{$}\NormalTok{surv[}\FunctionTok{c}\NormalTok{(}\DecValTok{17}\NormalTok{,}\DecValTok{19}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{540}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{)}
+\NormalTok{tabela[}\StringTok{"$IC(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{1\}(t\_\{0\}), 95}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%)$ inferior"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \FunctionTok{approx}\NormalTok{(kp\_est1}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], kp\_est1}\SpecialCharTok{$}\NormalTok{lower[}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{180}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y,}
+  \FunctionTok{approx}\NormalTok{(kp\_est1}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{,}\DecValTok{15}\NormalTok{)], kp\_est1}\SpecialCharTok{$}\NormalTok{lower[}\FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{,}\DecValTok{15}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{540}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{)}
+\NormalTok{tabela[}\StringTok{"$IC(}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{hat\{S\}\_\{1\}(t\_\{0\}), 95}\SpecialCharTok{\textbackslash{}\textbackslash{}}\StringTok{\%)$ superior"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}
+  \FunctionTok{approx}\NormalTok{(kp\_est1}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], kp\_est1}\SpecialCharTok{$}\NormalTok{upper[}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{180}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y,}
+  \FunctionTok{approx}\NormalTok{(kp\_est1}\SpecialCharTok{$}\NormalTok{time[}\FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{,}\DecValTok{15}\NormalTok{)], kp\_est1}\SpecialCharTok{$}\NormalTok{upper[}\FunctionTok{c}\NormalTok{(}\DecValTok{9}\NormalTok{,}\DecValTok{15}\NormalTok{)], }\AttributeTok{xout =} \DecValTok{540}\NormalTok{)}\SpecialCharTok{$}\NormalTok{y}
+\NormalTok{)}
+
+\FunctionTok{kable}\NormalTok{(}
+\NormalTok{  tabela,}
+  \AttributeTok{format    =} \StringTok{"latex"}\NormalTok{,}
+  \AttributeTok{align     =} \StringTok{"c"}\NormalTok{,}
+  \AttributeTok{digits    =} \DecValTok{3}\NormalTok{, }
+  \AttributeTok{booktabs  =}\NormalTok{ T,}
+  \AttributeTok{escape    =}\NormalTok{ F,}
+  \AttributeTok{col.names =} \FunctionTok{colnames}\NormalTok{(tabela)}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+
+\FunctionTok{kable\_styling}\NormalTok{(}
+  \AttributeTok{position =} \StringTok{"center"}\NormalTok{,}
+  \AttributeTok{latex\_options =} \StringTok{"HOLD\_position"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccccc}
+\toprule
+$t_{0}$ & $\hat{S}_{1}(t_{0})$ & $\hat{S}_{2}(t_{0})$ & $IC(\hat{S}_{1}(t_{0}), 95\%)$ inferior & $IC(\hat{S}_{1}(t_{0}), 95\%)$ superior\\
+\midrule
+180 & 0.783 & 0.815 & 0.484 & 0.921\\
+540 & 0.653 & 0.161 & 0.360 & 0.838\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\hypertarget{d-3}{%
+\subparagraph{d}\label{d-3}}
+
+\hspace{2 pt}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{falhas1   }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{28}\NormalTok{, }\DecValTok{89}\NormalTok{, }\DecValTok{175}\NormalTok{, }\DecValTok{195}\NormalTok{, }\DecValTok{309}\NormalTok{, }\DecValTok{462}\NormalTok{)}
+\NormalTok{censuras1 }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{377}\NormalTok{, }\DecValTok{393}\NormalTok{, }\DecValTok{421}\NormalTok{, }\DecValTok{447}\NormalTok{, }\DecValTok{709}\NormalTok{, }\DecValTok{744}\NormalTok{, }\DecValTok{770}\NormalTok{, }\DecValTok{1106}\NormalTok{, }\DecValTok{1206}\NormalTok{)}
+\NormalTok{dados1    }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas1,    censuras1)}
+\NormalTok{status1   }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas1}\SpecialCharTok{**}\DecValTok{0}\NormalTok{, censuras1}\SpecialCharTok{*}\DecValTok{0}\NormalTok{)}
+
+\NormalTok{falhas2   }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{34}\NormalTok{, }\DecValTok{88}\NormalTok{, }\DecValTok{137}\NormalTok{, }\DecValTok{199}\NormalTok{, }\DecValTok{280}\NormalTok{,}
+              \DecValTok{291}\NormalTok{, }\DecValTok{309}\NormalTok{, }\DecValTok{351}\NormalTok{, }\DecValTok{358}\NormalTok{, }\DecValTok{369}\NormalTok{,}
+              \DecValTok{369}\NormalTok{, }\DecValTok{370}\NormalTok{, }\DecValTok{375}\NormalTok{, }\DecValTok{382}\NormalTok{, }\DecValTok{392}\NormalTok{,}
+              \DecValTok{451}\NormalTok{)}
+\NormalTok{censuras2 }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{299}\NormalTok{, }\DecValTok{300}\NormalTok{, }\DecValTok{429}\NormalTok{, }\DecValTok{1119}\NormalTok{)}
+\NormalTok{dados2    }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas2,    censuras2)}
+\NormalTok{status2   }\OtherTok{=} \FunctionTok{c}\NormalTok{(falhas2}\SpecialCharTok{**}\DecValTok{0}\NormalTok{, censuras2}\SpecialCharTok{*}\DecValTok{0}\NormalTok{)}
+
+\NormalTok{dados  }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{( dados1,  dados2)}
+\NormalTok{status }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(status1, status2)}
+\NormalTok{grupos }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{length}\NormalTok{(dados1)), }\FunctionTok{rep}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FunctionTok{length}\NormalTok{(dados2)))}
+
+\NormalTok{ref\_data }\OtherTok{\textless{}{-}} \FunctionTok{Surv}\NormalTok{(dados, status)}
+\NormalTok{teste1   }\OtherTok{\textless{}{-}} \FunctionTok{survdiff}\NormalTok{(ref\_data }\SpecialCharTok{\textasciitilde{}}\NormalTok{ grupos, }\AttributeTok{rho =} \DecValTok{0}\NormalTok{)}
+\NormalTok{teste2   }\OtherTok{\textless{}{-}} \FunctionTok{survdiff}\NormalTok{(ref\_data }\SpecialCharTok{\textasciitilde{}}\NormalTok{ grupos, }\AttributeTok{rho =} \DecValTok{1}\NormalTok{)}
+
+\NormalTok{tabela          }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{()}
+\NormalTok{tabela[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{,}\DecValTok{1}\SpecialCharTok{:}\DecValTok{3}\NormalTok{] }\OtherTok{\textless{}{-}} \ConstantTok{NA}
+\FunctionTok{colnames}\NormalTok{(tabela) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Teste"}\NormalTok{, }\StringTok{"Estatística"}\NormalTok{, }\StringTok{"$p${-}valor"}\NormalTok{)}
+
+\NormalTok{tabela[}\StringTok{"Teste"}\NormalTok{]       }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"logrank"}\NormalTok{, }\StringTok{"Harrington{-}Fleming"}\NormalTok{)}
+\NormalTok{tabela[}\StringTok{"Estatística"}\NormalTok{] }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(teste1}\SpecialCharTok{$}\NormalTok{chisq, teste2}\SpecialCharTok{$}\NormalTok{chisq)}
+\NormalTok{tabela[}\StringTok{"$p${-}valor"}\NormalTok{]   }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{pchisq}\NormalTok{(teste1}\SpecialCharTok{$}\NormalTok{chisq, }\DecValTok{1}\NormalTok{),}
+                           \DecValTok{1}\SpecialCharTok{{-}}\FunctionTok{pchisq}\NormalTok{(teste2}\SpecialCharTok{$}\NormalTok{chisq, }\DecValTok{1}\NormalTok{))}
+
+\FunctionTok{kable}\NormalTok{(}
+\NormalTok{  tabela,}
+  \AttributeTok{format    =} \StringTok{"latex"}\NormalTok{,}
+  \AttributeTok{align     =} \StringTok{"c"}\NormalTok{,}
+  \AttributeTok{digits    =} \DecValTok{3}\NormalTok{, }
+  \AttributeTok{booktabs  =}\NormalTok{ T,}
+  \AttributeTok{escape    =}\NormalTok{ F,}
+  \AttributeTok{col.names =} \FunctionTok{colnames}\NormalTok{(tabela)}
+\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+
+\FunctionTok{kable\_styling}\NormalTok{(}
+  \AttributeTok{position =} \StringTok{"center"}\NormalTok{,}
+  \AttributeTok{latex\_options =} \StringTok{"HOLD\_position"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{ccc}
+\toprule
+Teste & Estatística & $p$-valor\\
+\midrule
+logrank & 5.566 & 0.018\\
+Harrington-Fleming & 2.741 & 0.098\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}
