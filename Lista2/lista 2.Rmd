@@ -13,7 +13,7 @@ text-align: justify}
 </style>
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = T)
+knitr::opts_chunk$set(echo = F)
 library(ggplot2)
 library(survival)
 library(latex2exp)
