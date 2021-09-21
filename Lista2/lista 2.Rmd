@@ -162,10 +162,11 @@ Em nossos dados de falhas e censuras é importante de se observar que temos um c
 
 ```{r,include=TRUE,echo = F}
 
-tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632, 647, 675, 727, 785,
-    801, 811, 816, 867, 893, 930, 937, 976, 1008, 1040, 1051, 1060, 1183, 1329, 1334,
-    1379, 1380, 1633, 1769, 1827, 1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729,
-    2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729,
+tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632,
+         647, 675, 727, 785, 801, 811, 816, 867, 893, 930, 937, 976, 1008,
+         1040, 1051, 1060, 1183, 1329, 1334, 1379, 1380, 1633, 1769, 1827,
+         1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729, 2729, 2729, 2729,
+         2729, 2729, 2729, 2729, 2729, 2729, 2729,
             2729, 2729, 2729, 2729, 2729)
 cens=c(0, 0, 0, 0 ,0 ,0, 0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,0 ,0 ,0 ,0,0 ,0 ,0 
     ,0 ,0 ,0, 0, 0, 0 ,0 ,0,0, 0, 0, 0 ,0 ,0, 0, 0, 0 ,0 ,0, 0 ,0,1 ,1 ,1 
@@ -222,10 +223,12 @@ plot(log(time),invst,pch=16,xlab="log(tempos)",
 par(mfrow=c(1,3))
 plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
 lines(c(0,time),c(1,ste),lty=3,col=4)
-legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","exponencial"),col=c(1,4),bty="n",cex=0.8)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","exponencial"),col=c(1,4),
+       bty="n",cex=0.8)
 plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
 lines(c(0,time),c(1,stw),lty=2,col=2)
-legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","Weibull"),col=c(1,2),bty="n",cex=0.8)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","Weibull"),col=c(1,2),
+       bty="n",cex=0.8)
 plot(ekm,conf.int=F,xlab="Tempos",ylab="S(t)")
 lines(c(0,time),c(1,stln),lty=2)
 legend(25,0.8,lty=c(1,2),c("Kaplan-Meier", "Log-normal"), bty="n", cex=0.8)
@@ -611,12 +614,16 @@ Amostra 2 (tumor pequeno): $34$, $88$, $137$, $199$, $280$, $291$, $299+$, $300+
 
 ```{r, echo = FALSE}
 
-tempo1   <- c(28, 89, 175, 195, 309, 377, 393, 421, 447, 462, 709, 744, 770, 1106, 1206)
-censura1 <- c( 1,  1,   1,   1,   1,   0,   0,   0,   0,   1,   0,   0,   0,    0,    0)
+tempo1   <- c(28, 89, 175, 195, 309, 377, 393, 421, 447,
+              462, 709, 744, 770, 1106, 1206)
+censura1 <- c( 1,  1,   1,   1,   1,   0,   0,   0,   0,
+               1,   0,   0,   0,    0,    0)
 grupo1   <- rep(1, length(tempo1))
 
-tempo2   <- c(34, 88, 137, 199, 280, 291, 299, 300, 309, 351, 358, 369, 369, 370, 375, 382, 392, 429, 451, 1119)
-censura2 <- c( 1,  1,   1,   1,   1,   1,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   0,   1,    0)
+tempo2   <- c(34, 88, 137, 199, 280, 291, 299, 300, 309, 351,
+              358, 369, 369, 370, 375, 382, 392, 429, 451, 1119)
+censura2 <- c( 1,  1,   1,   1,   1,   1,   0,   0,   1,   1,
+               1,   1,   1,   1,   1,   1,   1,   0,   1,    0)
 grupo2   <- rep(2, length(tempo2))
 
 tempo   <- c(tempo1  , tempo2  )
@@ -651,14 +658,18 @@ $$L(\beta) = \prod_{i=1}^{k} \dfrac{\exp(s_{i}\beta)}{\bigg[\sum_{j \in R(t_{i})
 Para ajustarmos o modelo de Cox precisamos passar pela etapa de estimação paramétrica e não paramétrica, mas antes vale a pena avaliar se a principal hipótese do modelo é razoável de ser assumida: a hipótese de proporcionalidade das funções de taxa de falha para dos grupos. Sendo assim, segue abaixo o gráfico para a inspeção visual:
 
 ```{r, fig.width = 7, fig.asp = 0.5, out.width = "100%", fig.align = 'center', warning = FALSE}
-modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1, data = data, x = T, method = "breslow"))
+modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1,
+                         data = data, x = T, method = "breslow"))
 Lambda1 <- log(-log(modelo1$surv))
-modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1, data = data, x = T, method = "breslow"))
+modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1,
+                         data = data, x = T, method = "breslow"))
 Lambda2 <- log(-log(modelo2$surv))
 
 ggplot()+
-  geom_step(aes(x = modelo1$time, y = Lambda1, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
-  geom_step(aes(x = modelo2$time, y = Lambda2, color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  geom_step(aes(x = modelo1$time, y = Lambda1, color = "Grupo 1: Tumor Grande"),
+            lwd = 1.2) +
+  geom_step(aes(x = modelo2$time, y = Lambda2, color = "Grupo 2: Tumor Pequeno"),
+            lwd = 1.2) +
   scale_color_hue("Grupo") +
   scale_y_continuous(TeX("$\\log(\\hat{\\Lambda}(t))$")) +
   scale_x_continuous("Tempo em dias") +
@@ -674,12 +685,18 @@ Ajustando o modelo obtemos estimativas para o parâmetro $\beta$ e para a funç�
 
 ```{r, fig.width = 7, fig.asp = 0.5, out.width = "100%", fig.align = 'center', warning = FALSE}
 
-modelo <- coxph(Surv(tempo, censura) ~ grupo, data = data, x = T, method = "breslow")
+modelo <- coxph(Surv(tempo, censura) ~ grupo,
+                data = data,
+                x = T,
+                method = "breslow")
 sobrev <- survfit(modelo)
 
 ggplot()+
-  geom_step(aes(x = sobrev$time, y = sobrev$surv, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
-  geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(modelo$coefficients)), color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  geom_step(aes(x = sobrev$time, y = sobrev$surv,
+                color = "Grupo 1: Tumor Grande"),
+            lwd = 1.2) +
+  geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(modelo$coefficients)),
+                color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
   scale_color_hue("Grupo") +
   scale_y_continuous(TeX("\\hat{S}(t)$")) +
   scale_x_continuous("Tempo em dias") +
@@ -746,7 +763,8 @@ Ajustando primeiramente o modelo com todas as variáveis.
 
 ```{r, warning = FALSE, include = FALSE}
 
-colnames(x)=c('Paciente','tempo','ind. falha','tratamento','idade','resíduo','status','idade01')
+colnames(x)=c('Paciente','tempo','ind. falha','tratamento',
+              'idade','resíduo','status','idade01')
 
 attach(x) #trocar todos os 12 por 01
 tratamentoc=ifelse(tratamento>1,1,0)#1 é 0 e 2 é 1
@@ -757,7 +775,8 @@ fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc+statusc,
            data=x, x = T, method="breslow") 
 
 rr=exp(fit1$coefficients)
-abc=matrix(c(fit1$coefficients,0.16443,0.00785,0.29133,0.55516,rr),nrow=4,ncol=3,byrow = F)
+abc=matrix(c(fit1$coefficients,0.16443,0.00785,0.29133,0.55516,rr),
+           nrow=4,ncol=3,byrow = F)
 
 abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
 abc=`rownames<-`(abc,c('tratamento','idade','residuo','status'))
@@ -785,14 +804,16 @@ kable_styling(
 ```{r}
 
 par(mfrow=c(2,2)) 
-fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -803,14 +824,16 @@ title("Tratamento")
 
 ##
 
-fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -819,14 +842,16 @@ lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Resíduo")
 
 
-fit<-coxph(Surv(tempo[statusc==0],`ind. falha`[statusc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[statusc==0],`ind. falha`[statusc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[statusc==1],`ind. falha`[statusc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[statusc==1],`ind. falha`[statusc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -835,14 +860,16 @@ lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Status")
 
 ########################### idade
-fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -861,7 +888,8 @@ Podemos observar que com o aumento da idade, o resíduo ser do tipo 2 e status s
 fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
            data=x, x = T, method="breslow") 
 rr=exp(fit1$coefficients)
-abc=matrix(c(fit1$coefficients,0.19099,0.00684,0.36680,rr),nrow=3,ncol=3,byrow = F)
+abc=matrix(c(fit1$coefficients,0.19099,0.00684,0.36680,rr),
+           nrow=3,ncol=3,byrow = F)
 
 abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
 abc=`rownames<-`(abc,c('tratamento','idade','residuo'))
@@ -882,14 +910,16 @@ kable_styling(
 
 ######graficos
 par(mfrow=c(1,3)) 
-fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -897,14 +927,16 @@ H0<- -log(s0)
 lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Tratamento")
 
-fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -912,14 +944,16 @@ H0<- -log(s0)
 lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Resíduo")
 
-fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -969,11 +1003,14 @@ for(i in 1:n){
     S00[i]<-min(aux2[i1,2])}}
 ts0<-cbind(tt,S00)
 
-plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),xlab="Tempos",ylab="S(t|x)",lty=1)
+plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),xlab="Tempos",ylab="S(t|x)",
+     lty=1)
 title("Idade de 45 anos/residuo 1/status 2/tratamento 2")
 ```
 
 Temos então nossa tabela estimada de sobrevivência para o paciente com 45 anos, resíduo = 1, status = 2 e tratamento 2.
+
+\pagebreak
 
 ## Anexo:
 
@@ -981,10 +1018,11 @@ Temos então nossa tabela estimada de sobrevivência para o paciente com 45 anos
 
 ```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
-tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632, 647, 675, 727, 785,
-    801, 811, 816, 867, 893, 930, 937, 976, 1008, 1040, 1051, 1060, 1183, 1329, 1334,
-    1379, 1380, 1633, 1769, 1827, 1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729,
-    2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729,
+tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632,
+         647, 675, 727, 785, 801, 811, 816, 867, 893, 930, 937, 976, 1008,
+         1040, 1051, 1060, 1183, 1329, 1334, 1379, 1380, 1633, 1769, 1827,
+         1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729, 2729, 2729, 2729,
+         2729, 2729, 2729, 2729, 2729, 2729, 2729,
             2729, 2729, 2729, 2729, 2729)
 cens=c(0, 0, 0, 0 ,0 ,0, 0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,0 ,0 ,0 ,0,0 ,0 ,0 
     ,0 ,0 ,0, 0, 0, 0 ,0 ,0,0, 0, 0, 0 ,0 ,0, 0, 0, 0 ,0 ,0, 0 ,0,1 ,1 ,1 
@@ -1042,13 +1080,16 @@ plot(log(time),invst,pch=16,xlab="log(tempos)",
 par(mfrow=c(1,3))
 plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
 lines(c(0,time),c(1,ste),lty=3,col=4)
-legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","exponencial"),col=c(1,4),bty="n",cex=0.8)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","exponencial"),
+       col=c(1,4),bty="n",cex=0.8)
 plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
 lines(c(0,time),c(1,stw),lty=2,col=2)
-legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","Weibull"),col=c(1,2),bty="n",cex=0.8)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","Weibull"),
+       col=c(1,2),bty="n",cex=0.8)
 plot(ekm,conf.int=F,xlab="Tempos",ylab="S(t)")
 lines(c(0,time),c(1,stln),lty=2)
-legend(25,0.8,lty=c(1,2),c("Kaplan-Meier", "Log-normal"), bty="n", cex=0.8)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier", "Log-normal"),
+       bty="n", cex=0.8)
 #usar o modelo EXPONECIAL WEIBULL Ou LOG-NORMAL
 # QUAL DELES É O MAIS APROPRIADO?    
 ### LEMBRAR QUE NO NOSSO CASO É CENSURA TIPO 2
@@ -1330,12 +1371,16 @@ ggplot()+
 
 ```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
-tempo1   <- c(28, 89, 175, 195, 309, 377, 393, 421, 447, 462, 709, 744, 770, 1106, 1206)
-censura1 <- c( 1,  1,   1,   1,   1,   0,   0,   0,   0,   1,   0,   0,   0,    0,    0)
+tempo1   <- c(28, 89, 175, 195, 309, 377, 393, 421,
+              447, 462, 709, 744, 770, 1106, 1206)
+censura1 <- c( 1,  1,   1,   1,   1,   0,   0,   0,
+               0,   1,   0,   0,   0,    0,    0)
 grupo1   <- rep(1, length(tempo1))
 
-tempo2   <- c(34, 88, 137, 199, 280, 291, 299, 300, 309, 351, 358, 369, 369, 370, 375, 382, 392, 429, 451, 1119)
-censura2 <- c( 1,  1,   1,   1,   1,   1,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   0,   1,    0)
+tempo2   <- c(34, 88, 137, 199, 280, 291, 299, 300, 309, 351,
+              358, 369, 369, 370, 375, 382, 392, 429, 451, 1119)
+censura2 <- c( 1,  1,   1,   1,   1,   1,   0,   0,   1,   1,
+               1,   1,   1,   1,   1,   1,   1,   0,   1,    0)
 grupo2   <- rep(2, length(tempo2))
 
 tempo   <- c(tempo1  , tempo2  )
@@ -1350,14 +1395,18 @@ data <- as.data.frame(data)
 #### c) 
 
 ```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
-modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1, data = data, x = T, method = "breslow"))
+modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1,
+                         data = data, x = T, method = "breslow"))
 Lambda1 <- log(-log(modelo1$surv))
-modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1, data = data, x = T, method = "breslow"))
+modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1,
+                         data = data, x = T, method = "breslow"))
 Lambda2 <- log(-log(modelo2$surv))
 
 ggplot()+
-  geom_step(aes(x = modelo1$time, y = Lambda1, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
-  geom_step(aes(x = modelo2$time, y = Lambda2, color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  geom_step(aes(x = modelo1$time, y = Lambda1, color = "Grupo 1: Tumor Grande"),
+            lwd = 1.2) +
+  geom_step(aes(x = modelo2$time, y = Lambda2, color = "Grupo 2: Tumor Pequeno"),
+            lwd = 1.2) +
   scale_color_hue("Grupo") +
   scale_y_continuous(TeX("$\\log(\\hat{\\Lambda}(t))$")) +
   scale_x_continuous("Tempo em dias") +
@@ -1369,12 +1418,15 @@ ggplot()+
 
 ```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
-modelo <- coxph(Surv(tempo, censura) ~ grupo, data = data, x = T, method = "breslow")
+modelo <- coxph(Surv(tempo, censura) ~ grupo,
+                data = data, x = T, method = "breslow")
 sobrev <- survfit(modelo)
 
 ggplot()+
-  geom_step(aes(x = sobrev$time, y = sobrev$surv, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
-  geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(modelo$coefficients)), color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  geom_step(aes(x = sobrev$time, y = sobrev$surv, color = "Grupo 1: Tumor Grande"),
+            lwd = 1.2) +
+  geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(modelo$coefficients)),
+                color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
   scale_color_hue("Grupo") +
   scale_y_continuous(TeX("\\hat{S}(t)$")) +
   scale_x_continuous("Tempo em dias") +
@@ -1418,7 +1470,8 @@ x=read.table("dadosq2.txt")
 
 ```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
-colnames(x)=c('Paciente','tempo','ind. falha','tratamento','idade','resíduo','status','idade01')
+colnames(x)=c('Paciente','tempo','ind. falha','tratamento',
+              'idade','resíduo','status','idade01')
 
 attach(x)#trocar todos os 12 por 01
 tratamentoc=ifelse(tratamento>1,1,0)#1 é 0 e 2 é 1
@@ -1429,7 +1482,8 @@ fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc+statusc,
            data=x, x = T, method="breslow") 
 
 rr=exp(fit1$coefficients)
-abc=matrix(c(fit1$coefficients,0.16443,0.00785,0.29133,0.55516,rr),nrow=4,ncol=3,byrow = F)
+abc=matrix(c(fit1$coefficients,0.16443,0.00785,0.29133,0.55516,rr),
+           nrow=4,ncol=3,byrow = F)
 
 abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
 abc=`rownames<-`(abc,c('tratamento','idade','residuo','status'))
@@ -1440,14 +1494,16 @@ abc
 
 
 par(mfrow=c(2,2)) 
-fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1458,14 +1514,16 @@ title("Tratamento")
 
 ##
 
-fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1474,14 +1532,16 @@ lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Resíduo")
 
 
-fit<-coxph(Surv(tempo[statusc==0],`ind. falha`[statusc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[statusc==0],`ind. falha`[statusc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[statusc==1],`ind. falha`[statusc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[statusc==1],`ind. falha`[statusc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1490,14 +1550,16 @@ lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Status")
 
 ########################### idade
-fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1512,21 +1574,24 @@ title("idade >56")
 fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
            data=x, x = T, method="breslow") 
 rr=exp(fit1$coefficients)
-abc=matrix(c(fit1$coefficients,0.19099,0.00684,0.36680,rr),nrow=3,ncol=3,byrow = F)
+abc=matrix(c(fit1$coefficients,0.19099,0.00684,0.36680,rr),
+           nrow=3,ncol=3,byrow = F)
 
 abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
 abc=`rownames<-`(abc,c('tratamento','idade','residuo'))
 abc
 ######graficos
 par(mfrow=c(1,3)) 
-fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1534,14 +1599,16 @@ H0<- -log(s0)
 lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Tratamento")
 
-fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1549,14 +1616,16 @@ H0<- -log(s0)
 lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("Resíduo")
 
-fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
 H0<- -log(s0)
 plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
      ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
-fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1,
+           data=x, x = T,
            method="breslow")
 ss<- survfit(fit)
 s0<-round(ss$surv,digits=5)
@@ -1593,7 +1662,8 @@ for(i in 1:n){
     S00[i]<-min(aux2[i1,2])}}
 ts0<-cbind(tt,S00)
 
-plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),xlab="Tempos",ylab="S(t|x)",lty=1)
+plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),
+     xlab="Tempos",ylab="S(t|x)",lty=1)
 title("Idade de 45 anos/residuo 1/status 2/tratamento 2")
 ```
 
