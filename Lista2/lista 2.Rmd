@@ -20,6 +20,260 @@ library(latex2exp)
 library(kableExtra)
 ```
 
+## Questão 3.2
+
+Deseja-se comparar duas populações de tempos de vida. Uma amostra de tamanho $n$ ($r \leq n$ falhas) foi obtida da população 1 que tem distribuição exponencial com média $\alpha$. Uma amostra de tamanho $m$ ($s \leq m$ falhas) foi obtida da população 2 que tem distribuição exponencial com média $\alpha + \Delta$.
+
+### a) Estabeleça as hipóteses que se deseja testar.
+
+Queremos testar se as duas populações de tempos de vida possuem possuem a mesma distribuição ou não. Como ambas possuem distribuição exponencial, uma com média $\alpha$ e a outra com média $\alpha + \Delta$, temos que as dsitribuições serão as mesmas se, e somente se, o valor de $\Delta$ for zero. Sendo assim, iremos testar as seguintes hipóteses:
+
+$$H_{0}: \Delta = 0; \ \ \ H_{1}: \Delta \neq 0$$
+
+### b) Apresente a função de verossimilhança para $\theta = (\alpha, \Delta)'$.
+
+Sejam $t_{1}, \dots, t_{n}$ a primeira populção de tempos de vida, sendo as $r$ primeiras observações falhas e as demais censuras. De forma análoga, sejam $u_{1}, \dots, u_{m}$ a segunda populção de tempos de vida, sendo as $s$ primeiras observações falhas e as demais censuras. Assim, podemos obter as funções de verossimilhança levando em consideração as observações de cada população.
+
+$$\begin{aligned} L(\alpha;\ t_{1}, \dots, t_{n}) &= \prod_{i = 1}^{n}\bigg[f(t_{i}; \alpha)\bigg]^{\delta_{i}}\bigg[S(t_{i}; \alpha)\bigg]^{1-\delta_{i}} \\
+&= \prod_{i = 1}^{n}\bigg[\dfrac{1}{\alpha}\exp\bigg\{-\dfrac{1}{\alpha}t_{i}\bigg\}\bigg]^{\delta_{i}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha}t_{i}\bigg\}\bigg]^{1-\delta_{i}} \\
+&= \prod_{i = 1}^{n}\bigg[\dfrac{1}{\alpha}\bigg]^{\delta_{i}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha}t_{i}\bigg\}\bigg]^{\delta_{i}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha}t_{i}\bigg\}\bigg]^{-\delta_{i}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha}t_{i}\bigg\}\bigg] \\
+&= \bigg[\dfrac{1}{\alpha}\bigg]^{\sum_{i = 1}^{n}\delta_{i}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i}\bigg\}\bigg] \\
+&= \bigg(\dfrac{1}{\alpha}\bigg)^{r}\exp\bigg\{-\dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i}\bigg\}
+\end{aligned}$$
+
+E, de forma análoga:
+
+$$\begin{aligned} L(\alpha, \Delta;\ u_{1}, \dots, u_{m}) &= \prod_{j = 1}^{m}\bigg[f(u_{j}; \alpha, \Delta)\bigg]^{\gamma_{j}}\bigg[S(u_{j}; \alpha, \Delta)\bigg]^{1-\gamma_{j}} \\
+&= \prod_{j = 1}^{m}\bigg[\dfrac{1}{\alpha+\Delta}\exp\bigg\{-\dfrac{1}{\alpha+\Delta}u_{j}\bigg\}\bigg]^{\gamma_{j}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha+\Delta}u_{j}\bigg\}\bigg]^{1-\gamma_{j}} \\
+&= \prod_{j = 1}^{m}\bigg[\dfrac{1}{\alpha+\Delta}\bigg]^{\gamma_{j}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha+\Delta}u_{j}\bigg\}\bigg]^{\gamma_{j}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha+\Delta}u_{j}\bigg\}\bigg]^{-\gamma_{j}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha+\Delta}u_{j}\bigg\}\bigg] \\
+&= \bigg[\dfrac{1}{\alpha+\Delta}\bigg]^{\sum_{j = 1}^{m}\gamma_{j}}\bigg[\exp\bigg\{-\dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j}\bigg\}\bigg] \\
+&= \bigg(\dfrac{1}{\alpha+\Delta}\bigg)^{s}\exp\bigg\{-\dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j}\bigg\}
+\end{aligned}$$
+
+Agora, para obtermos a função de verossimilhança levando em consideração ambas as populações simultaneamente, iremos supor que as populações são independentes, o que nos permite obter:
+
+$$\begin{aligned} L(\alpha, \Delta;\ t_{1}, \dots, t_{n}, u_{1}, \dots, u_{m})
+&\overset{ind}{=} L(\alpha;\ t_{1}, \dots, t_{n}) \cdot L(\alpha, \Delta;\ u_{1}, \dots, u_{m}) \\
+&= \bigg(\dfrac{1}{\alpha}\bigg)^{r}\exp\bigg\{-\dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i}\bigg\}\bigg(\dfrac{1}{\alpha+\Delta}\bigg)^{s}\exp\bigg\{-\dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j}\bigg\}
+\end{aligned}$$
+
+### c) Apresente o vetor escore $(U(\theta))$ e a matriz de informação observada $(F(\theta))$.
+
+Queremos obter o vetor escore:
+
+$$(U(\theta)) = \bigg(\dfrac{\partial \ln L}{\partial \alpha}(\alpha, \Delta), \ \dfrac{\partial \ln L}{\partial \Delta}(\alpha, \Delta) \bigg)$$
+Para isso, vamos obter as derivadas parcial da função de log-veressimilhança com relação a cada parâmetro do vetor paramétrico em questão, neste caso $\alpha$ e $\Delta$:
+
+$$\begin{aligned}l(\alpha, \Delta)
+&= \ln(L(\alpha, \Delta)) \\
+&= \ln\bigg[\bigg(\dfrac{1}{\alpha}\bigg)^{r} \exp\bigg\{-\dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i}\bigg\} \bigg(\dfrac{1}{\alpha+\Delta}\bigg)^{s} \exp\bigg\{-\dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j}\bigg\}\bigg] \\
+&= - r \ln(\alpha) - \dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i} - s \ln(\alpha + \Delta) - \dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j} \\
+\dfrac{\partial l}{\partial \alpha}(\alpha, \Delta) &= \dfrac{\partial}{\partial \alpha}\bigg[ - \ln(\alpha) - \dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i} - \ln(\alpha + \Delta) - \dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j} \bigg] \\
+&= -\dfrac{r}{\alpha} + \dfrac{1}{\alpha^{2}}\sum_{i = 1}^{n}t_{i} - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j} \\
+\dfrac{\partial l}{\partial \Delta}(\alpha, \Delta) &= \dfrac{\partial}{\partial \Delta}\bigg[ - \ln(\alpha) - \dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i} - \ln(\alpha + \Delta) - \dfrac{1}{\alpha+\Delta}\sum_{j = 1}^{m}u_{j} \bigg] \\
+&= - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j}
+\end{aligned}$$
+
+Portanto, o vetor escore é dado por:
+
+$$(U(\theta)) = \bigg(-\dfrac{r}{\alpha} + \dfrac{1}{\alpha^{2}}\sum_{i = 1}^{n}t_{i} - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j}, \ - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j} \bigg)$$
+Já para obtermos a matriz de informação (note que esta não é a matriz de informação de Fisher), conforme apresentado no livro texto, precisamos considerar:
+
+$$F(\theta) = F(\alpha, \Delta) =
+\begin{bmatrix}
+\dfrac{\partial^{2}l}{\partial\alpha^{2}}(\alpha, \Delta)           & \dfrac{\partial^{2}l}{\partial\alpha\partial\Delta}(\alpha, \Delta) \\
+& \\
+\dfrac{\partial^{2}l}{\partial\Delta\partial\alpha}(\alpha, \Delta) & \dfrac{\partial^{2}l}{\partial\Delta^{2}}(\alpha, \Delta)           \\
+\end{bmatrix}$$
+
+Assim, iremos obter:
+
+$$\begin{aligned} \dfrac{\partial^{2}l}{\partial\alpha^{2}}(\alpha, \Delta)
+&= \dfrac{\partial}{\partial\alpha} \bigg[ \dfrac{\partial l}{\partial\alpha}(\alpha, \Delta) \bigg] \\
+&= \dfrac{\partial}{\partial\alpha} \bigg[ -\dfrac{r}{\alpha} + \dfrac{1}{\alpha^{2}}\sum_{i = 1}^{n}t_{i} - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j} \bigg] \\
+&= \dfrac{r}{\alpha^{2}} - \dfrac{2}{\alpha^{3}}\sum_{i = 1}^{n}t_{i} + \dfrac{s}{(\alpha + \Delta)^{2}} - \dfrac{2}{(\alpha + \Delta)^{3}}\sum_{j = 1}^{m}u_{j} \\
+\dfrac{\partial^{2}l}{\partial\Delta^{2}}(\alpha, \Delta)
+&= \dfrac{\partial}{\partial\Delta} \bigg[ \dfrac{\partial l}{\partial\Delta}(\alpha, \Delta) \bigg] \\
+&= \dfrac{\partial}{\partial\Delta} \bigg[ - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j} \bigg] \\
+&= \dfrac{s}{(\alpha + \Delta)^{2}} - \dfrac{2}{(\alpha + \Delta)^{3}}\sum_{j = 1}^{m}u_{j} \\
+\dfrac{\partial^{2}l}{\partial\alpha\partial\Delta}(\alpha, \Delta)
+&= \dfrac{\partial^{2}l}{\partial\Delta\partial\alpha}(\alpha, \Delta)
+= \dfrac{\partial}{\partial\alpha} \bigg[ \dfrac{\partial l}{\partial\Delta}(\alpha, \Delta) \bigg] \\
+&= \dfrac{\partial}{\partial\alpha} \bigg[ - \dfrac{s}{\alpha + \Delta} + \dfrac{1}{(\alpha + \Delta)^{2}}\sum_{j = 1}^{m}u_{j} \bigg] \\
+&= \dfrac{s}{(\alpha + \Delta)^{2}} - \dfrac{2}{(\alpha + \Delta)^{3}}\sum_{j = 1}^{m}u_{j} \\
+\end{aligned}$$
+
+### d) Obtenha as expressões dos testes de Wald e da razão de verossimilhanças para as hipóteses apresentadas em (a).
+
+Para obtermos as expressões do teste de Wald, precisamos obter a estatística do teste:
+
+$$W = \dfrac{(\hat\Delta - \Delta_{0})^{2}}{Var(\hat\Delta)}$$
+Sendo que $\hat\Delta$ é o estimador de máxima verossimilhança de $\Delta$ e $\Delta_{0}$ é o valor que estamos querendo testar com a hipótese nula, neste caso $\Delta_{0} = 0$.
+
+Agora basta obtermos $\hat\Delta$ e $Var(\hat\Delta)$. Para isso, iremos encontrar os estimadores de máxima verossimilhança de $\alpha$ e $\theta$, sendo suficiente resolver o sistema de equações:
+
+$$\left\{\begin{array}{ll} \dfrac{\partial l}{\partial \alpha}(\hat\alpha, \hat\Delta) = 0 &\Longleftrightarrow -\dfrac{r}{\hat\alpha} + \dfrac{1}{\hat\alpha^{2}}\sum_{i = 1}^{n}t_{i} - \dfrac{s}{\hat\alpha + \hat\Delta} + \dfrac{1}{(\hat\alpha + \hat\Delta)^{2}}\sum_{j = 1}^{m}u_{j} = 0 \\
+\dfrac{\partial l}{\partial \Delta}(\hat\alpha, \hat\Delta) = 0 &\Longleftrightarrow - \dfrac{s}{\hat\alpha + \hat\Delta} + \dfrac{1}{(\hat\alpha + \hat\Delta)^{2}}\sum_{j = 1}^{m}u_{j} = 0 \\ \end{array} \right.$$
+
+Desse sistema de equações obtemos que $\hat\alpha = \frac{1}{r}\sum_{i=1}^{n}t_{i} = \bar{t}_{r}$ e $\hat\Delta = \frac{1}{s}\sum_{j=1}^{m}u_{j}-\hat\alpha = \bar{u}_{s} - \bar{t}_{r}$. E ainda:
+
+$$Var(\hat\Delta) = Var(\bar{u}_{s} - \bar{t}_{r}) \overset{ind}{=} Var(\bar{u}_{s}) + Var(\bar{t}_{r})$$
+Para obtermos a variância de $\hat\Delta$ iremos agora passar por uma sequência de procedimentos arbitrários, de modo que seja possível obter pelo menos uma aproximação. Para isso, iremos utilizar os resultados vistos em aula, uma vez que seria muito demorado detalhar cada etapa do processo. Iremos definir dois parâmetros novos de forma que $\lambda = \frac{1}{\alpha}$ e $\beta = \frac{1}{\alpha + \Delta}$. Desta forma, pela propriedade da invariância do estimador de máxima verossimilhança a transformações bijetivas, temos que os estimadores de máxima verossimilhança para esses parâmetros são $\hat\lambda = \frac{1}{\hat\alpha}$ e $\hat\beta = \frac{1}{\hat\alpha + \hat\Delta}$. Agora utilizando resultados vistos em aula, temos uma aproximação para a variância desses estimadores (aqui foram utilizadas as matrizes de informação de Fisher, iguais a $-[\mathbb{E}[F(\theta)]]^{-1}$, como aproximação) dadas por:
+
+$$Var(\hat\lambda) \approx \dfrac{\lambda^{2}}{r} ; \ \ \ Var(\hat\beta) \approx \dfrac{\beta^{2}}{s}$$
+Agora, também utilizando resultados vistos em aula, podemos fazer uso do método delta para obtermos mais uma aproximação mas agora para as variâncias dos estimadores originais. Assim, o resultado final fica:
+
+$$Var(\hat\alpha) = Var(\bar{t}_{r}) \approx \dfrac{\alpha^{2}}{r}; \ \ \ Var(\hat\alpha + \hat\Delta) = Var(\hat\alpha + \bar{u}_{s} - \hat\alpha) = Var(\bar{u}_{s}) \approx \dfrac{(\alpha + \Delta)^{2}}{s}$$
+
+Assim:
+
+$$Var(\hat\Delta) = Var(\bar{u}_{s}) + Var(\bar{t}_{r}) \approx \dfrac{(\alpha + \Delta)^{2}}{s} + \dfrac{\alpha^{2}}{r}$$
+
+No caso, como não conhecemos os valores dos parâmetros $\alpha$ e $\Delta$, então precisamos, para todo e qualquer fim prático, considerar $\hat{Var}(\hat\Delta)$ ao invés de $Var(\Delta)$, onde os valores dos parâmetros são substituídos pelas suas respectivas estimativas de máxima verossimilhança. Assim, temos que a estatística do teste de Wald, para as hipóteses que queremos testar, é aproximadamente dada por:
+
+$$W \approx \dfrac{\hat\Delta^{2}}{\hat{Var}(\hat\Delta)} = \dfrac{(\bar{u}_{s}-\bar{t}_{r})^{2}}{\dfrac{\bar{t}_{r}^{2}}{r}+\dfrac{\bar{u}_{s}^{2}}{s}}$$
+
+Por resultados teóricos, temos que a estatística do teste terá distribuição assintótica $\chi^{2}$ com $1$ grau de liberdade e, portanto, rejeitamos a hipótese nula a um nível de significância de $100\alpha\%$ se $W > q_{1;\ 1-\alpha}$. Onde $q_{1;\ \alpha}$ representa o quantil $\alpha$ da distribuição $\chi^{2}$ com $1$ grau de liberdade.
+
+Para o teste de razão de verossimilhança, precisamo considerar a função de verossimilhança supondo que $\Delta = 0$:
+
+$$\begin{aligned} L(\alpha, 0;\ t_{1}, \dots, t_{n}, u_{1}, \dots, u_{m})
+&\overset{ind}{=} L(\alpha;\ t_{1}, \dots, t_{n}) \cdot L(\alpha, 0;\ u_{1}, \dots, u_{m}) \\
+&= \bigg(\dfrac{1}{\alpha}\bigg)^{r}\exp\bigg\{-\dfrac{1}{\alpha}\sum_{i = 1}^{n}t_{i}\bigg\}\bigg(\dfrac{1}{\alpha+0}\bigg)^{s}\exp\bigg\{-\dfrac{1}{\alpha+0}\sum_{j = 1}^{m}u_{j}\bigg\} \\
+&= \bigg(\dfrac{1}{\alpha}\bigg)^{r+s}\exp\bigg\{-\dfrac{1}{\alpha}\bigg[\sum_{i = 1}^{n}t_{i} + \sum_{j=1}^{m}u_{j} \bigg]\bigg\} \\
+\end{aligned}$$
+
+$$\begin{aligned} \Longrightarrow \ln L(\alpha, 0)
+&= \ln \bigg[ \bigg(\dfrac{1}{\alpha}\bigg)^{r+s}\exp\bigg\{-\dfrac{1}{\alpha}\bigg[\sum_{i = 1}^{n}t_{i} + \sum_{j=1}^{m}u_{j} \bigg]\bigg\} \bigg] \\
+&= -(r+s) \ln \alpha - \dfrac{1}{\alpha}\bigg[\sum_{i = 1}^{n}t_{i} + \sum_{j=1}^{m}u_{j} \bigg] \\
+\end{aligned} $$
+
+Para essa função de verossimilhança, realizando contas análogas às que já foram realizadas, obtemos que o estimador de máxima verossimilhança é dado por $\hat\alpha_{0} = \dfrac{\sum_{i = 1}^{n}t_{i} + \sum_{j=1}^{m}u_{j}}{r+s}$.
+
+Agora, precisamos considerar a seguinte estaística do teste:
+
+$$TRV = -2 \bigg[ \dfrac{L(\hat\alpha_{0}, 0)}{L(\hat\alpha, \hat\Delta)} \bigg] = 2[\ln L(\hat\alpha, \hat\Delta) - \ln L(\hat\alpha_{0}, 0)]$$
+$$ = 2 \bigg[ - r \ln(\hat\alpha) - \dfrac{1}{\hat\alpha}\sum_{i = 1}^{n}t_{i} - s \ln(\hat\alpha + \hat\Delta) - \dfrac{1}{\hat\alpha+\hat\Delta}\sum_{j = 1}^{m}u_{j} + (r+s) \ln \hat\alpha_{0} + \dfrac{1}{\hat\alpha_{0}}\bigg[\sum_{i = 1}^{n}t_{i} + \sum_{j=1}^{m}u_{j} \bigg] \bigg]$$
+Por resultados teóricos, temos que a estatística do teste terá distribuição assintótica $\chi^{2}$ com $1$ grau de liberdade e, portanto, rejeitamos a hipótese nula a um nível de significância de $100\alpha\%$ se $TRV > q_{1;\ 1-\alpha}$. Onde $q_{1;\ \alpha}$ representa o quantil $\alpha$ da distribuição $\chi^{2}$ com $1$ grau de liberdade.
+
+## Questão 3.4
+
+Em nossos dados de falhas e censuras é importante de se observar que temos um caso de censura do tipo 2 onde ao alcancar o numero de 45 falhas o resto dos dados foi censurado. Vamos então fazer os 3 ajustes para cada um dos 3 modelos Exponencial, Weibull e Log-Normal respectivamente.
+
+```{r,include=TRUE,echo = F}
+tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632, 647, 675, 727, 785,
+    801, 811, 816, 867, 893, 930, 937, 976, 1008, 1040, 1051, 1060, 1183, 1329, 1334,
+    1379, 1380, 1633, 1769, 1827, 1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729,
+    2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729,
+            2729, 2729, 2729, 2729, 2729)
+cens=c(0, 0, 0, 0 ,0 ,0, 0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,0 ,0 ,0 ,0,0 ,0 ,0 
+    ,0 ,0 ,0, 0, 0, 0 ,0 ,0,0, 0, 0, 0 ,0 ,0, 0, 0, 0 ,0 ,0, 0 ,0,1 ,1 ,1 
+    ,1 ,1, 1, 1 ,1 ,1 ,1,1 ,1 ,1 ,1 ,1)
+```
+
+
+
+```{r}
+ajust1 = survreg(Surv(tempos,cens,type = "left")~1,dist='exponential')
+
+alpha1 = exp(ajust1$coefficients[1])
+
+ajust2 = survreg(Surv(tempos,cens,type = "left")~1,dist='weibull')
+
+alpha2 = exp(ajust2$coefficients[1])
+gama2 = 1/ajust2$scale
+
+ajust3 = survreg(Surv(tempos,cens,type = "left")~1,dist='lognorm')
+
+
+
+
+
+####################################################
+ekm = survfit(Surv(tempos,cens,type  = "left")~1)
+time = ekm$time
+st = ekm$surv
+ste = exp(-time/alpha1)
+stw = exp(-(time/alpha2)^gama2) 
+stln = pnorm((-log(time)+5.568)/1.8 )
+cbind(time,st,ste,stw,stln)
+
+##############################
+
+par(mfrow=c(1,3))
+plot(st,ste,pch=16,ylim=range(c(0.0,1)),xlim=range(c(0,1)),
+     xlab="S(t): Kaplan-Meier", ylab="S(t): exponencial")
+lines(c(0,1),c(0,1),type="l",lty=1)
+plot(st,stw, pch=16, ylim=range(c(0.0,1)), xlim=range(c(0,1)),
+     xlab = "S(t): Kaplan-Meier", ylab="S(t): Weibull")
+lines(c(0,1),c(0,1),type="l",lty=1)
+plot(st,stln,pch=16,ylim=range(c(0.0,1)), xlim=range(c(0,1)),
+     xlab="S(t): Kaplan-Meier", ylab="S(t): log-normal")
+lines(c(0,1),c(0,1),type="l",lty=1)
+#############################################
+par(mfrow=c(1,3)) 
+invst=qnorm(st)
+plot(time,-log(st),pch=16,xlab="tempos",ylab="-log(S(t))")
+plot(log(time),log(-log(st)),pch=16,xlab="log(tempos)",
+     ylab="log(-log(S(t)))")
+plot(log(time),invst,pch=16,xlab="log(tempos)",
+     ylab=expression(Phi^-1*(S(t))))
+
+
+
+###########################################################
+par(mfrow=c(1,3))
+plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
+lines(c(0,time),c(1,ste),lty=3,col=4)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","exponencial"),col=c(1,4),bty="n",cex=0.8)
+plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
+lines(c(0,time),c(1,stw),lty=2,col=2)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","Weibull"),col=c(1,2),bty="n",cex=0.8)
+plot(ekm,conf.int=F,xlab="Tempos",ylab="S(t)")
+lines(c(0,time),c(1,stln),lty=2)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier", "Log-normal"), bty="n", cex=0.8)
+#usar o modelo EXPONECIAL WEIBULL Ou LOG-NORMAL
+# QUAL DELES É O MAIS APROPRIADO?    
+### LEMBRAR QUE NO NOSSO CASO É CENSURA TIPO 2
+
+```
+
+Devido ao comportamento dos graficos podemos observar nos 2 primeiros graficos que o modelo exponencial é o que mais se aproxima de uma reta entre os 3 e por fim no terceiro grafico podemos ver como seria o ajuste para cada um dos 3 modelos.
+
+Vamos portanto então seguir com o modelo exponencial.
+
+Tempo medio
+```{r,echo = F}
+#O fabricante tem interesse em estimar o tempo médio e
+#mediano de vida do isolador e o percentual de falhas após 500 horas de uso
+
+#tempo medio
+
+
+sum(ste*(tempos[1:45]-c(0,ekm$time[-length(ekm$time)])))
+
+```
+
+Mediana
+
+```{r,echo = F}
+#mediana 
+
+(0.5-0.50867074)*(727-675)/(0.48286032-0.50867074)+675
+
+```
+
+Percentual de falhas após 500 horas
+
+```{r,echo = F}
+
+#percentual de falhas após 500 horas
+
+(473-538)/(500-538)*(0.62271350-0.58347093)+0.58347093 #taxa de falha de 0.65
+
+
+```
+
 ## Questão 4.1
 
 ### 1
@@ -324,3 +578,341 @@ $$
 $$
 
 Este valor nos diz que, segundo o modelo, cerca de $55.29\%$ dos pacientes sobrevivem até o 40º mês após o início do acompanhamento. 
+
+## Questão 5.1:
+
+Os seguintes dados representam o tempo (em dias) até a morte de pacientes com câncer de ovário tratados na Mayo Clinic (Fleming et al, 1980). O "$+$" indica censura.
+
+Amostra 1 (tumor grande): $28$, $89$, $175$, $195$, $309$, $377+$, $393+$, $421+$, $447+$, $462$, $709+$, $744+$, $770+$, $1106+$, $1206+$.
+
+Amostra 2 (tumor pequeno): $34$, $88$, $137$, $199$, $280$, $291$, $299+$, $300+$, $309$, $351$, $358$, $369$, $369$, $370$, $375$, $382$, $392$, $429+$, $451$, $1119+$.
+
+```{r, echo = FALSE}
+
+tempo1   <- c(28, 89, 175, 195, 309, 377, 393, 421, 447, 462, 709, 744, 770, 1106, 1206)
+censura1 <- c( 1,  1,   1,   1,   1,   0,   0,   0,   0,   1,   0,   0,   0,    0,    0)
+grupo1   <- rep(1, length(tempo1))
+
+tempo2   <- c(34, 88, 137, 199, 280, 291, 299, 300, 309, 351, 358, 369, 369, 370, 375, 382, 392, 429, 451, 1119)
+censura2 <- c( 1,  1,   1,   1,   1,   1,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   0,   1,    0)
+grupo2   <- rep(2, length(tempo2))
+
+tempo   <- c(tempo1  , tempo2  )
+censura <- c(censura1, censura2)
+grupo   <- as.factor(c(grupo1  , grupo2  ))
+
+data <- cbind(tempo, censura, grupo)
+data <- as.data.frame(data)
+
+```
+
+
+### a) Escreva a forma do Modelo de Cox para estes dados.
+
+Levando em consideração os dados do enunciados, iremos definir a covariável $X$ sendo uma indicadora que vale $1$ se o tumor do paciente for pequeno e $0$ se o tumor for grande. Além disso, seja $\lambda_{1}(t)$ a função de taxa de falha para o grupo com tumor grande e $\lambda_{0}(t)$ a função de taxa de falha para o grupo com tumor pequeno. Assim, o modelo de Cox para a função de taxa de falha da $i$-ésima observação pode ser expresso como sendo:
+
+$$\lambda(t) = \left\{\begin{array}{ll} 
+\lambda_{1}(t) = \lambda_{0}(t)g(x_{i}\beta) = \lambda_{0}(t)g(\beta), & \text{se } x_{i} = 1\\
+\lambda_{0}(t) = \lambda_{0}(t)g(x_{i}\beta) = \lambda_{0}(t)g(0),     & \text{se } x_{i} = 0\\ 
+\end{array} \right.$$
+
+Aqui estamos supondo que a razão entre as funções de taxa de falha dos dois grupos é uma constante que independe do tempo $K$, e estamos considerando a formulação mais geral do modelo de Cox, em que $g$ é uma função positiva com $g(0) = 1$. Para os itens a seguir iremos especificar $g(x) = \exp(x)$. Vale notar que o modelo possui duas partes, uma paramétrica que depende de $\beta$ e uma não-paramétrica associada a $\lambda_{0}(t)$.
+
+### b) Escreva a forma da função de verossimilhança parcial.
+
+Para ajustar o modelo de Cox, é necessário fazer uma estimação em duas etapas, uma para a parte paramétrica e outra para a parte não paramétrica. Para a primeira, é comum levar em consideração a função de verossimilhança parcial e tomar o $\hat\beta$ que maximiza a mesma. Olhando para o conjunto de dados, temos que há um empate nos tempos observados, o que nos leva a considerar uma aproximação da função de verossimilhança parcial para a estimação de $\beta$ (esta aproximação é razoável pois o número de observações repetidas para cada instante de tempo único é muito baixo). Sendo assim, vamos supor que temos $t_{1}, \dots, t_{k}$ tempos distintos de falha, de modo que para cada $t_{i}$ o número de falhas associadas é $d_{i}$. Além disso, $s_{i}$ representa o valor das somas das covariáveis dos indivíduos que falharam no tempo $t_{i}$. Desta forma, a função de verossimilhança parcial aproximada será dada por:
+
+$$L(\beta) = \prod_{i=1}^{k} \dfrac{\exp(s_{i}\beta)}{\bigg[\sum_{j \in R(t_{i})}\exp(x_{j}\beta)\bigg]^{d_{i}}}$$
+
+### c) Ajuste o modelo de Cox e construa um intervalo de confiança para o parâmetro do modelo.
+
+Para ajustarmos o modelo de Cox precisamos passar pela etapa de estimação paramétrica e não paramétrica, mas antes vale a pena avaliar se a principal hipótese do modelo é razoável de ser assumida: a hipótese de proporcionalidade das funções de taxa de falha para dos grupos. Sendo assim, segue abaixo o gráfico para a inspeção visual:
+
+```{r, echo = FALSE}
+modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1, data = data, x = T, method = "breslow"))
+Lambda1 <- log(-log(modelo1$surv))
+modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1, data = data, x = T, method = "breslow"))
+Lambda2 <- log(-log(modelo2$surv))
+
+ggplot()+
+  geom_step(aes(x = modelo1$time, y = Lambda1, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
+  geom_step(aes(x = modelo2$time, y = Lambda2, color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  scale_color_hue("Grupo") +
+  scale_y_continuous(TeX("$\\log(\\hat{\\Lambda}(t))$")) +
+  scale_x_continuous("Tempo em dias") +
+  guides(fill = "none") +
+  ggtitle("Log da Função de Taxa de Falha Acumalada") +
+  theme_bw()
+
+```
+
+Observando o gráfico abaixo, pelo cruzamento das curvas, a principal hipótese do modelo não aparenta estar sendo satisfeita. Mesmo assim, pelo que a questão pede, iremos prosseguir com o ajuste do modelo de Cox.
+
+Ajustando o modelo obtemos estimativas para o parâmetro $\beta$ e para a função de sobrevivência estimada. Segue abaixo a função de sobrevivência estimada para cada grupo:
+
+```{r, echo = FALSE}
+
+modelo <- coxph(Surv(tempo, censura) ~ grupo, data = data, x = T, method = "breslow")
+sobrev <- survfit(modelo)
+
+ggplot()+
+  geom_step(aes(x = sobrev$time, y = sobrev$surv, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
+  geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(modelo$coefficients)), color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  scale_color_hue("Grupo") +
+  scale_y_continuous(TeX("\\hat{S}(t)$")) +
+  scale_x_continuous("Tempo em dias") +
+  guides(fill = "none") +
+  ggtitle("Função de Sobrevivência") +
+  theme_bw()
+
+```
+
+Além disso valor estimado de $\beta$ foi $\hat\beta = 1.118618$ e, utilizando as propriedades assintóticas dos estimadores de máxima verossimilhança parcial, obtemos uma estimativa do desvio padrão do estimador $\hat\sigma(\hat\beta) = 0.4970298$. Assim, considerando um intervalo de confiança a partir da normalidade assintótica do estimador obtemos $IC(\beta; 95\%) = (0.1444, 2.0928)$.
+
+
+### d) Teste a hipótese de igualdade dos dois grupos. Caso exista diferença entre os grupos, interprete o coeficiente estimado.
+
+Gostaríamos de testar se existe diferença entre os grupos. Note que isso é equivalente a dizer que ambos os grupos possuem a mesma função de taxa de falha, o que no contexto do modelo de Cox explicitado na letra (a) equivale a dizer que $\beta = 0$. Sendo assim, gostaríamos de testar as seguintes hipóteses:
+
+$$H_{0}: \beta = 0; \ \ \ H_{1}: \beta \neq 0$$
+Para testar as hipóteses acima iremos as propriedades assintóticas dos estimadores de máxima verossimilhança parcial, o que nos fornece a seguinte tabela resumo acerca de $\beta$:
+
+```{r, echo = FALSE}
+
+kable_styling(
+  kable(
+    summary(modelo)$coefficients,
+    format = "latex",
+    align = "c",
+    digits = 5,
+    escape = FALSE,
+    booktabs = TRUE,
+    linesep = c("\\hline")
+  ),
+  position = "center",
+  latex_options = "hold_position"
+)
+
+```
+
+Utilizando o intervalo de confiança estimado para $\beta$ no item (c) temos que, como o intervalo a um nível de $95\%$ de confiança não contém o zero, rejeitamos a hipótese nula a um nível de significância de $\alpha = 0.05$. Sendo assim, temos evidências para dizer que as populações são distintas e o coeficiente $\beta$ é significativo. Com isso, basta interpretar o coeficiente estimado. Pelas hipóteses do modelo, temos que o razão entre as funções de riscos dos dois grupos é constante. Obtemos que:
+
+$$\dfrac{\lambda_{1}(t)}{\lambda_{0}(t)} = \dfrac{\lambda_{0}(t)g(\beta)}{\lambda_{0}(t)g(0)} = \dfrac{\lambda_{0}(t)\exp\{\beta\}}{\lambda_{0}(t)\exp\{0\}} = \exp\{\beta\}$$
+
+Utilizando a propriedade de invariância dos estimadores de máxima verossimilhança parcial, obtemos que o estimador de máxima verossimilhança parcial de $\exp\{\beta\}$ é dado por $\exp\{\hat\beta\}$, onde $\hat\beta$ é o estimador de máxima verossimilhança parcial de $\beta$. Assim, obtemos que $\exp\{\hat\beta\} = \exp\{1.118618\} = 3.060621$. Isso nos permite interpretar, uma vez que estamos considerando o coeficiente significativo, que o risco de morte para os pacientes com tumores pequenos é aproximadamente $3$ vezes maior se comparado ao risco de morte para os pacientes com tumores grandes.
+
+### e) Sabendo que o teste logrank coincide com o teste escore associado ao modelo de Cox, use este teste para testar a hipótese estabelecida em (d).
+
+Para realizar o teste de logrank precisamos considerar a seguinte estatística:
+
+$$T = \dfrac{\displaystyle \Bigg[\sum_{j = 1}^{k}(d_{2j}-w_{2j}) \Bigg]^{2}}{\displaystyle \sum_{j=1}^{k}(V_{j})_{2}}$$
+Onde $d_{ij}$ e $n_{ij}$ representam o número de falhas no tempo $t_{j}$ e número de indivíduos que estão sob risco em um tempo imediatamente inferior a $t_{j}$ para o $i$-ésimo grupo. Além disso $w_{2j} = n_{2j}d_{j}n_{j}^{-1}$ e $(V_{j})_{2} = n_{2j}(n_{j}-n_{2j})d_{j}(n_{j}-d_{j})n_{j}^{-2}(n_{j}-1)^{-1}$. Utilizando o auxílio do softawre R, utilizando o pacote "survival", foram calculadas as estatísticas relevantes referentes ao teste logrank, assim obtivemos que $T = 5.51$, e o $p$-valor do teste é $p = 0.02$, indicando novamente que as duas população são significativamente distintas a um nível de significância de $\alpha = 0.05$.
+
+
+## Questão 5.2
+
+```{r}
+x=read.table("dadosq2.txt")
+
+```
+
+
+### 5.2.1
+
+Ajustando primeiramente o modelo com todas as variaveis.
+```{r}
+colnames(x)=c('Paciente','tempo','ind. falha','tratamento','idade','resíduo','status','idade01')
+
+attach(x)#trocar todos os 12 por 01
+tratamentoc=ifelse(tratamento>1,1,0)#1 é 0 e 2 é 1
+residuoc=ifelse(resíduo>1,1,0) #1 é 0 e 2 é 1
+statusc=ifelse(status>1,1,0)#1 é 0 e 2 é 1
+idadec=ifelse(idade>56,1,0)
+fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc+statusc,
+           data=x, x = T, method="breslow") 
+
+rr=exp(fit1$coefficients)
+abc=matrix(c(fit1$coefficients,0.16443,0.00785,0.29133,0.55516,rr),nrow=4,ncol=3,byrow = F)
+
+abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
+abc=`rownames<-`(abc,c('tratamento','idade','residuo','status'))
+abc
+```
+
+```{r}
+
+
+par(mfrow=c(2,2)) 
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Tratamento")
+
+
+##
+
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Resíduo")
+
+
+fit<-coxph(Surv(tempo[statusc==0],`ind. falha`[statusc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[statusc==1],`ind. falha`[statusc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Status")
+
+########################### idade
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("idade >56")
+
+```
+
+Temos em vermelho os tipo 2(tratamento,Residuo e status) e em preto o tipo 1 e para as idade foi dividido em dois grupos os com 56 anos ou mais(em vermelho) e menos que 56 anos (em preto).
+
+Podemos observar que com o aumento da idade , o residuo ser do tipo 2 e status ser do tipo 2 nos temos que aumenta o risco de não sobreviver e que estar no tratamento 2 diminui esse risco. E devido a isto vamos considerar o modelo ideal aquele sem levar em consideração a variavel Status(melhor explicado na questão de numero 2). vamos então fazer o ajuste levando em consideração Tratamento,idade e Residuo.
+
+```{r}
+fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
+           data=x, x = T, method="breslow") 
+rr=exp(fit1$coefficients)
+abc=matrix(c(fit1$coefficients,0.19099,0.00684,0.36680,rr),nrow=3,ncol=3,byrow = F)
+
+abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
+abc=`rownames<-`(abc,c('tratamento','idade','residuo'))
+abc
+######graficos
+par(mfrow=c(1,3)) 
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Tratamento")
+
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Resíduo")
+
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("idade >56")
+```
+
+Temos em vermelho os tipo 2(tratamento e Residuo) e em preto o tipo 1 e para as idade foi dividido em dois grupos os com 56 anos ou mais(em vermelho) e menos que 56 anos (em preto).
+
+Por fim ainda temos que para o p-valor nao estamos dando tanta atenção devido ao fato de nossa amostra ser pequena.
+
+### 5.2.2
+Importante de se observar que na variavel status temos os cruzamento dos dois grupos o que acaba por quebrar a nossa hipotese de que os riscos são proporcionais e portanto estão violando a nossa suposição de riscos proporcionais.
+
+### 5.2.3
+
+Olhando o coeficiente de tratamento podemos observar o seu valor de -0.8369728 o que nos indica que se temos o tratamento 2 ou seja (i=1) vamos ter uma diminuição do risco do paciente e tambem utilizando a razao de risco podemos ver que o risco do paciente no tratamento do tipo 2 é aproximadamente 0.43 vezes o risco do paciente no tratamento do tipo 1 ou seja o tratamento do tipo 2 tem diferencas com relação ao tipo 1
+
+### 5.2.4
+
+
+```{r}
+
+fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
+            data=x, x = T, method="breslow")
+
+atrat=-0.83697*1+0.12775*2+0.68609*0
+
+
+Ht<-basehaz(fit1,centered=T)
+tempos<-Ht$time
+H0<-Ht$hazard
+S0<- exp(-H0)
+
+
+round(cbind(tempos,S0,H0),digits=5)
+tt<-sort(tempos)
+aux1<-as.matrix(tt)
+n<-nrow(aux1)
+aux2<-as.matrix(cbind(tempos,S0))
+S00<-rep(max(aux2[,2]),n)
+for(i in 1:n){
+  if(tt[i]> min(aux2[,1])){
+    i1<- aux2[,1]<= tt[i]
+    S00[i]<-min(aux2[i1,2])}}
+ts0<-cbind(tt,S00)
+
+plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),xlab="Tempos",ylab="S(t|x)",lty=1)
+title("Idade de 45 anos/residuo 1/status 2/tratamento 2")
+```
+
+Temos então nossa tabela estimada de sobrevivencia para o paciente com 45 anos ,residuo=1 ,status =2 e tratamento 2.
