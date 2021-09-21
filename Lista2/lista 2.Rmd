@@ -161,6 +161,7 @@ Por resultados teóricos, temos que a estatística do teste terá distribuição
 Em nossos dados de falhas e censuras é importante de se observar que temos um caso de censura do tipo 2 onde ao alcancar o numero de 45 falhas o resto dos dados foi censurado. Vamos então fazer os 3 ajustes para cada um dos 3 modelos Exponencial, Weibull e Log-Normal respectivamente.
 
 ```{r,include=TRUE,echo = F}
+
 tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632, 647, 675, 727, 785,
     801, 811, 816, 867, 893, 930, 937, 976, 1008, 1040, 1051, 1060, 1183, 1329, 1334,
     1379, 1380, 1633, 1769, 1827, 1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729,
@@ -169,11 +170,11 @@ tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632, 647, 67
 cens=c(0, 0, 0, 0 ,0 ,0, 0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,0 ,0 ,0 ,0,0 ,0 ,0 
     ,0 ,0 ,0, 0, 0, 0 ,0 ,0,0, 0, 0, 0 ,0 ,0, 0, 0, 0 ,0 ,0, 0 ,0,1 ,1 ,1 
     ,1 ,1, 1, 1 ,1 ,1 ,1,1 ,1 ,1 ,1 ,1)
+
 ```
 
-
-
 ```{r}
+
 ajust1 = survreg(Surv(tempos,cens,type = "left")~1,dist='exponential')
 
 alpha1 = exp(ajust1$coefficients[1])
@@ -184,9 +185,6 @@ alpha2 = exp(ajust2$coefficients[1])
 gama2 = 1/ajust2$scale
 
 ajust3 = survreg(Surv(tempos,cens,type = "left")~1,dist='lognorm')
-
-
-
 
 
 ####################################################
@@ -220,7 +218,6 @@ plot(log(time),invst,pch=16,xlab="log(tempos)",
      ylab=expression(Phi^-1*(S(t))))
 
 
-
 ###########################################################
 par(mfrow=c(1,3))
 plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
@@ -242,13 +239,14 @@ Devido ao comportamento dos graficos podemos observar nos 2 primeiros graficos q
 
 Vamos portanto então seguir com o modelo exponencial.
 
-Tempo medio
+Tempo médio
+
 ```{r,echo = F}
-#O fabricante tem interesse em estimar o tempo médio e
-#mediano de vida do isolador e o percentual de falhas após 500 horas de uso
 
-#tempo medio
+# O fabricante tem interesse em estimar o tempo médio e
+# mediano de vida do isolador e o percentual de falhas após 500 horas de uso
 
+# tempo médio
 
 sum(ste*(tempos[1:45]-c(0,ekm$time[-length(ekm$time)])))
 
@@ -257,7 +255,8 @@ sum(ste*(tempos[1:45]-c(0,ekm$time[-length(ekm$time)])))
 Mediana
 
 ```{r,echo = F}
-#mediana 
+
+# mediana 
 
 (0.5-0.50867074)*(727-675)/(0.48286032-0.50867074)+675
 
@@ -267,10 +266,9 @@ Percentual de falhas após 500 horas
 
 ```{r,echo = F}
 
-#percentual de falhas após 500 horas
+# percentual de falhas após 500 horas
 
 (473-538)/(500-538)*(0.62271350-0.58347093)+0.58347093 #taxa de falha de 0.65
-
 
 ```
 
@@ -281,6 +279,7 @@ Percentual de falhas após 500 horas
 Vamos supor que no tempo $25$, onde há um $*$, o autor quis dizer que houve censura.
 
 ```{r}
+
 obs1=c(1,2,2,2,6,8,8,9,13,16,17,29,34,36)
 cen1=c(2,9,13,22,25,43,45)
 
@@ -299,11 +298,13 @@ times=c(0:max(obs))
 
 kp_est=survfit(Surv(obs,cen)~trat)
 kp_est_full=survfit(Surv(obs,cen)~1)
+
 ```
 
 Primeiramente, como uma análise preliminar, avaliaremos visualmente os três modelos em questão (Exponencial, Weibull e Log-Normal) junto ao estimador de Kaplan-Meier, sem diferenciar os tratamentos $A$ e $B$:
 
 ```{r}
+
 reg_exp=survreg(Surv(obs,cen)~1,dist='exponential')
 
 p_exp=pexp(times,1/exp(4.212128 ))
@@ -325,11 +326,13 @@ ggplot()+
   scale_y_continuous('Probabilidade de sobrevivência')+
   scale_x_continuous('Tempo')+
   theme_bw()
+
 ```
 
 Podemos observar que as curvas de sobrevência dos modelos Exponencial e Log-Normal são bem próximas, o que favorece a escolha do modelo Exponencial em detrimento do Log-Normal, por ser um modelo mais simples (com apenas um parâmetro). A diante verificaremos as funções de sobreviência de cada modelo, desta vez utilizando os tratamentos como covariável:
 
 ```{r}
+
 reg_exp=survreg(Surv(obs,cen)~trat,dist='exponential')
 
 p_exp1=pexp(times,1/exp(3.8889006))
@@ -357,9 +360,11 @@ ggplot()+
   scale_y_continuous('Probabilidade de sobrevivência')+
   scale_x_continuous('Tempo')+
   theme_bw()
+
 ```
 
 ```{r}
+
 reg_weibull=survreg(Surv(obs,cen)~trat,dist='weibull')
 
 # Nas duas linhas a seguir, os parâmetros passados para a função pweibull
@@ -396,9 +401,11 @@ ggplot()+
   scale_y_continuous('Probabilidade de sobrevivência')+
   scale_x_continuous('Tempo')+
   theme_bw()
+
 ```
 
 ```{r}
+
 reg_lnorm=survreg(Surv(obs,cen)~trat,dist='lognormal')
 
 p_lnorm1=plnorm(times,3.5137704,1.167061)
@@ -426,6 +433,7 @@ ggplot()+
   scale_y_continuous('Probabilidade de sobrevivência')+
   scale_x_continuous('Tempo')+
   theme_bw()
+
 ```
 
 Por fim, faremos um teste de hipótese para a seleção do modelo final. Como o modelo Log-Normal produz um resultado razoavelmente próximo do modelo Exponencial, descartaremos esse modelo, restando agora apenas escolher entre os modelo Weibull e Exponencial. Observe que o modelo Exponencial é um caso particular do modelo Weibull, o que nos permite usar o teste da razão de verossimilhança. Faremos o teste com $5\%$ de significânica e usaremos como estatística de teste:
@@ -449,7 +457,9 @@ Com isto, temos que o *p-valor* do teste é $1-0.850476=0.149524>0.05$, logo, ac
 Os parâmetros do modelo final podem ser vizualidos a seguir:
 
 ```{r}
+
 reg_exp
+
 ```
 
 Vale destacar que o a variável $trat$ é $0$ para o tratamento $A$ e $1$ para o tratamento $B$, daí, o intercepto para o tratamento $A$ é $3.8889006$ e o para o tratamento $B$ é $4.70953$. Mais detalhes sobre a diferença entre os tratamentos podem ser encontrados no item $2$.
@@ -459,7 +469,9 @@ Vale destacar que o a variável $trat$ é $0$ para o tratamento $A$ e $1$ para o
 Sob a hipótese de que não há diferença entre os tratamos, o modelo ajustado passa a ser:
 
 ```{r}
+
 survreg(Surv(obs,cen)~1,dist='exponential')
+
 ```
 
 Repetindo o procedimento do item anterior para o Teste de Razão de Máxima Verossimilhança e adotando, novamente, um nível de significância de $5\%$, obtemos que a estatística de teste é $TRV=1.54078$ e que o *p-valor* é $1-0.7854983=0.2145017>0.05$, logo, aceitamos a hipótese de que não há diferença entre os tratamentos.
@@ -467,6 +479,7 @@ Repetindo o procedimento do item anterior para o Teste de Razão de Máxima Vero
 Vale destacar que verificamos em todos os modelos (Exponencial, Weibull e Log-Normal) que a hipóse de que não há diferença entre os tratamentos é aceita.
 
 ```{r}
+
 times=c(1:100)
 reg_exp_pura=survreg(Surv(obs,cen)~1,dist='exponential')
 
@@ -482,6 +495,7 @@ ggplot()+
   scale_y_continuous('Probabilidade de sobrevivência')+
   scale_x_continuous('Tempo')+
   theme_bw()
+
 ```
 
 ### 3
@@ -489,6 +503,7 @@ ggplot()+
 A curva de sobrevivência estimada pode ser observada no gráfico a seguir:
 
 ```{r}
+
 times=c(1:200)
 p_exp_pura=pexp(times,1/exp(4.212128))
 
@@ -498,6 +513,7 @@ ggplot()+
   scale_y_continuous('Probabilidade de sobrevivência')+
   scale_x_continuous('Tempo')+
   theme_bw()
+
 ```
 
 Começaremos a análise dos resíduos pelos resíduos de Cox-Snell, definidos como:
@@ -515,6 +531,7 @@ $$
 Os resíduos Cox-Snell podem ser usados para avaliar se o nosso modelo se ajusta bem aos dados. No caso do modelo exponencial, para que consideremos que o ajuste foi bom, o gráfico $\widehat{e}_i \times -\log(\widehat{S}(\widehat{e}_i))$ deve ser aproximadamente uma reta com inclinação $1$:
 
 ```{r}
+
 res=obs*exp(-4.212128)
 kp_est=survfit(formula = Surv(res,cen) ~ 1)
 
@@ -528,6 +545,7 @@ ggplot()+
   scale_x_continuous(TeX('$\\widehat{e}_i$'))+
   scale_y_continuous(TeX('$-\\log(\\widehat{S}(\\widehat{e}_i))$'))+
   theme_bw()
+
 ```
 
 A reta tracejado no gráfico acima tem inclinação $1$, assim, temos que o modelo Exponencial parece se adequar bem aos dados observados (ao menos olhando para os resíduos de Cox-Sneal).
@@ -542,6 +560,7 @@ $$
 Onde $\delta_i$ é a variável indicadora de censura e os $\widehat{e}_i$'s são os resíduos de Cox-Snell definidos anteriormente.
 
 ```{r}
+
 m=cen-res
 
 ggplot()+
@@ -549,6 +568,7 @@ ggplot()+
   scale_x_continuous('Tempo')+
   scale_y_continuous(TeX('$\\widehat{m}_i$'))+
   theme_bw()
+
 ```
 
 Por último, analisaremos os resíduos Deviance, definidos como:
@@ -558,6 +578,7 @@ $$
 $$
 
 ```{r}
+
 d=sign(m)*sqrt(-2*(m+cen*log(cen-m)))
 
 ggplot()+
@@ -565,6 +586,7 @@ ggplot()+
   scale_x_continuous('Tempo')+
   scale_y_continuous(TeX('\\widehat{d}_i'))+
   theme_bw()
+
 ```
 
 Os gráficos dos resíduos Deviance e Mantigale podem ser usados para detectar pontos atípicos e a adequação do modelo ajustado, como não detectamos evidências significativas de anomalias em ambos os gráficos, podemos concluir que não há outliers e que o modelo se adequa bem aos dados.
@@ -628,7 +650,7 @@ $$L(\beta) = \prod_{i=1}^{k} \dfrac{\exp(s_{i}\beta)}{\bigg[\sum_{j \in R(t_{i})
 
 Para ajustarmos o modelo de Cox precisamos passar pela etapa de estimação paramétrica e não paramétrica, mas antes vale a pena avaliar se a principal hipótese do modelo é razoável de ser assumida: a hipótese de proporcionalidade das funções de taxa de falha para dos grupos. Sendo assim, segue abaixo o gráfico para a inspeção visual:
 
-```{r, echo = FALSE}
+```{r, fig.width = 7, fig.asp = 0.5, out.width = "100%", fig.align = 'center', warning = FALSE}
 modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1, data = data, x = T, method = "breslow"))
 Lambda1 <- log(-log(modelo1$surv))
 modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1, data = data, x = T, method = "breslow"))
@@ -650,7 +672,7 @@ Observando o gráfico abaixo, pelo cruzamento das curvas, a principal hipótese 
 
 Ajustando o modelo obtemos estimativas para o parâmetro $\beta$ e para a função de sobrevivência estimada. Segue abaixo a função de sobrevivência estimada para cada grupo:
 
-```{r, echo = FALSE}
+```{r, fig.width = 7, fig.asp = 0.5, out.width = "100%", fig.align = 'center', warning = FALSE}
 
 modelo <- coxph(Surv(tempo, censura) ~ grupo, data = data, x = T, method = "breslow")
 sobrev <- survfit(modelo)
@@ -712,6 +734,7 @@ Onde $d_{ij}$ e $n_{ij}$ representam o número de falhas no tempo $t_{j}$ e núm
 ## Questão 5.2
 
 ```{r}
+
 x=read.table("dadosq2.txt")
 
 ```
@@ -719,8 +742,682 @@ x=read.table("dadosq2.txt")
 
 ### 5.2.1
 
-Ajustando primeiramente o modelo com todas as variaveis.
+Ajustando primeiramente o modelo com todas as variáveis.
+
+```{r, warning = FALSE, include = FALSE}
+
+colnames(x)=c('Paciente','tempo','ind. falha','tratamento','idade','resíduo','status','idade01')
+
+attach(x) #trocar todos os 12 por 01
+tratamentoc=ifelse(tratamento>1,1,0)#1 é 0 e 2 é 1
+residuoc=ifelse(resíduo>1,1,0) #1 é 0 e 2 é 1
+statusc=ifelse(status>1,1,0)#1 é 0 e 2 é 1
+idadec=ifelse(idade>56,1,0)
+fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc+statusc,
+           data=x, x = T, method="breslow") 
+
+rr=exp(fit1$coefficients)
+abc=matrix(c(fit1$coefficients,0.16443,0.00785,0.29133,0.55516,rr),nrow=4,ncol=3,byrow = F)
+
+abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
+abc=`rownames<-`(abc,c('tratamento','idade','residuo','status'))
+
+```
+
 ```{r}
+
+kable_styling(
+  kable(
+    abc,
+    format = "latex",
+    align = "c",
+    digits = 5,
+    escape = FALSE,
+    booktabs = TRUE,
+    linesep = c("\\hline")
+  ),
+  position = "center",
+  latex_options = "hold_position"
+)
+
+```
+
+```{r}
+
+par(mfrow=c(2,2)) 
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Tratamento")
+
+
+##
+
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Resíduo")
+
+
+fit<-coxph(Surv(tempo[statusc==0],`ind. falha`[statusc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[statusc==1],`ind. falha`[statusc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Status")
+
+########################### idade
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("idade >56")
+
+```
+
+Temos em vermelho os tipo 2 (tratamento, resíduo e status) e em preto os tipo 1 e para as idades foi dividido em dois grupos: os com 56 anos ou mais (em vermelho) e menos que 56 anos (em preto).
+
+Podemos observar que com o aumento da idade, o resíduo ser do tipo 2 e status ser do tipo 2 nós temos que aumenta o risco de não sobreviver e que estar no tratamento 2 diminui esse risco. E devido a isto vamos considerar o modelo ideal aquele sem levar em consideração a variável status (melhor explicado na questão de número 2). Vamos então fazer o ajuste levando em consideração tratamento, idade e resíduo.
+
+```{r}
+
+fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
+           data=x, x = T, method="breslow") 
+rr=exp(fit1$coefficients)
+abc=matrix(c(fit1$coefficients,0.19099,0.00684,0.36680,rr),nrow=3,ncol=3,byrow = F)
+
+abc=`colnames<-`(abc,c('coeficiente','p-valor','razao de risco'))
+abc=`rownames<-`(abc,c('tratamento','idade','residuo'))
+
+kable_styling(
+  kable(
+    abc,
+    format = "latex",
+    align = "c",
+    digits = 5,
+    escape = FALSE,
+    booktabs = TRUE,
+    linesep = c("\\hline")
+  ),
+  position = "center",
+  latex_options = "hold_position"
+)
+
+######graficos
+par(mfrow=c(1,3)) 
+fit<-coxph(Surv(tempo[tratamentoc==0],`ind. falha`[tratamentoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[tratamentoc==1],`ind. falha`[tratamentoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Tratamento")
+
+fit<-coxph(Surv(tempo[residuoc==0],`ind. falha`[residuoc==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[residuoc==1],`ind. falha`[residuoc==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("Resíduo")
+
+fit<-coxph(Surv(tempo[idadec==0],`ind. falha`[idadec==0]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+plot(ss$time,log(H0), xlab="Tempos",ylim=range(c(-5,1)),
+     ylab = expression(log(Lambda[0]* (t))), bty="n",type="s")
+fit<-coxph(Surv(tempo[idadec==1],`ind. falha`[idadec==1]) ~ 1, data=x, x = T,
+           method="breslow")
+ss<- survfit(fit)
+s0<-round(ss$surv,digits=5)
+H0<- -log(s0)
+lines(ss$time,log(H0),type="l",lty=1,col=2)
+title("idade >56")
+
+```
+
+Temos em vermelho os tipo 2 (tratamento e resíduo) e em preto o tipo 1 e para as idade foi dividido em dois grupos: os com 56 anos ou mais (em vermelho) e menos que 56 anos (em preto).
+
+Por fim ainda temos que para o p-valor não estamos dando tanta atenção devido ao fato de nossa amostra ser pequena.
+
+### 5.2.2
+
+Importante de se observar que na variável status temos os cruzamento dos dois grupos, o que acaba por quebrar a nossa hipótese de que os riscos são proporcionais, e, portanto, estão violando a nossa suposição de riscos proporcionais.
+
+### 5.2.3
+
+Olhando o coeficiente de tratamento podemos observar o seu valor de -0.8369728, o que nos indica que se temos o tratamento 2, ou seja, (i=1) vamos ter uma diminuição do risco do paciente. E também, utilizando a razão de risco, podemos ver que o risco do paciente no tratamento do tipo 2 é aproximadamente 0.43 vezes o risco do paciente no tratamento do tipo 1, ou seja, o tratamento do tipo 2 tem diferenças com relação ao tipo 1.
+
+### 5.2.4
+
+```{r}
+
+fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
+            data=x, x = T, method="breslow")
+
+atrat=-0.83697*1+0.12775*2+0.68609*0
+
+
+Ht<-basehaz(fit1,centered=T)
+tempos<-Ht$time
+H0<-Ht$hazard
+S0<- exp(-H0)
+
+
+round(cbind(tempos,S0,H0),digits=5)
+tt<-sort(tempos)
+aux1<-as.matrix(tt)
+n<-nrow(aux1)
+aux2<-as.matrix(cbind(tempos,S0))
+S00<-rep(max(aux2[,2]),n)
+for(i in 1:n){
+  if(tt[i]> min(aux2[,1])){
+    i1<- aux2[,1]<= tt[i]
+    S00[i]<-min(aux2[i1,2])}}
+ts0<-cbind(tt,S00)
+
+plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),xlab="Tempos",ylab="S(t|x)",lty=1)
+title("Idade de 45 anos/residuo 1/status 2/tratamento 2")
+```
+
+Temos então nossa tabela estimada de sobrevivência para o paciente com 45 anos, resíduo = 1, status = 2 e tratamento 2.
+
+## Anexo:
+
+### Questão 3.4
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+tempos=c(151, 164, 336, 365, 403, 454, 455, 473, 538,577, 592, 628, 632, 647, 675, 727, 785,
+    801, 811, 816, 867, 893, 930, 937, 976, 1008, 1040, 1051, 1060, 1183, 1329, 1334,
+    1379, 1380, 1633, 1769, 1827, 1831, 1849, 2016, 2282, 2415, 2430, 2686, 2729,
+    2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729, 2729,
+            2729, 2729, 2729, 2729, 2729)
+cens=c(0, 0, 0, 0 ,0 ,0, 0 ,0 ,0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0,0 ,0 ,0 ,0,0 ,0 ,0 
+    ,0 ,0 ,0, 0, 0, 0 ,0 ,0,0, 0, 0, 0 ,0 ,0, 0, 0, 0 ,0 ,0, 0 ,0,1 ,1 ,1 
+    ,1 ,1, 1, 1 ,1 ,1 ,1,1 ,1 ,1 ,1 ,1)
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+ajust1 = survreg(Surv(tempos,cens,type = "left")~1,dist='exponential')
+
+alpha1 = exp(ajust1$coefficients[1])
+
+ajust2 = survreg(Surv(tempos,cens,type = "left")~1,dist='weibull')
+
+alpha2 = exp(ajust2$coefficients[1])
+gama2 = 1/ajust2$scale
+
+ajust3 = survreg(Surv(tempos,cens,type = "left")~1,dist='lognorm')
+
+
+####################################################
+ekm = survfit(Surv(tempos,cens,type  = "left")~1)
+time = ekm$time
+st = ekm$surv
+ste = exp(-time/alpha1)
+stw = exp(-(time/alpha2)^gama2) 
+stln = pnorm((-log(time)+5.568)/1.8 )
+cbind(time,st,ste,stw,stln)
+
+##############################
+
+par(mfrow=c(1,3))
+plot(st,ste,pch=16,ylim=range(c(0.0,1)),xlim=range(c(0,1)),
+     xlab="S(t): Kaplan-Meier", ylab="S(t): exponencial")
+lines(c(0,1),c(0,1),type="l",lty=1)
+plot(st,stw, pch=16, ylim=range(c(0.0,1)), xlim=range(c(0,1)),
+     xlab = "S(t): Kaplan-Meier", ylab="S(t): Weibull")
+lines(c(0,1),c(0,1),type="l",lty=1)
+plot(st,stln,pch=16,ylim=range(c(0.0,1)), xlim=range(c(0,1)),
+     xlab="S(t): Kaplan-Meier", ylab="S(t): log-normal")
+lines(c(0,1),c(0,1),type="l",lty=1)
+#############################################
+par(mfrow=c(1,3)) 
+invst=qnorm(st)
+plot(time,-log(st),pch=16,xlab="tempos",ylab="-log(S(t))")
+plot(log(time),log(-log(st)),pch=16,xlab="log(tempos)",
+     ylab="log(-log(S(t)))")
+plot(log(time),invst,pch=16,xlab="log(tempos)",
+     ylab=expression(Phi^-1*(S(t))))
+
+
+
+###########################################################
+par(mfrow=c(1,3))
+plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
+lines(c(0,time),c(1,ste),lty=3,col=4)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","exponencial"),col=c(1,4),bty="n",cex=0.8)
+plot(ekm,conf.int =F,xlab="Tempos",ylab="S(t)")
+lines(c(0,time),c(1,stw),lty=2,col=2)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier","Weibull"),col=c(1,2),bty="n",cex=0.8)
+plot(ekm,conf.int=F,xlab="Tempos",ylab="S(t)")
+lines(c(0,time),c(1,stln),lty=2)
+legend(25,0.8,lty=c(1,2),c("Kaplan-Meier", "Log-normal"), bty="n", cex=0.8)
+#usar o modelo EXPONECIAL WEIBULL Ou LOG-NORMAL
+# QUAL DELES É O MAIS APROPRIADO?    
+### LEMBRAR QUE NO NOSSO CASO É CENSURA TIPO 2
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+# O fabricante tem interesse em estimar o tempo médio e
+# mediano de vida do isolador e o percentual de falhas após 500 horas de uso
+
+# tempo médio
+
+sum(ste*(tempos[1:45]-c(0,ekm$time[-length(ekm$time)])))
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+# mediana 
+
+(0.5-0.50867074)*(727-675)/(0.48286032-0.50867074)+675
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+# percentual de falhas após 500 horas
+
+(473-538)/(500-538)*(0.62271350-0.58347093)+0.58347093 #taxa de falha de 0.65
+
+```
+
+### Questão 4.1
+
+#### 1
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+obs1=c(1,2,2,2,6,8,8,9,13,16,17,29,34,36)
+cen1=c(2,9,13,22,25,43,45)
+
+obs2=c(1,2,5,7,12,19,22,30,39,42,46,55)
+cen2=c(7,11,35)
+
+obs=c(obs1,obs2,cen1,cen2)
+cen=c(rep(0,length(obs1)+length(obs2)),
+          rep(1,length(cen1)+length(cen2)))
+trat=c(rep(0,length(obs1)),
+       rep(1,length(obs2)),
+       rep(0,length(cen1)),
+       rep(1,length(cen2)))
+
+times=c(0:max(obs))
+
+kp_est=survfit(Surv(obs,cen)~trat)
+kp_est_full=survfit(Surv(obs,cen)~1)
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+reg_exp=survreg(Surv(obs,cen)~1,dist='exponential')
+
+p_exp=pexp(times,1/exp(4.212128 ))
+
+reg_weibull=survreg(Surv(obs,cen)~1,dist='weibull')
+
+p_weibull=pweibull(times,shape=1/(0.7120545),scale=exp(3.968099))
+
+reg_lnorm=survreg(Surv(obs,cen)~1,dist='lognormal')
+
+p_lnorm=plnorm(times,3.784683 ,1.201686)
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],y=kp_est$surv[1:15],color='Kaplan-Meier'))+
+  geom_line(aes(x=times,y=1-p_exp,color='Modelo exponencial'))+
+  geom_line(aes(x=times,y=1-p_weibull,color='Modelo Weibull'))+
+  geom_line(aes(x=times,y=1-p_lnorm,color='Modelo Log-Normal'))+
+  scale_color_hue('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+reg_exp=survreg(Surv(obs,cen)~trat,dist='exponential')
+
+p_exp1=pexp(times,1/exp(3.8889006))
+p_exp2=pexp(times,1/exp(3.8889006+0.8206296))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],
+                y=kp_est$surv[1:15],
+                color='A',
+                linetype='Kaplan-Meier'))+
+  geom_step(aes(x=kp_est$time[16:29],
+                y=kp_est$surv[16:29],
+                color='B',
+                linetype='Kaplan-Meier'))+
+  geom_line(aes(x=times,
+                y=1-p_exp1,
+                color='A',
+                linetype='Modelo exponencial'))+
+  geom_line(aes(x=times,
+                y=1-p_exp2,
+                color='B',
+                linetype='Modelo exponencial'))+
+  scale_color_hue('Tratamento')+
+  scale_linetype('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+reg_weibull=survreg(Surv(obs,cen)~trat,dist='weibull')
+
+# Nas duas linhas a seguir, os parâmetros passados para a função pweibull
+# Foram convertidos seguindo as intruções do help da função survreg:
+## There are multiple ways to parameterize a Weibull distribution. The survreg 
+## function embeds it in a general location-scale family, which is a 
+## different parameterization than the rweibull function, and often leads
+## to confusion.
+##   survreg's scale  =    1/(rweibull shape)
+##   survreg's intercept = log(rweibull scale)
+##   For the log-likelihood all parameterizations lead to the same value.
+p_weibull1=pweibull(times,shape=1/(0.6781842),scale=exp(3.6817645))
+p_weibull2=pweibull(times,shape=1/(0.6781842),exp(3.6817645+0.6396505))
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],
+                y=kp_est$surv[1:15],
+                color='A',
+                linetype='Kaplan-Meier'))+
+  geom_step(aes(x=kp_est$time[16:29],
+                y=kp_est$surv[16:29],
+                color='B',
+                linetype='Kaplan-Meier'))+
+  geom_line(aes(x=times,
+                y=1-p_weibull1,
+                color='A',
+                linetype='Modelo Weibull'))+
+  geom_line(aes(x=times,
+                y=1-p_weibull2,
+                color='B',
+                linetype='Modelo Weibull'))+
+  scale_color_hue('Tratamento')+
+  scale_linetype('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+reg_lnorm=survreg(Surv(obs,cen)~trat,dist='lognormal')
+
+p_lnorm1=plnorm(times,3.5137704,1.167061)
+p_lnorm2=plnorm(times,3.5137704+0.6196506,1.167061)
+
+ggplot()+
+  geom_step(aes(x=kp_est$time[1:15],
+                y=kp_est$surv[1:15],
+                color='A',
+                linetype='Kaplan-Meier'))+
+  geom_step(aes(x=kp_est$time[16:29],
+                y=kp_est$surv[16:29],
+                color='B',
+                linetype='Kaplan-Meier'))+
+  geom_line(aes(x=times,
+                y=1-p_lnorm1,
+                color='A',
+                linetype='Modelo Log-Normal'))+
+  geom_line(aes(x=times,
+                y=1-p_lnorm2,
+                color='B',
+                linetype='Modelo Log-Normal'))+
+  scale_color_hue('Tratamento')+
+  scale_linetype('Estimação')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+reg_exp
+```
+
+#### 2
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+survreg(Surv(obs,cen)~1,dist='exponential')
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+times=c(1:100)
+reg_exp_pura=survreg(Surv(obs,cen)~1,dist='exponential')
+
+p_exp1=pexp(times,1/exp(3.8889006))
+p_exp2=pexp(times,1/exp(3.8889006+0.8206296))
+p_exp_pura=pexp(times,1/exp(4.212128))
+
+ggplot()+
+  geom_line(aes(x=times,y=1-p_exp1,color='Exp. - Trat. A'))+
+  geom_line(aes(x=times,y=1-p_exp2,color='Exp. - Trat. B'))+
+  geom_line(aes(x=times,y=1-p_exp_pura,color='Exp. - Sem trat.'))+
+  scale_color_hue('Modelo')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+#### 3
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+times=c(1:200)
+p_exp_pura=pexp(times,1/exp(4.212128))
+
+ggplot()+
+  geom_line(aes(x=times,y=1-p_exp_pura,color='Modelo final'))+
+  scale_color_manual('',values='black')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+res=obs*exp(-4.212128)
+kp_est=survfit(formula = Surv(res,cen) ~ 1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara))+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous(TeX('$\\widehat{e}_i$'))+
+  scale_y_continuous(TeX('$-\\log(\\widehat{S}(\\widehat{e}_i))$'))+
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+m=cen-res
+
+ggplot()+
+  geom_point(aes(x=obs,y=m))+
+  scale_x_continuous('Tempo')+
+  scale_y_continuous(TeX('$\\widehat{m}_i$'))+
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+d=sign(m)*sqrt(-2*(m+cen*log(cen-m)))
+
+ggplot()+
+  geom_point(aes(x=obs,y=cen-res))+
+  scale_x_continuous('Tempo')+
+  scale_y_continuous(TeX('\\widehat{d}_i'))+
+  theme_bw()
+
+```
+
+### Questão 5.1:
+
+#### a)
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+tempo1   <- c(28, 89, 175, 195, 309, 377, 393, 421, 447, 462, 709, 744, 770, 1106, 1206)
+censura1 <- c( 1,  1,   1,   1,   1,   0,   0,   0,   0,   1,   0,   0,   0,    0,    0)
+grupo1   <- rep(1, length(tempo1))
+
+tempo2   <- c(34, 88, 137, 199, 280, 291, 299, 300, 309, 351, 358, 369, 369, 370, 375, 382, 392, 429, 451, 1119)
+censura2 <- c( 1,  1,   1,   1,   1,   1,   0,   0,   1,   1,   1,   1,   1,   1,   1,   1,   1,   0,   1,    0)
+grupo2   <- rep(2, length(tempo2))
+
+tempo   <- c(tempo1  , tempo2  )
+censura <- c(censura1, censura2)
+grupo   <- as.factor(c(grupo1  , grupo2  ))
+
+data <- cbind(tempo, censura, grupo)
+data <- as.data.frame(data)
+
+```
+
+#### c) 
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+modelo1 <- survfit(coxph(Surv(tempo[grupo == 1], censura[grupo == 1]) ~ 1, data = data, x = T, method = "breslow"))
+Lambda1 <- log(-log(modelo1$surv))
+modelo2 <- survfit(coxph(Surv(tempo[grupo == 2], censura[grupo == 2]) ~ 1, data = data, x = T, method = "breslow"))
+Lambda2 <- log(-log(modelo2$surv))
+
+ggplot()+
+  geom_step(aes(x = modelo1$time, y = Lambda1, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
+  geom_step(aes(x = modelo2$time, y = Lambda2, color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  scale_color_hue("Grupo") +
+  scale_y_continuous(TeX("$\\log(\\hat{\\Lambda}(t))$")) +
+  scale_x_continuous("Tempo em dias") +
+  guides(fill = "none") +
+  ggtitle("Log da Função de Taxa de Falha Acumalada") +
+  theme_bw()
+
+```
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+modelo <- coxph(Surv(tempo, censura) ~ grupo, data = data, x = T, method = "breslow")
+sobrev <- survfit(modelo)
+
+ggplot()+
+  geom_step(aes(x = sobrev$time, y = sobrev$surv, color = "Grupo 1: Tumor Grande"), lwd = 1.2) +
+  geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(modelo$coefficients)), color = "Grupo 2: Tumor Pequeno"), lwd = 1.2) +
+  scale_color_hue("Grupo") +
+  scale_y_continuous(TeX("\\hat{S}(t)$")) +
+  scale_x_continuous("Tempo em dias") +
+  guides(fill = "none") +
+  ggtitle("Função de Sobrevivência") +
+  theme_bw()
+
+```
+
+#### d) 
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+kable_styling(
+  kable(
+    summary(modelo)$coefficients,
+    format = "latex",
+    align = "c",
+    digits = 5,
+    escape = FALSE,
+    booktabs = TRUE,
+    linesep = c("\\hline")
+  ),
+  position = "center",
+  latex_options = "hold_position"
+)
+
+```
+
+
+### Questão 5.2
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
+x=read.table("dadosq2.txt")
+
+```
+
+
+#### 5.2.1
+
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
+
 colnames(x)=c('Paciente','tempo','ind. falha','tratamento','idade','resíduo','status','idade01')
 
 attach(x)#trocar todos os 12 por 01
@@ -739,7 +1436,7 @@ abc=`rownames<-`(abc,c('tratamento','idade','residuo','status'))
 abc
 ```
 
-```{r}
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
 
 par(mfrow=c(2,2)) 
@@ -810,11 +1507,8 @@ title("idade >56")
 
 ```
 
-Temos em vermelho os tipo 2(tratamento,Residuo e status) e em preto o tipo 1 e para as idade foi dividido em dois grupos os com 56 anos ou mais(em vermelho) e menos que 56 anos (em preto).
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
-Podemos observar que com o aumento da idade , o residuo ser do tipo 2 e status ser do tipo 2 nos temos que aumenta o risco de não sobreviver e que estar no tratamento 2 diminui esse risco. E devido a isto vamos considerar o modelo ideal aquele sem levar em consideração a variavel Status(melhor explicado na questão de numero 2). vamos então fazer o ajuste levando em consideração Tratamento,idade e Residuo.
-
-```{r}
 fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
            data=x, x = T, method="breslow") 
 rr=exp(fit1$coefficients)
@@ -871,21 +1565,9 @@ lines(ss$time,log(H0),type="l",lty=1,col=2)
 title("idade >56")
 ```
 
-Temos em vermelho os tipo 2(tratamento e Residuo) e em preto o tipo 1 e para as idade foi dividido em dois grupos os com 56 anos ou mais(em vermelho) e menos que 56 anos (em preto).
+#### 5.2.4
 
-Por fim ainda temos que para o p-valor nao estamos dando tanta atenção devido ao fato de nossa amostra ser pequena.
-
-### 5.2.2
-Importante de se observar que na variavel status temos os cruzamento dos dois grupos o que acaba por quebrar a nossa hipotese de que os riscos são proporcionais e portanto estão violando a nossa suposição de riscos proporcionais.
-
-### 5.2.3
-
-Olhando o coeficiente de tratamento podemos observar o seu valor de -0.8369728 o que nos indica que se temos o tratamento 2 ou seja (i=1) vamos ter uma diminuição do risco do paciente e tambem utilizando a razao de risco podemos ver que o risco do paciente no tratamento do tipo 2 é aproximadamente 0.43 vezes o risco do paciente no tratamento do tipo 1 ou seja o tratamento do tipo 2 tem diferencas com relação ao tipo 1
-
-### 5.2.4
-
-
-```{r}
+```{r echo = TRUE, results= 'hide', fig.show = 'hide', warning = FALSE}
 
 fit1<-coxph(Surv(tempo,`ind. falha`)~tratamentoc+idade+residuoc,
             data=x, x = T, method="breslow")
@@ -915,4 +1597,3 @@ plot(tt,S00^exp(-atrat),type="s",ylim=range(c(0,1)),xlab="Tempos",ylab="S(t|x)",
 title("Idade de 45 anos/residuo 1/status 2/tratamento 2")
 ```
 
-Temos então nossa tabela estimada de sobrevivencia para o paciente com 45 anos ,residuo=1 ,status =2 e tratamento 2.
