@@ -1,0 +1,178 @@
+---
+title: ""
+output: pdf_document
+header-includes:
+    - \usepackage{caption}
+---
+
+```{r setup, include=FALSE}
+library(ggplot2)
+library(ggtext)
+library(latex2exp)
+knitr::opts_chunk$set(echo = F, fig.height=4, fig.width=6,comment=NA)
+```
+
+
+\large \begin{center}
+	\textbf{UNIVERSIDADE FEDERAL DO RIO DE JANEIRO}\\
+	
+Instituto de Matemática\\
+
+Análise de Sobrevivência\\
+
+\vspace{250 pt}
+
+\textbf{{\Large {\color{red}Título a ser colocado}}}\\
+
+Trabalho aplicado\\
+
+\vspace{160 pt}
+\begin{flushright}
+
+	\textbf{Alunos:}\text{ Daniel Barreto}\\
+	                \text{ Renan Reis}\\
+	                \text{ Silvaneo Junior}\\
+	\textbf{Professora:}\text{ Marina Silva Paez}\\
+	
+\end{flushright}
+\vspace{90 pt}
+
+Rio de Janeiro, 7 de outubro de 2021.
+
+\end{center}
+
+\pagebreak
+
+# 1 - Introdução
+
+Este trabalho consiste na construção e análise de modelo para análise de sobrevivência em um conjunto de dos clientes de uma companhia de telecomunicações, sendo este conjunto disponibilizado pela *IBM*.
+
+Nesse trabalho, o interesse é modelar a probabilidade de um cliente cancelar o serviço contratado com o auxílio de variáveis auxiliares, desta forma, começamos com a análise exploratória do conjunto de dados, em seguida ajustamos alguns modelos paramétricos usando as informações complementares dos clientes como regressoras e, por último, ajustamos o modelo de Cox.
+
+O banco de dados usado pode ser encontrado no site:
+
+\url{https://www.kaggle.com/blastchar/telco-customer-churn}
+
+Por último, o código usado para gerar os resultados neste trabalho pode ser encontrado no apêndice.
+
+\pagebreak
+
+# 2 - Análise exploratória dos dados
+
+O conjunto de dados utilizados consiste em $7043$ observações de clientes de uma empresa de telecomunicações, sendo que a fonte dos dados não informou o nome da empresa em questão ou data de coleta dos dados. O conjunto tem $21$ variáveis que são descritas a seguir:
+
+- **customeID**: Variável categórica consistindo em uma sequência de $4$ números e $5$ letras separados por um traço (exemplo: *2155-AMQRX*), este valor é único para cada cliente (e portanto, para cada linha) e serve para identificar os clientes. Esta variável não foi usada no ajuste dos modelos.
+
+- **gender**: Variável categórica binária representando o genêro do cliente, assume valores *Male* e *Female*.
+
+- **SeniorCitizen**: Variável categórica binária, assume valor $1$ quando o cliente é idoso e $0$ caso contrário.
+
+- **Partner**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente possui parceiro.
+
+- **Dependents**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente possui dependentes.
+
+- **tenure**: Variável contínua, assume apenas valores inteiros positivos e indica o número de meses que desde a contratação do serviço por parte do cliente.
+
+- **PhoneService**: Variável categórica binária, assume valores *Yes* e *No* indicando se o plano do cliente possui serviço de telephonia.
+
+- **MultipleLines**: Variável categórica, assume valores *Yes*, *No* e *No phone service* indicando se o cliente possui múltiplas linhas de telefone.
+
+- **InternetService**: Variável categórica, assume valores *DSL*, *Fiber optic*, *No* indicando o tipo de serviço de internet contratado.
+
+- **OnlineSecurity**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou o serviço de segurança *online* oferecido pela empresa.
+
+- **OnlineBackup**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou o serviço de *backup online* oferecido pela empresa.
+
+- **DeviceProtection**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou o serviço de proteção de dispositivos oferecido pela empresa.
+
+- **TechSupport**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou o serviço de suporte técnico oferecido pela empresa.
+
+- **StreamingTV**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou serviço de *Streaming* de TV.
+
+- **StreamingMovies**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou serviço de *Streaming* de filmes.
+
+- **Contract**: Variável categórica, assume valores *Month-to-month*, *One year* e *Two year* indicando o tipo de contrato do cliente.
+
+- **PaperlessBilling**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente recebe a cobrança da mensalidade por papel (*No*).
+
+- **PaymentMethod**: Variável categórica, assume valores *Bank transfer (automatic)*, *Credit card (automatic)*, *Electronic check* e *Mailed check* indicando a forma de pagamento utilizada pelo cliente.
+
+- **MonthlyCharges**: Variável contínua, assume valores valores positivos e indica o valor pago mensalmente pelo cliente.
+
+- **TotalCharges**: Variável contínua, assume valores valores positivos e indica o valor pago pelo cliente do início do contrato até o momento da coleta dos dados.
+
+- **Churn**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente cancelou o serviço. No caso onde houve cancelamento, consideramos como falha, sendo que quando não houve cancelamento consideramos como censura tipo II (o cliente não havia cancelado até o momento da coleta).
+
+Observe que há uma certa redundância entre as variáveis *MonthlyCharges* e *TotalCharges*, pois esta última seria a soma dos valores da mensalidade ao longo do tempo em que o cliente esteve na empresa, de fato, através de uma regressão linear, podemos verificar que *TotalCharges* pode ser quase perfeitamente descrito pelo produto entre *MonthlyCharges* e *tenure*, sendo que o coeficiente $R^2$ da regressão foi $99.91\%$, ou seja, $99.91\%$ da variabilidade de *TotalCharges* é explicada pelo produto entre *MonthlyCharges* e *tenure* (o coeficiente associado a ele é aproximadamente $1$). Vale ressaltar que a parcela da variabilidade não explicada se deve, provavelmente, a mudanças na mensalidade ao longo do tempo, a serviços com custo fixo contratados esporadicamente (uma taxa de manutenção) ou a algum tipo de taxa de adesão.
+
+Segue adiante alguns gráficos com a distribuição das variáveis:
+
+```{r fig.height=12, fig.width=8}
+dados=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = T)
+dados=dados[order(dados$gender,
+            dados$SeniorCitizen,
+            dados$Partner,
+            dados$Dependents,
+            dados$PhoneService,
+            dados$MultipleLines,
+            dados$InternetService,
+            dados$OnlineSecurity,
+            dados$OnlineBackup,
+            dados$DeviceProtection,
+            dados$TechSupport,
+            dados$StreamingTV,
+            dados$StreamingMovies,
+            dados$Contract,
+            dados$PaperlessBilling,
+            dados$PaymentMethod),]
+
+dados$tenure=dados$tenure+0.5
+
+ref_dat=as.data.frame(table(dados$gender))
+ref_dat$group='gender'
+ref_dat=ref_dat[order(ref_dat$Var1,decreasing =T),]
+ref_dat$ypos=cumsum(ref_dat$Freq)-0.5*ref_dat$Freq
+n=sum(ref_dat$Freq)
+for(name in names(dados)[-c(1,2,6,19,20)]){
+  dummy=as.data.frame(table(dados[[name]]))
+  dummy$group=name
+  
+  dummy=dummy[order(dummy$Var1,decreasing =F),]
+  dummy$ypos=cumsum(dummy$Freq)-0.5*dummy$Freq
+  ref_dat=rbind(ref_dat,dummy)
+}
+
+#ref_dat=ref_dat[ref_dat$group=='gender',]
+  
+  ggplot(ref_dat,
+         aes(x='',
+             fill=Var1,
+             y=Freq))+
+    geom_bar(width=10,stat='identity')+
+    coord_polar('y',start=0)+
+    geom_richtext(aes(y=ypos,
+                  label = paste0('<b>',Var1,'</b>','<br>',100*round(Freq/n,4),'%')),
+              color = "white",size=3) +
+    scale_fill_hue(name)+
+    facet_wrap(~group,ncol=4)+
+    guides(fill='none')+
+    theme_void()
+```
+
+\pagebreak
+
+# 4 - Ajuste do modelo de Cox
+
+\pagebreak
+
+# 3 - Ajuste de modelos paramétricos
+
+\pagebreak
+
+# 5 - Referências
+
+\pagebreak
+
+# 6 - Apêndice
+
+\pagebreak

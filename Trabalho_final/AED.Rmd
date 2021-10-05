@@ -1,0 +1,386 @@
+---
+title: "Análise de sobrevivência"
+author: "Grupo 6: Daniel Barreto, Renan Reis e Silvaneo Junior"
+date: ""
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+library(tidyr)
+library(ggplot2)
+library(GGally)
+library(plotly)
+library(survival)
+```
+
+
+```{r include=FALSE}
+source('plot_helper.R')
+
+dados=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = T)
+dados=dados[order(dados$gender,
+            dados$SeniorCitizen,
+            dados$Partner,
+            dados$Dependents,
+            dados$PhoneService,
+            dados$MultipleLines,
+            dados$InternetService,
+            dados$OnlineSecurity,
+            dados$OnlineBackup,
+            dados$DeviceProtection,
+            dados$TechSupport,
+            dados$StreamingTV,
+            dados$StreamingMovies,
+            dados$Contract,
+            dados$PaperlessBilling,
+            dados$PaymentMethod),]
+
+dados$tenure=dados$tenure+0.5
+```
+
+```{r}
+# [1] "customerID"       "gender"           "SeniorCitizen"    "Partner"          "Dependents"      
+# [6] "tenure"           "PhoneService"     "MultipleLines"    "InternetService"  "OnlineSecurity"  
+# [11] "OnlineBackup"     "DeviceProtection" "TechSupport"      "StreamingTV"      "StreamingMovies" 
+# [16] "Contract"         "PaperlessBilling" "PaymentMethod"    "MonthlyCharges"   "TotalCharges"    
+# [21] "Churn"  
+
+ref=table(dados[,c(3,15)])
+
+ref
+
+t(t(ref)/colSums(ref))
+ref/rowSums(ref)
+
+chisq.test(ref)
+
+```
+
+## Análise das covariáveis
+
+## Tempo
+
+```{r}
+ggplot(dados)+
+  geom_histogram(aes(tenure),color='black',fill='lightblue',binwidth=2)+
+  theme_bw()
+```
+
+## Tempo
+
+```{r}
+kp_est=survfit(Surv(dados$tenure,ifelse(dados$Churn=='Yes',0,1))~1)
+ribbon_time=sort(c(kp_est$time-0.01,kp_est$time+0.01)[-c(1)],decreasing=F)
+ribbon_lower=sort(c(kp_est$lower,kp_est$lower)[-c(length(kp_est$time))],decreasing=T)
+ribbon_upper=sort(c(kp_est$upper,kp_est$upper)[-c(length(kp_est$time))],decreasing=T)
+
+ggplotly(
+ggplot()+
+  geom_step(aes(x=kp_est$time,y=kp_est$surv))+
+  geom_ribbon(aes(x=ribbon_time,ymin=ribbon_lower,ymax=ribbon_upper),
+                             fill='lightblue',
+                             alpha=0.5)+
+  labs(title='Função de sobrevivência estimada por Kaplan-Meier')+
+  scale_y_continuous('Probabilidade de sobrevivência')+
+  scale_x_continuous('Tempo')+
+  theme_bw()
+)
+```
+
+## Falhas
+
+```{r}
+gera_pieplot(dados,21)
+```
+
+## Gênero
+
+```{r}
+gera_pieplot(dados,2)
+```
+
+## Gênero
+
+```{r}
+gera_kp_plot(dados,2)
+```
+
+## Senioridade
+
+```{r}
+gera_pieplot(dados,3)
+```
+
+## Senioridade
+
+```{r}
+gera_kp_plot(dados,3)
+```
+
+## Parceiro
+
+```{r}
+gera_pieplot(dados,4)
+```
+
+## Parceiro
+
+```{r}
+gera_kp_plot(dados,4)
+```
+
+## Dependentes
+
+```{r}
+gera_pieplot(dados,5)
+```
+
+## Dependentes
+
+```{r}
+gera_kp_plot(dados,5)
+```
+
+## PhoneService
+
+```{r}
+gera_pieplot(dados,7)
+```
+
+## PhoneService
+
+```{r}
+gera_kp_plot(dados,7)
+```
+
+## MultipleLines
+
+```{r}
+gera_pieplot(dados,8)
+```
+
+## MultipleLines
+
+```{r}
+gera_kp_plot(dados,8)
+```
+
+## InternetService
+
+```{r}
+gera_pieplot(dados,9)
+```
+
+## InternetService
+
+```{r}
+gera_kp_plot(dados,9)
+```
+
+## InternetService+PhoneService
+
+```{r}
+dados$Interaction=interaction(dados$PhoneService,dados$InternetService)
+
+gera_kp_plot(dados,length(names(dados)))
+```
+
+## OnlineSecurity
+
+```{r}
+gera_pieplot(dados,10)
+```
+
+## OnlineSecurity
+
+```{r}
+gera_kp_plot(dados,10)
+```
+
+## OnlineBackup
+
+```{r}
+gera_pieplot(dados,11)
+```
+
+## OnlineBackup
+
+```{r}
+gera_kp_plot(dados,11)
+```
+
+## DeviceProtection
+
+```{r}
+gera_pieplot(dados,12)
+```
+
+## DeviceProtection
+
+```{r}
+gera_kp_plot(dados,12)
+```
+
+## TechSupport
+
+```{r}
+gera_pieplot(dados,13)
+```
+
+## TechSupport
+
+```{r}
+gera_kp_plot(dados,13)
+```
+
+## StreamingTV
+
+```{r}
+gera_pieplot(dados,14)
+```
+
+## StreamingTV
+
+```{r}
+gera_kp_plot(dados,14)
+```
+
+## StreamingMovies
+
+```{r}
+gera_pieplot(dados,15)
+```
+
+## StreamingMovies
+
+```{r}
+gera_kp_plot(dados,15)
+```
+
+## Contract
+
+```{r}
+gera_pieplot(dados,16)
+```
+
+## Contract
+
+```{r}
+gera_kp_plot(dados,16)
+```
+
+## PaperlessBilling
+
+```{r}
+gera_pieplot(dados,17)
+```
+
+## PaperlessBilling
+
+```{r}
+gera_kp_plot(dados,17)
+```
+
+## PaymentMethod
+
+```{r}
+gera_pieplot(dados,18)
+```
+
+## PaymentMethod
+
+```{r}
+gera_kp_plot(dados,18)
+```
+
+## Mensalidade
+
+```{r}
+ggplot(dados)+
+  geom_histogram(aes(MonthlyCharges),color='black',fill='lightblue')+
+  theme_bw()
+```
+
+## Mensalidade
+
+```{r}
+ggplot(dados)+
+  geom_boxplot(aes(x=StreamingTV,y=MonthlyCharges,fill=StreamingTV))+
+  guides(fill='none')+
+  theme_bw()
+```
+
+## Regressão da mensalidade
+
+Coeficiente $R^2=99.88%$ e $\widehat{\sigma}=1.026$ (a mensalidade média é $64.76169$).
+
+```{r}
+# Variáveis sem efeito signifiativo:
+#    - gender
+#    - SeniorCitizen
+#    - Partner
+#    - Dependents
+#    - Contract
+#    - PaperlessBilling
+#    - PaymentMethod
+
+regressao=
+  lm(MonthlyCharges~PhoneService+MultipleLines+InternetService+
+    OnlineSecurity+OnlineBackup+DeviceProtection+TechSupport+StreamingTV+StreamingMovies,
+   data=dados)
+
+ggplot()+
+  geom_point(aes(x=dados$MonthlyCharges,y=regressao$fitted.values))+
+  geom_line(aes(x=dados$MonthlyCharges,y=dados$MonthlyCharges),linetype='dashed')+
+  scale_x_continuous('Mensalidade')+
+  scale_y_continuous('Mensalidade estimada')+
+  coord_fixed()+
+  theme_bw()
+```
+
+## Covariáveis
+
+```{r}
+plaeholder=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = F)[,-c(1,6,19,20,21)]
+```
+
+```{r}
+name1_list=c()
+name2_list=c()
+chisq_list=c()
+df_list=c()
+count=0
+for(name1 in names(plaeholder)){
+  for(name2 in names(plaeholder)){
+    dummy=plaeholder[plaeholder[[name1]]!='No internet service' & plaeholder[[name2]]!='No internet service' & plaeholder[[name1]]!='No phone service' & plaeholder[[name2]]!='No phone service',]
+    
+    name1_list=c(name1_list,name1)
+    name2_list=c(name2_list,name2)
+
+    tab=table(dummy[[name1]],dummy[[name2]])
+    if(name1==name2){
+      df_list=c(df_list,1)
+      chisq_list=c(chisq_list,NA)
+    }else{
+      teste=chisq.test(tab)
+      count=count+1
+      df_list=c(df_list,teste$df)
+      chisq_list=c(chisq_list,teste$statistic)
+    }
+  }
+}
+count=count/2
+tile_data=data.frame(var1=name1_list,var2=name2_list,chisq=chisq_list,df=df_list)
+```
+
+```{r}
+alpha=qchisq(1-0.01/count,1)
+ggplot(tile_data)+
+  geom_tile(aes(x=var1,y=var2,fill=-log(chisq/alpha)),color='black')+
+  scale_fill_gradient2('',low='red',mid='white',high='blue',midpoint=0,
+                       label=function(x){round(1-pchisq(alpha*exp(-x),1),2)})+
+  theme_bw()+
+  theme(axis.text.x = element_text(angle=90))+
+  coord_fixed()
+```
