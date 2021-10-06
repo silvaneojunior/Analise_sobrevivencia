@@ -19,7 +19,7 @@ gera_pieplot=function(dados,index){
 }
 
 gera_kp_plot=function(dados,index){
-  kp_est=survfit(Surv(dados$tenure,ifelse(dados$Churn=='Yes',1,0))~dados[,index])
+  kp_est=survfit(Surv(dados$tenure,ifelse(dados$Churn=='Yes',0,1))~dados[,index])
   
   plot=ggplot()+
     labs(title='Função de sobrevivência estimada por Kaplan-Meier')+
