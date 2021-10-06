@@ -20,7 +20,7 @@ library(survival)
 
 
 ```{r include=FALSE}
-source('plot_helper.R',encoding='UTF-8')
+source('plot_helper.R', encoding = "UTF-8")
 
 dados=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = T)
 dados=dados[order(dados$gender,
@@ -290,7 +290,7 @@ gera_kp_plot(dados,18)
 
 ```{r}
 ggplot(dados)+
-  geom_histogram(aes(MonthlyCharges),color='black',fill='lightblue')+
+  geom_histogram(aes(MonthlyCharges), color='black', fill='lightblue', bins = 30)+
   theme_bw()
 ```
 
@@ -377,3 +377,296 @@ ggplot()+
 <!--   theme(axis.text.x = element_text(angle=90))+ -->
 <!--   coord_fixed() -->
 <!-- ``` -->
+
+## Modelo de Cox
+
+## Especificação do Modelo
+
+Sejam $\lambda$ a função de taxa de falha, $g$ uma função não negativa tal que $g(0) = 1$, $\lambda_{0}$ uma função não negativa do tempo, $\beta$ um vetor paramétrico e $x'_{i}$ um vetor de covariáveis para a $i$-ésima observação da amostra 
+
+$$\lambda(t) = \lambda_{0}(t)g(x'_{i}\beta)$$
+
+Sendo que iremos adotar $g(x) = \exp\{x\}$. Dessa forma, obtemos que, para duas observações $i$ e $j$ quaisquer
+
+$$\dfrac{\lambda_{i}(t)}{\lambda_{j}(t)} = \dfrac{\lambda_{0}(t)\exp\{x'_{i}\beta\}}{\lambda_{0}(t)\exp\{x'_{j}\beta\}} = \exp\{(x'_{i}-x'_{j})\beta\} = K(i,j)$$
+
+```{r}
+
+dados_dwb <- read.csv(
+  file = "Telco-Customer-Churn.csv",
+  header = TRUE,
+  sep = ",",
+  quote = "",
+  dec = "."
+)
+
+dados_dwb[which(dados_dwb[,8] == "No phone service"),8] <- "No"
+for (j in c(10:15)){
+  dados_dwb[which(dados_dwb[,j] == "No internet service"),j] <- "No"
+}
+
+dados_dwb[which(dados_dwb[,21] == "Yes"),22] <- 1
+dados_dwb[which(dados_dwb[,21] == "No" ),22] <- 0
+names(dados_dwb)[22] <- "Status" # Vale 1 no caso de falha e 0 no de censura
+
+dados_dwb[,6] <- as.numeric(dados_dwb[,6])
+dados_dwb[,6] <- dados_dwb[,6] + 0.5
+
+for (i in 1:nrow(dados_dwb)){
+  if (dados_dwb[i,18] %in% c("Bank transfer (automatic)", "Credit card (automatic)"))
+    dados_dwb[i,18] <- "Automatic"
+}
+
+variables <- c(2:5, 7:18)
+for (j in c(variables, 21)){
+  dados_dwb[,j] <- as.factor(dados_dwb[,j])
+}
+
+aux_modelo_Nelson <- list()
+
+for (k in 1:length(variables)){
+  
+  aux_modelo_Nelson[[k]] <- list()
+  
+  for (m in 1:length(table(dados_dwb[,variables[k]]))){
+    
+    aux_modelo_Nelson[[k]][[m]] <- 
+      survfit(
+        coxph(
+          Surv(
+            dados_dwb$tenure[which(dados_dwb[,variables[k]] == names(table(dados_dwb[,variables[k]]))[m])], 
+            dados_dwb$Status[which(dados_dwb[,variables[k]] == names(table(dados_dwb[,variables[k]]))[m])]
+          ) ~ 1,
+          data = dados_dwb,
+          x = T,
+          method = "breslow"
+        ), 
+        conf.type = "log-log"
+      )
+  }
+}
+
+aux_nomes  <- list()
+aux_nomes[[ 1]] <- c("Sexo", "Feminino", "Masculino")
+aux_nomes[[ 2]] <- c("Sênior", "Não", "Sim")
+aux_nomes[[ 3]] <- c("Parceiro", "Não", "Sim")
+aux_nomes[[ 4]] <- c("Dependentes", "Não", "Sim")
+aux_nomes[[ 5]] <- c("Serviço de Telefone", "Não", "Sim")
+aux_nomes[[ 6]] <- c("Múltiplas Linhas", "Não", "Sim")
+aux_nomes[[ 7]] <- c("Serviço de Internet", "DSL", "Fibra Óptica", "Não")
+aux_nomes[[ 8]] <- c("Segurança Online", "Não", "Sim")
+aux_nomes[[ 9]] <- c("Backup Online", "Não", "Sim")
+aux_nomes[[10]] <- c("Proteção do Dispositivo", "Não", "Sim")
+aux_nomes[[11]] <- c("Suporte Técnico", "Não", "Sim")
+aux_nomes[[12]] <- c("Transmissão de TV", "Não", "Sim")
+aux_nomes[[13]] <- c("Transmissão de Filmes", "Não", "Sim")
+aux_nomes[[14]] <- c("Contrato", "Mês a Mês", "Anual", "Bienal")
+aux_nomes[[15]] <- c("Cobrança Virtual", "Não", "Sim")
+aux_nomes[[16]] <- c("Forma de Pagamento", 
+                     "Automática",
+                     "Cheque Eletrônico",
+                     "Cheque por Correio")
+
+aux_graph_Lambda <- list()
+aux_graph_Nelson <- list()
+
+for (k in 1:length(variables)){
+  
+  aux <- ggplot() +
+      scale_color_hue(aux_nomes[[k]][1]) +
+      scale_y_continuous(TeX("$\\log(\\hat{\\Lambda}(t))$")) +
+      scale_x_continuous("Tempo em meses") +
+      guides(fill = "none") +
+      ggtitle("Log da Função de Taxa de Falha Acumalada") +
+      theme_bw()
+  
+  for (m in 1:length(table(dados_dwb[,variables[k]]))){
+    
+    aux <- aux + 
+      geom_step(
+        aes_string(
+          x = aux_modelo_Nelson[[k]][[m]]$time,
+          y = log(-log(aux_modelo_Nelson[[k]][[m]]$surv)),
+          color = paste0("'", aux_nomes[[k]][m+1], "'") 
+        ), 
+        lwd = 1.2
+      )
+  }
+  
+  aux_graph_Lambda[[k]] <- aux
+  
+  aux <- ggplot()+
+    scale_color_hue(aux_nomes[[k]][1]) +
+    scale_y_continuous("Probabilidade de sobrevivência") +
+    scale_x_continuous("Tempo em meses") +
+    guides(fill = "none") +
+    ggtitle("Estimativas das Funções de Sobrevivência por Nelson-Aalen") +
+    theme_bw()
+  
+  for (m in 1:length(table(dados_dwb[,variables[k]]))){
+    
+    aux <- aux + 
+      geom_step(
+        aes_string(
+          x = aux_modelo_Nelson[[k]][[m]]$time,
+          y = aux_modelo_Nelson[[k]][[m]]$surv,
+          color = paste0("'", aux_nomes[[k]][m+1], "'")
+        )
+      ) +
+      pammtools::geom_stepribbon(
+        aes_string(
+          x = aux_modelo_Nelson[[k]][[m]]$time,
+          ymin = aux_modelo_Nelson[[k]][[m]]$lower, 
+          ymax = aux_modelo_Nelson[[k]][[m]]$upper,
+          fill = paste0("'", aux_nomes[[k]][m+1], "'")
+        ),
+        alpha = 0.1
+      )
+  }
+  
+  aux_graph_Nelson[[k]] <- aux
+}
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[1]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[2]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[3]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[4]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[5]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[6]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[7]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[8]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[9]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[10]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[11]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[12]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[13]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[14]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[15]]
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+aux_graph_Lambda[[16]]
+
+```
+
+## Processo de Seleção de Variáveis
+
+Inicialmente o modelo foi ajustado com as variáveis selecionadas a partir do método *backward*, mas o ajuste obtido foi insatisfatório na análise de resíduos.
+
+Foram então pré-selecionadas as variáveis que obtiveram um bom ajuste resultante e a partir delas foi realizado o método *forward*.
+
+## Exemplo de Resíduo Ruim
+
+```{r}
+
+
+
+```
