@@ -1,13 +1,7 @@
 
 *.pdf
 *.log
-.Rproj.user
-Lista 1/.Rhistory
-Lista2/.Rhistory
-Trabalho_final/.Rhistory
-Lista2/.Rhistory
-Trabalho_final/.Rhistory
+*/.Rproj.user
+*/.Rhistory
 *.html
-Trabalho_final/.Rhistory
-Lista2/.Rhistory
 *.dcf
