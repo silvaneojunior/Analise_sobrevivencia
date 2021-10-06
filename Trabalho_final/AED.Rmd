@@ -70,7 +70,7 @@ ggplot(dados)+
 ## Tempo
 
 ```{r}
-kp_est=survfit(Surv(dados$tenure,ifelse(dados$Churn=='Yes',0,1))~1)
+kp_est=survfit(Surv(dados$tenure,ifelse(dados$Churn=='Yes',1,0))~1)
 ribbon_time=sort(c(kp_est$time-0.01,kp_est$time+0.01)[-c(1)],decreasing=F)
 ribbon_lower=sort(c(kp_est$lower,kp_est$lower)[-c(length(kp_est$time))],decreasing=T)
 ribbon_upper=sort(c(kp_est$upper,kp_est$upper)[-c(length(kp_est$time))],decreasing=T)
@@ -81,9 +81,9 @@ ggplot()+
   geom_ribbon(aes(x=ribbon_time,ymin=ribbon_lower,ymax=ribbon_upper),
                              fill='lightblue',
                              alpha=0.5)+
-  labs(title='Função de sobrevivência estimada por Kaplan-Meier')+
-  scale_y_continuous('Probabilidade de sobrevivência')+
-  scale_x_continuous('Tempo')+
+    labs(title='Função de sobrevivência estimada por Kaplan-Meier')+
+    scale_y_continuous('Probabilidade de sobrevivência',limits=c(0.0,1.0))+
+    scale_x_continuous('Tempo')+
   theme_bw()
 )
 ```

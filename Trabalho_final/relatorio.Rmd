@@ -45,21 +45,19 @@ Rio de Janeiro, 7 de outubro de 2021.
 
 # 1 - Introdução
 
-Este trabalho consiste na construção e análise de modelo para análise de sobrevivência em um conjunto de dos clientes de uma companhia de telecomunicações, sendo este conjunto disponibilizado pela *IBM*.
+Este trabalho consiste na construção e avaliação de modelos para análise de sobrevivência em um conjunto de dados consistindo em clientes de uma companhia de telecomunicações, sendo este conjunto disponibilizado pela *IBM*.
 
-Nesse trabalho, o interesse é modelar a probabilidade de um cliente cancelar o serviço contratado com o auxílio de variáveis auxiliares, desta forma, começamos com a análise exploratória do conjunto de dados, em seguida ajustamos alguns modelos paramétricos usando as informações complementares dos clientes como regressoras e, por último, ajustamos o modelo de Cox.
+Nesse trabalho, o interesse é modelar a probabilidade de um cliente cancelar o serviço contratado com o auxílio de variáveis auxiliares, desta forma, começamos com a análise exploratória do conjunto de dados, em seguida ajustamos o modelo de Cox e, por fim, ajustamos alguns modelos paramétricos usando as informações complementares dos clientes como regressoras.
 
 O banco de dados usado pode ser encontrado no site:
 
 \url{https://www.kaggle.com/blastchar/telco-customer-churn}
 
-Por último, o código usado para gerar os resultados neste trabalho pode ser encontrado no apêndice.
-
 \pagebreak
 
 # 2 - Análise exploratória dos dados
 
-O conjunto de dados utilizados consiste em $7043$ observações de clientes de uma empresa de telecomunicações, sendo que a fonte dos dados não informou o nome da empresa em questão ou data de coleta dos dados. O conjunto tem $21$ variáveis que são descritas a seguir:
+O conjunto de dados utilizado consiste em $7.043$ observações de clientes de uma empresa de telecomunicações, sendo que a fonte dos dados não informou o nome da empresa em questão ou data de coleta dos dados. O conjunto tem $21$ variáveis que são descritas a seguir:
 
 - **customeID**: Variável categórica consistindo em uma sequência de $4$ números e $5$ letras separados por um traço (exemplo: *2155-AMQRX*), este valor é único para cada cliente (e portanto, para cada linha) e serve para identificar os clientes. Esta variável não foi usada no ajuste dos modelos.
 
