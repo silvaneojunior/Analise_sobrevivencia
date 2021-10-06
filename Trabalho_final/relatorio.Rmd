@@ -9,7 +9,7 @@ header-includes:
 library(ggplot2)
 library(ggtext)
 library(latex2exp)
-knitr::opts_chunk$set(echo = F, fig.height=4, fig.width=6,comment=NA)
+knitr::opts_chunk$set(echo = F, fig.height=4, fig.width=6,comment=NA,fig.align='center')
 ```
 
 
@@ -137,12 +137,18 @@ for(name in names(dados)[-c(1,2,6,19,20)]){
   dummy=as.data.frame(table(dados[[name]]))
   dummy$group=name
   
-  dummy=dummy[order(dummy$Var1,decreasing =F),]
+  dummy=dummy[order(dummy$Var1,decreasing =T),]
   dummy$ypos=cumsum(dummy$Freq)-0.5*dummy$Freq
   ref_dat=rbind(ref_dat,dummy)
 }
 
 #ref_dat=ref_dat[ref_dat$group=='gender',]
+ref_dat$Var1=as.character(ref_dat$Var1)
+ref_dat[ref_dat=='No internet service']='No internet<br>service'
+ref_dat[ref_dat=='No phone service']='No phone<br>service'
+ref_dat[ref_dat=='Bank transfer (automatic)']='Bank<br>transfer'
+ref_dat[ref_dat=='Credit card (automatic)']='Credit<br>card'
+ref_dat$Var1=as.factor(ref_dat$Var1)
   
   ggplot(ref_dat,
          aes(x='',
@@ -152,7 +158,7 @@ for(name in names(dados)[-c(1,2,6,19,20)]){
     coord_polar('y',start=0)+
     geom_richtext(aes(y=ypos,
                   label = paste0('<b>',Var1,'</b>','<br>',100*round(Freq/n,4),'%')),
-              color = "white",size=3) +
+              color = "white",size=2,label.size=0,fill=NA) +
     scale_fill_hue(name)+
     facet_wrap(~group,ncol=4)+
     guides(fill='none')+
@@ -161,11 +167,45 @@ for(name in names(dados)[-c(1,2,6,19,20)]){
 
 \pagebreak
 
-# 4 - Ajuste do modelo de Cox
+Apartir dos gráficos acima, podemos observar que há diversas categorias redundantes entre as variáveis, especificamente, as categorias *No internet service* representam sempre o mesmo grupo (o grupo representado pela categoria *No* da variável *InternetService*), sendo que algo semelhante acontece entre as variáveis *PhoneService* e *MultipleLines*. Para esse casos, podemos simplificar os modelos a serem ajustados omitindo o parâmetro associado a categoria *No internet service* (e *No phone service*), pois esta informação já está contida na variável *InternetService* (e *PhoneService*). Vale destacar que, caso a simplificação mencionada não fosse adotada, os paramêtros omitidos não seria estimados pelo *R* (apareceriam com valor $0$ e desvio padrão *NA*) e as demais estimativas seriam conservadas, desta forma, a simplicação adotada não tem efeito prático no ajuste dos modelos.
+
+Ainda sobre a redundância entre as variáveis, foi observado que a mensalidade (*MonthlyCharges*) pode ser quase perfeitamente descrito como uma combinação linear (mais uma constante) das variáveis *PhoneService*, *MultipleLines*, *InternetService*, *OnlineSecurity*, *OnlineBackup*, *DeviceProtection*, *TechSupport*, *StreamingTV* e *StreamingMovies*, para ressaltar isto, ajustamos um modelo de regressão linear, onde obtemos um coeficiente $R^2$ igual a $99.88\%$, desta forma, seria redundante incluir nos modelo paramétricos a variável mensalidade junto as variávies associadas ao plano contratado, sendo então necessário verificar qual destes conjuntos de variáveis é mais significativo para o ajuste. Adiante temos um gráfico comparado os valores estimados da mensalidade usando o modelo de regressão linear e os valores observados:
+
+```{r}
+# Variáveis sem efeito signifiativo:
+#    - gender
+#    - SeniorCitizen
+#    - Partner
+#    - Dependents
+#    - Contract
+#    - PaperlessBilling
+#    - PaymentMethod
+
+regressao=
+  lm(MonthlyCharges~PhoneService+MultipleLines+InternetService+
+    OnlineSecurity+OnlineBackup+DeviceProtection+TechSupport+StreamingTV+StreamingMovies,
+   data=dados)
+
+ggplot()+
+  geom_point(aes(x=dados$MonthlyCharges,y=regressao$fitted.values))+
+  geom_line(aes(x=dados$MonthlyCharges,y=dados$MonthlyCharges),linetype='dashed')+
+  scale_x_continuous('Mensalidade')+
+  scale_y_continuous('Mensalidade estimada')+
+  coord_fixed()+
+  theme_bw()
+```
+
+Veja que os valores previstos são discretos, isso acontece devido ao fato de que todas as variáveis regressoras são categóricas. Vale observar também que a hipótese de homocedasticidade, necessária para o modelo de regressão linear, não parece ser respeitada, porém, para o escopo deste trabalho, isto não acarreta em problemas na análise, pois estamos interessados apenas em saber se a Mensalidade pode ser descrita como uma combinação linear de outras variáveis.
+
+Por último, vale destacar que, ao se usar apenas a Mensalidade nos modelos paramétricos, há uma clara perda de informação, por isso, é necessário verificar se esta perda é significativa para o ajuste, pois caso não seja, pelo princípio da parcimônia, seria mais adequado usar o modelo mais simples, i.e., o modelo que usa a Mensalidade.
 
 \pagebreak
 
-# 3 - Ajuste de modelos paramétricos
+# 3 - Ajuste do modelo de Cox
+
+\pagebreak
+
+# 4 - Ajuste de modelos paramétricos
 
 \pagebreak
 
