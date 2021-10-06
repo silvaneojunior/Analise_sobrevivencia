@@ -6,7 +6,11 @@ output: ioslides_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE)
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = FALSE,
+	warning = FALSE
+)
 library(tidyr)
 library(ggplot2)
 library(GGally)
@@ -16,7 +20,7 @@ library(survival)
 
 
 ```{r include=FALSE}
-source('plot_helper.R')
+source('plot_helper.R',encoding='UTF-8')
 
 dados=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = T)
 dados=dados[order(dados$gender,
@@ -39,30 +43,18 @@ dados=dados[order(dados$gender,
 dados$tenure=dados$tenure+0.5
 ```
 
-```{r}
-# [1] "customerID"       "gender"           "SeniorCitizen"    "Partner"          "Dependents"      
-# [6] "tenure"           "PhoneService"     "MultipleLines"    "InternetService"  "OnlineSecurity"  
-# [11] "OnlineBackup"     "DeviceProtection" "TechSupport"      "StreamingTV"      "StreamingMovies" 
-# [16] "Contract"         "PaperlessBilling" "PaymentMethod"    "MonthlyCharges"   "TotalCharges"    
-# [21] "Churn"  
-
-ref=table(dados[,c(3,15)])
-
-ref
-
-t(t(ref)/colSums(ref))
-ref/rowSums(ref)
-
-chisq.test(ref)
-
-```
-
-## Análise das covariáveis
-
 ## Tempo
 
 ```{r}
 ggplot(dados)+
+  geom_histogram(aes(tenure),color='black',fill='lightblue',binwidth=2)+
+  theme_bw()
+```
+
+## Tempo
+
+```{r}
+ggplot(dados[dados$Churn=='Yes',])+
   geom_histogram(aes(tenure),color='black',fill='lightblue',binwidth=2)+
   theme_bw()
 ```
@@ -339,48 +331,49 @@ ggplot()+
   theme_bw()
 ```
 
-## Covariáveis
+<!-- ## Covariáveis -->
 
-```{r}
-plaeholder=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = F)[,-c(1,6,19,20,21)]
-```
+<!-- ```{r} -->
+<!-- plaeholder=read.csv('Telco-Customer-Churn.csv',stringsAsFactors = F)[,-c(1,6,19,20,21)] -->
+<!-- ``` -->
 
-```{r}
-name1_list=c()
-name2_list=c()
-chisq_list=c()
-df_list=c()
-count=0
-for(name1 in names(plaeholder)){
-  for(name2 in names(plaeholder)){
-    dummy=plaeholder[plaeholder[[name1]]!='No internet service' & plaeholder[[name2]]!='No internet service' & plaeholder[[name1]]!='No phone service' & plaeholder[[name2]]!='No phone service',]
-    
-    name1_list=c(name1_list,name1)
-    name2_list=c(name2_list,name2)
+<!-- ```{r} -->
+<!-- name1_list=c() -->
+<!-- name2_list=c() -->
+<!-- chisq_list=c() -->
+<!-- df_list=c() -->
+<!-- count=0 -->
+<!-- for(name1 in names(plaeholder)){ -->
+<!--   for(name2 in names(plaeholder)){ -->
+<!--     dummy=plaeholder[plaeholder[[name1]]!='No internet service' & plaeholder[[name2]]!='No internet service' & plaeholder[[name1]]!='No phone service' & plaeholder[[name2]]!='No phone service',] -->
 
-    tab=table(dummy[[name1]],dummy[[name2]])
-    if(name1==name2){
-      df_list=c(df_list,1)
-      chisq_list=c(chisq_list,NA)
-    }else{
-      teste=chisq.test(tab)
-      count=count+1
-      df_list=c(df_list,teste$df)
-      chisq_list=c(chisq_list,teste$statistic)
-    }
-  }
-}
-count=count/2
-tile_data=data.frame(var1=name1_list,var2=name2_list,chisq=chisq_list,df=df_list)
-```
+<!--     name1_list=c(name1_list,name1) -->
+<!--     name2_list=c(name2_list,name2) -->
 
-```{r}
-alpha=qchisq(1-0.01/count,1)
-ggplot(tile_data)+
-  geom_tile(aes(x=var1,y=var2,fill=-log(chisq/alpha)),color='black')+
-  scale_fill_gradient2('',low='red',mid='white',high='blue',midpoint=0,
-                       label=function(x){round(1-pchisq(alpha*exp(-x),1),2)})+
-  theme_bw()+
-  theme(axis.text.x = element_text(angle=90))+
-  coord_fixed()
-```
+<!--     tab=table(dummy[[name1]],dummy[[name2]]) -->
+<!--     if(name1==name2){ -->
+<!--       df_list=c(df_list,1) -->
+<!--       chisq_list=c(chisq_list,NA) -->
+<!--     }else{ -->
+<!--       teste=chisq.test(tab) -->
+<!--       count=count+1 -->
+<!--       df_list=c(df_list,teste$df) -->
+<!--       chisq_list=c(chisq_list,teste$statistic) -->
+<!--     } -->
+<!--   } -->
+<!-- } -->
+<!-- count=count/2 -->
+<!-- tile_data=data.frame(var1=name1_list,var2=name2_list,chisq=chisq_list,df=df_list) -->
+<!-- tile_data$chisq[ifelse(is.na(tile_data$chisq),1,tile_data$chisq)==0]=10**-3 -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- alpha=qchisq(1-0.01/count,1) -->
+<!-- ggplot(tile_data)+ -->
+<!--   geom_tile(aes(x=var1,y=var2,fill=-log(chisq/alpha)),color='black')+ -->
+<!--   scale_fill_gradient2('',low='red',mid='white',high='blue',midpoint=0, -->
+<!--                        label=function(x){round(1-pchisq(alpha*exp(-x),1),4)})+ -->
+<!--   theme_bw()+ -->
+<!--   theme(axis.text.x = element_text(angle=90))+ -->
+<!--   coord_fixed() -->
+<!-- ``` -->
