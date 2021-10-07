@@ -1,8 +1,10 @@
 ---
 title: ""
 output: pdf_document
+indent: true
 header-includes:
     - \usepackage{caption}
+    - \usepackage{indentfirst}
 ---
 
 ```{r setup, include=FALSE}
@@ -22,9 +24,7 @@ Análise de Sobrevivência\\
 
 \vspace{250 pt}
 
-\textbf{{\Large {\color{red}Título a ser colocado}}}\\
-
-Trabalho aplicado\\
+\textbf{{\Large Relatório do trabalho final}}\\
 
 \vspace{160 pt}
 \begin{flushright}
@@ -45,7 +45,9 @@ Rio de Janeiro, 7 de outubro de 2021.
 
 # 1 - Introdução
 
-Este trabalho consiste na construção e avaliação de modelos para análise de sobrevivência em um conjunto de dados consistindo em clientes de uma companhia de telecomunicações, sendo este conjunto disponibilizado pela *IBM*.
+\vspace{10 pt}
+
+Este trabalho consiste na construção e avaliação de modelos para análise de sobrevivência em um conjunto de dados referentes aos clientes de uma companhia de telecomunicações, sendo este conjunto disponibilizado pela *IBM*. Os dados utilizados foram gerados artificialmente por parte da *IBM*, desta forma, não representam nenhuma empresa em particular.
 
 Nesse trabalho, o interesse é modelar a probabilidade de um cliente cancelar o serviço contratado com o auxílio de variáveis auxiliares, desta forma, começamos com a análise exploratória do conjunto de dados, em seguida ajustamos o modelo de Cox e, por fim, ajustamos alguns modelos paramétricos usando as informações complementares dos clientes como regressoras.
 
@@ -57,9 +59,9 @@ O banco de dados usado pode ser encontrado no site:
 
 # 2 - Análise exploratória dos dados
 
-O conjunto de dados utilizado consiste em $7.043$ observações de clientes de uma empresa de telecomunicações, sendo que a fonte dos dados não informou o nome da empresa em questão ou data de coleta dos dados. O conjunto tem $21$ variáveis que são descritas a seguir:
+ O conjunto de dados utilizado consiste em $7.043$ observações de clientes de uma empresa de telecomunicações, sendo que a fonte dos dados não informou o nome da empresa em questão ou data de coleta dos dados, pois, de fato, os dados são artificiais. O conjunto contem $21$ variáveis que são descritas a seguir:
 
-- **customeID**: Variável categórica consistindo em uma sequência de $4$ números e $5$ letras separados por um traço (exemplo: *2155-AMQRX*), este valor é único para cada cliente (e portanto, para cada linha) e serve para identificar os clientes. Esta variável não foi usada no ajuste dos modelos.
+- **customeID**: Variável categórica na forma de uma sequência de $4$ números e $5$ letras separados por um traço (exemplo: *2155-AMQRX*), este valor é único para cada cliente (e portanto, para cada linha) e serve para identificar os clientes. Esta variável não foi usada no ajuste dos modelos.
 
 - **gender**: Variável categórica binária representando o genêro do cliente, assume valores *Male* e *Female*.
 
@@ -69,11 +71,11 @@ O conjunto de dados utilizado consiste em $7.043$ observações de clientes de u
 
 - **Dependents**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente possui dependentes.
 
-- **tenure**: Variável contínua, assume apenas valores inteiros positivos e indica o número de meses que desde a contratação do serviço por parte do cliente.
+- **tenure**: Variável contínua, assume apenas valores inteiros positivos e indica o número de meses desde a contratação do serviço por parte do cliente.
 
-- **PhoneService**: Variável categórica binária, assume valores *Yes* e *No* indicando se o plano do cliente possui serviço de telephonia.
+- **PhoneService**: Variável categórica binária, assume valores *Yes* e *No* indicando se o plano do cliente possui serviço de telefonia.
 
-- **MultipleLines**: Variável categórica, assume valores *Yes*, *No* e *No phone service* indicando se o cliente possui múltiplas linhas de telefone.
+- **MultipleLines**: Variável categórica, assume valores *Yes*, *No* e *No phone service* indicando se o cliente contratou múltiplas linhas telefônicas.
 
 - **InternetService**: Variável categórica, assume valores *DSL*, *Fiber optic*, *No* indicando o tipo de serviço de internet contratado.
 
@@ -89,7 +91,7 @@ O conjunto de dados utilizado consiste em $7.043$ observações de clientes de u
 
 - **StreamingMovies**: Variável categórica, assume valores *Yes*, *No* e *No internet service* indicando se o cliente contratou serviço de *Streaming* de filmes.
 
-- **Contract**: Variável categórica, assume valores *Month-to-month*, *One year* e *Two year* indicando o tipo de contrato do cliente.
+- **Contract**: Variável categórica, assume valores *Month-to-month*, *One year* e *Two year* indicando o tempo de vigência do contrato com a empresa.
 
 - **PaperlessBilling**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente recebe a cobrança da mensalidade por papel (*No*).
 
@@ -165,9 +167,10 @@ ref_dat$Var1=as.factor(ref_dat$Var1)
 
 \pagebreak
 
+
 Apartir dos gráficos acima, podemos observar que há diversas categorias redundantes entre as variáveis, especificamente, as categorias *No internet service* representam sempre o mesmo grupo (o grupo representado pela categoria *No* da variável *InternetService*), sendo que algo semelhante acontece entre as variáveis *PhoneService* e *MultipleLines*. Para esse casos, podemos simplificar os modelos a serem ajustados omitindo o parâmetro associado a categoria *No internet service* (e *No phone service*), pois esta informação já está contida na variável *InternetService* (e *PhoneService*). Vale destacar que, caso a simplificação mencionada não fosse adotada, os paramêtros omitidos não seria estimados pelo *R* (apareceriam com valor $0$ e desvio padrão *NA*) e as demais estimativas seriam conservadas, desta forma, a simplicação adotada não tem efeito prático no ajuste dos modelos.
 
-Ainda sobre a redundância entre as variáveis, foi observado que a mensalidade (*MonthlyCharges*) pode ser quase perfeitamente descrito como uma combinação linear (mais uma constante) das variáveis *PhoneService*, *MultipleLines*, *InternetService*, *OnlineSecurity*, *OnlineBackup*, *DeviceProtection*, *TechSupport*, *StreamingTV* e *StreamingMovies*, para ressaltar isto, ajustamos um modelo de regressão linear, onde obtemos um coeficiente $R^2$ igual a $99.88\%$, desta forma, seria redundante incluir nos modelo paramétricos a variável mensalidade junto as variávies associadas ao plano contratado, sendo então necessário verificar qual destes conjuntos de variáveis é mais significativo para o ajuste. Adiante temos um gráfico comparado os valores estimados da mensalidade usando o modelo de regressão linear e os valores observados:
+Ainda sobre a redundância entre as variáveis, foi observado que a mensalidade (*MonthlyCharges*) pode ser quase perfeitamente descrita como uma combinação linear (mais uma constante) das variáveis *PhoneService*, *MultipleLines*, *InternetService*, *OnlineSecurity*, *OnlineBackup*, *DeviceProtection*, *TechSupport*, *StreamingTV* e *StreamingMovies*, para ressaltar isto, ajustamos um modelo de regressão linear, onde obtemos um coeficiente $R^2$ igual a $99.88\%$, desta forma, seria redundante incluir nos modelo paramétricos a variável mensalidade junto as variávies associadas ao plano contratado, sendo então necessário verificar qual destes conjuntos de variáveis é mais significativo para o ajuste. Adiante temos um gráfico comparado os valores estimados da mensalidade usando o modelo de regressão linear e os valores observados:
 
 ```{r}
 # Variáveis sem efeito signifiativo:
@@ -197,13 +200,15 @@ Veja que os valores previstos são discretos, isso acontece devido ao fato de qu
 
 Por último, vale destacar que, ao se usar apenas a Mensalidade nos modelos paramétricos, há uma clara perda de informação, por isso, é necessário verificar se esta perda é significativa para o ajuste, pois caso não seja, pelo princípio da parcimônia, seria mais adequado usar o modelo mais simples, i.e., o modelo que usa a Mensalidade.
 
-\pagebreak
-
-# 3 - Ajuste do modelo de Cox
+\textcolor{white}{Easter egg}
 
 \pagebreak
 
-# 4 - Ajuste de modelos paramétricos
+# 3 - Ajuste de modelos paramétricos
+
+\pagebreak
+
+# 4 - Ajuste do modelo de Cox
 
 \pagebreak
 
