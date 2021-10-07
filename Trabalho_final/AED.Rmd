@@ -16,6 +16,7 @@ library(ggplot2)
 library(GGally)
 library(plotly)
 library(survival)
+library(kableExtra)
 ```
 
 
@@ -695,16 +696,15 @@ aux_nomes[[16]] <- c("Forma de Pagamento",
                      "Cheque por Correio")
 
 aux_graph_Lambda <- list()
-aux_graph_Nelson <- list()
 
 for (k in 1:length(variables)){
   
   aux <- ggplot() +
-      scale_color_hue(aux_nomes[[k]][1]) +
-      scale_y_continuous(TeX("$\\log(\\hat{\\Lambda}(t))$")) +
+      scale_color_hue("") +
+      scale_y_continuous("log(Lambda(t))") +
       scale_x_continuous("Tempo em meses") +
       guides(fill = "none") +
-      ggtitle("Log da Função de Taxa de Falha Acumalada") +
+      ggtitle(paste0("Log da Função de Taxa de Falha Acumalada (", aux_nomes[[k]][1], ")")) +
       theme_bw()
   
   for (m in 1:length(table(dados_dwb[,variables[k]]))){
@@ -721,37 +721,6 @@ for (k in 1:length(variables)){
   }
   
   aux_graph_Lambda[[k]] <- aux
-  
-  aux <- ggplot()+
-    scale_color_hue(aux_nomes[[k]][1]) +
-    scale_y_continuous("Probabilidade de sobrevivência") +
-    scale_x_continuous("Tempo em meses") +
-    guides(fill = "none") +
-    ggtitle("Estimativas das Funções de Sobrevivência por Nelson-Aalen") +
-    theme_bw()
-  
-  for (m in 1:length(table(dados_dwb[,variables[k]]))){
-    
-    aux <- aux + 
-      geom_step(
-        aes_string(
-          x = aux_modelo_Nelson[[k]][[m]]$time,
-          y = aux_modelo_Nelson[[k]][[m]]$surv,
-          color = paste0("'", aux_nomes[[k]][m+1], "'")
-        )
-      ) +
-      pammtools::geom_stepribbon(
-        aes_string(
-          x = aux_modelo_Nelson[[k]][[m]]$time,
-          ymin = aux_modelo_Nelson[[k]][[m]]$lower, 
-          ymax = aux_modelo_Nelson[[k]][[m]]$upper,
-          fill = paste0("'", aux_nomes[[k]][m+1], "'")
-        ),
-        alpha = 0.1
-      )
-  }
-  
-  aux_graph_Nelson[[k]] <- aux
 }
 
 ```
@@ -759,16 +728,7 @@ for (k in 1:length(variables)){
 ## Proporcionalidade dos Riscos Relativos
 
 ```{r}
-
-aux_graph_Lambda[[1]]
-
-```
-
-## Proporcionalidade dos Riscos Relativos
-
-```{r}
-
-aux_graph_Lambda[[2]]
+ggplotly(aux_graph_Lambda[[1]])
 
 ```
 
@@ -776,7 +736,7 @@ aux_graph_Lambda[[2]]
 
 ```{r}
 
-aux_graph_Lambda[[3]]
+ggplotly(aux_graph_Lambda[[2]])
 
 ```
 
@@ -784,7 +744,7 @@ aux_graph_Lambda[[3]]
 
 ```{r}
 
-aux_graph_Lambda[[4]]
+ggplotly(aux_graph_Lambda[[3]])
 
 ```
 
@@ -792,7 +752,7 @@ aux_graph_Lambda[[4]]
 
 ```{r}
 
-aux_graph_Lambda[[5]]
+ggplotly(aux_graph_Lambda[[4]])
 
 ```
 
@@ -800,7 +760,7 @@ aux_graph_Lambda[[5]]
 
 ```{r}
 
-aux_graph_Lambda[[6]]
+ggplotly(aux_graph_Lambda[[5]])
 
 ```
 
@@ -808,7 +768,7 @@ aux_graph_Lambda[[6]]
 
 ```{r}
 
-aux_graph_Lambda[[7]]
+ggplotly(aux_graph_Lambda[[6]])
 
 ```
 
@@ -816,7 +776,7 @@ aux_graph_Lambda[[7]]
 
 ```{r}
 
-aux_graph_Lambda[[8]]
+ggplotly(aux_graph_Lambda[[7]])
 
 ```
 
@@ -824,7 +784,7 @@ aux_graph_Lambda[[8]]
 
 ```{r}
 
-aux_graph_Lambda[[9]]
+ggplotly(aux_graph_Lambda[[8]])
 
 ```
 
@@ -832,7 +792,7 @@ aux_graph_Lambda[[9]]
 
 ```{r}
 
-aux_graph_Lambda[[10]]
+ggplotly(aux_graph_Lambda[[9]])
 
 ```
 
@@ -840,7 +800,7 @@ aux_graph_Lambda[[10]]
 
 ```{r}
 
-aux_graph_Lambda[[11]]
+ggplotly(aux_graph_Lambda[[10]])
 
 ```
 
@@ -848,7 +808,7 @@ aux_graph_Lambda[[11]]
 
 ```{r}
 
-aux_graph_Lambda[[12]]
+ggplotly(aux_graph_Lambda[[11]])
 
 ```
 
@@ -856,7 +816,7 @@ aux_graph_Lambda[[12]]
 
 ```{r}
 
-aux_graph_Lambda[[13]]
+ggplotly(aux_graph_Lambda[[12]])
 
 ```
 
@@ -864,7 +824,7 @@ aux_graph_Lambda[[13]]
 
 ```{r}
 
-aux_graph_Lambda[[14]]
+ggplotly(aux_graph_Lambda[[13]])
 
 ```
 
@@ -872,7 +832,7 @@ aux_graph_Lambda[[14]]
 
 ```{r}
 
-aux_graph_Lambda[[15]]
+ggplotly(aux_graph_Lambda[[14]])
 
 ```
 
@@ -880,7 +840,15 @@ aux_graph_Lambda[[15]]
 
 ```{r}
 
-aux_graph_Lambda[[16]]
+ggplotly(aux_graph_Lambda[[15]])
+
+```
+
+## Proporcionalidade dos Riscos Relativos
+
+```{r}
+
+ggplotly(aux_graph_Lambda[[16]])
 
 ```
 
@@ -894,6 +862,187 @@ Foram então pré-selecionadas as variáveis que obtiveram um bom ajuste resulta
 
 ```{r}
 
+modelo <- coxph(
+  Surv(tenure, Status) ~ 
+    Contract,
+  data   = dados_dwb,
+  x      = T,
+  method = "breslow"
+)
+
+ggplotly(
+  ggplot() +
+    geom_point(aes(x = cox.zph(modelo)$time, y = cox.zph(modelo)$y), alpha = 0.1) +
+    scale_x_continuous("Tempo") +
+    scale_y_continuous("Beta(t) para Contrato") +
+    ggtitle("Resíduos de Schoenfeld") +
+    theme_bw()
+)
 
 
 ```
+
+## Coeficientes Obtidos
+
+Seguem abaixo os coeficientes obtidos seguidos das estatísticas para avaliar a significância
+
+```{r}
+
+modelo <- coxph(
+  Surv(tenure, Status) ~ 
+    Dependents       +
+    InternetService  +
+    PaperlessBilling,
+  data   = dados_dwb,
+  x      = T,
+  method = "breslow"
+)
+
+sobrev <- survfit(modelo)
+coef   <- modelo$coefficients
+
+kable_styling(
+  kable(
+    summary(modelo)$coefficients,
+    format = "html",
+    align = "c",
+    digits = 2,
+    escape = FALSE,
+    booktabs = TRUE,
+    linesep = c("\\hline")
+  ),
+  position = "center",
+  latex_options = "hold_position",
+  font_size = 20
+)
+
+```
+
+## Análise de Resíduo do Modelo Ajustado
+
+```{r}
+
+ggplotly(
+  ggplot() +
+    geom_point(aes(x = c(1:nrow(dados_dwb)), y = residuals(modelo, type = "martingale"), alpha = 0.1)) +
+    scale_x_continuous("Índice") +
+    scale_y_continuous("Resíduos") +
+    ggtitle("Resíduos de Martingale") +
+    theme_bw()
+)
+  
+```
+
+## Análise de Resíduo do Modelo Ajustado
+
+```{r}
+
+ggplotly(
+  ggplot() +
+  geom_point(aes(x = c(1:nrow(dados_dwb)), y = residuals(modelo, type = "deviance"), alpha = 0.1)) +
+  scale_x_continuous("Índice") +
+  scale_y_continuous("Resíduos") +
+  ggtitle("Resíduos da Deviance") +
+  theme_bw()
+)
+
+
+```
+
+## Análise de Resíduo do Modelo Ajustado
+
+```{r}
+
+ggplotly(
+  ggplot() +
+    geom_point(aes(x = cox.zph(modelo)$time, y = cox.zph(modelo)[["y"]][,"Dependents"]), alpha = 0.1) +
+    scale_x_continuous("Tempo") +
+    scale_y_continuous("Beta(t)") +
+    ggtitle("Resíduos de Schoenfeld para Dependentes") +
+    theme_bw()
+)
+
+```
+
+## Análise de Resíduo do Modelo Ajustado
+
+```{r}
+
+ggplotly(
+  ggplot() +
+    geom_point(aes(x = cox.zph(modelo)$time, y = cox.zph(modelo)[["y"]][,"InternetService"]), alpha = 0.1) +
+    scale_x_continuous("Tempo") +
+    scale_y_continuous("Beta(t)") +
+    ggtitle("Resíduos de Schoenfeld para Serviço de Internet") +
+    theme_bw()
+)
+
+```
+
+## Análise de Resíduos do Modelo Ajustado
+
+```{r}
+
+ggplotly(
+  ggplot() +
+    geom_point(aes(x = cox.zph(modelo)$time, y = cox.zph(modelo)[["y"]][,"PaperlessBilling"]), alpha = 0.1) +
+    scale_x_continuous("Tempo") +
+    scale_y_continuous("Beta(t)") +
+    ggtitle("Resíduos de Schoenfeld para Cobrança Virtual") +
+    theme_bw()
+)
+  
+```
+
+## Visualização do Ajuste
+
+```{r}
+
+ggplotly(
+  ggplot()+
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(0*coef[1] + 0*coef[2] + 0*coef[3] + 0*coef[4])), color = "(0, 0, 0)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(0*coef[1] + 0*coef[2] + 0*coef[3] + 1*coef[4])), color = "(0, 0, 1)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(0*coef[1] + 1*coef[2] + 0*coef[3] + 0*coef[4])), color = "(0, 1, 0)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(0*coef[1] + 1*coef[2] + 0*coef[3] + 1*coef[4])), color = "(0, 1, 1)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(0*coef[1] + 0*coef[2] + 1*coef[3] + 0*coef[4])), color = "(0, 2, 0)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(0*coef[1] + 0*coef[2] + 1*coef[3] + 1*coef[4])), color = "(0, 2, 1)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(1*coef[1] + 0*coef[2] + 0*coef[3] + 0*coef[4])), color = "(1, 0, 0)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(1*coef[1] + 0*coef[2] + 0*coef[3] + 1*coef[4])), color = "(1, 0, 1)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(1*coef[1] + 1*coef[2] + 0*coef[3] + 0*coef[4])), color = "(1, 1, 0)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(1*coef[1] + 1*coef[2] + 0*coef[3] + 1*coef[4])), color = "(1, 1, 1)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(1*coef[1] + 0*coef[2] + 1*coef[3] + 0*coef[4])), color = "(1, 2, 0)"), lwd = 1.2) +
+    geom_step(aes(x = sobrev$time, y = sobrev$surv**(exp(1*coef[1] + 0*coef[2] + 1*coef[3] + 1*coef[4])), color = "(1, 2, 1)"), lwd = 1.2) +
+    scale_color_hue("Grupo") +
+    scale_y_continuous("S(t)") +
+    scale_x_continuous("Tempo em meses") +
+    guides(fill = "none") +
+    ggtitle("Função de Sobrevivência") +
+    theme_bw()
+)
+  
+```
+
+
+## Interpretação dos Coeficientes
+
+Seguem abaixo as exponenciais dos coeficientes seguidos dos intervalos de conficança para avaliar a significância das mesmas
+
+```{r}
+
+kable_styling(
+  kable(
+    summary(modelo)$conf.int,
+    format = "html",
+    align = "c",
+    digits = 5,
+    escape = FALSE,
+    booktabs = TRUE,
+    linesep = c("\\hline")
+  ),
+  position = "center",
+  latex_options = "hold_position",
+  font_size = 20
+)
+
+```
+
