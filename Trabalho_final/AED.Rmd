@@ -5,6 +5,16 @@ date: ""
 output: ioslides_presentation
 ---
 
+## Introdução
+
+- Dados de uma empresa de telecomunicações.
+
+- 7043 clientes, 21 variáveis.
+
+- Falha igual ao cancelamento do serviço.
+
+- Caso não haja falha, temos censura tipo I.
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
 	echo = FALSE,
@@ -420,7 +430,7 @@ ggplot()+
   geom_line(aes(y=ste,x=tempos,color="exponential"))+
   geom_line(aes(y=stw,x=tempos,color="weibull"))+
   geom_line(aes(x=tempos,y=stln,color="lognormal"))+
-  scale_y_continuous('Probabilidade de sobrevivência')
+  scale_y_continuous('Probabilidade de sobrevivência')+
   theme_bw()
 
 
@@ -483,9 +493,9 @@ ggplot()+
   theme_bw()
 ```
 
-## Log normal 
+## Log-normal 
 
-Como existe uma relação entre valor mensal pago e métodos de pagamentos, multiplas linhas,serviço de internet,etc(todos os componentes que são responsaveis pela fatura que é gerada por cada conta). Sabendo desta informação vamos ajustar dois possíveis modelos paramétricos utilizando a log normal.
+Como existe uma relação entre valor mensal pago e métodos de pagamentos, multiplas linhas,serviço de internet,etc(todos os componentes que são responsaveis pela fatura que é gerada por cada conta). Sabendo desta informação vamos ajustar dois possíveis modelos paramétricos utilizando a log-normal.
 
 ```{r}
 

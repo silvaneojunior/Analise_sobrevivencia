@@ -191,6 +191,7 @@ server <- function(input, output) {
         x <- c(1:80)
         y <- 1-plnorm(x,lin_disc,scale)
         
+        
         plot=ggplot()+
             geom_line(aes(x=x,y=y))+
             scale_y_continuous('Probabilidade de sobrevivência',limits=c(0,1))+
@@ -218,8 +219,7 @@ server <- function(input, output) {
                                 fill='I.C. Kaplan-Meier'),
                             alpha=0.25)
         }
-        plot
-        
     })
+        
 }
 shinyApp(ui = ui, server = server)

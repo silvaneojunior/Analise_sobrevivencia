@@ -99,7 +99,7 @@ O conjunto de dados utilizado consiste em $7.043$ observações de clientes de u
 
 - **TotalCharges**: Variável contínua, assume valores valores positivos e indica o valor pago pelo cliente do início do contrato até o momento da coleta dos dados.
 
-- **Churn**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente cancelou o serviço. No caso onde houve cancelamento, consideramos como falha, sendo que quando não houve cancelamento consideramos como censura tipo II (o cliente não havia cancelado até o momento da coleta).
+- **Churn**: Variável categórica binária, assume valores *Yes* e *No* indicando se o cliente cancelou o serviço. No caso onde houve cancelamento, consideramos como falha, sendo que quando não houve cancelamento consideramos como censura tipo I (o cliente não havia cancelado até o momento da coleta).
 
 Observe que há uma certa redundância entre as variáveis *MonthlyCharges* e *TotalCharges*, pois esta última seria a soma dos valores da mensalidade ao longo do tempo em que o cliente esteve na empresa, de fato, através de uma regressão linear, podemos verificar que *TotalCharges* pode ser quase perfeitamente descrito pelo produto entre *MonthlyCharges* e *tenure*, sendo que o coeficiente $R^2$ da regressão foi $99.91\%$, ou seja, $99.91\%$ da variabilidade de *TotalCharges* é explicada pelo produto entre *MonthlyCharges* e *tenure* (o coeficiente associado a ele é aproximadamente $1$). Vale ressaltar que a parcela da variabilidade não explicada se deve, provavelmente, a mudanças na mensalidade ao longo do tempo, a serviços com custo fixo contratados esporadicamente (uma taxa de manutenção) ou a algum tipo de taxa de adesão.
 
