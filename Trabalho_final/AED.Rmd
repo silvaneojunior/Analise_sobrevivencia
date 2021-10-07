@@ -378,6 +378,224 @@ ggplot()+
 <!--   coord_fixed() -->
 <!-- ``` -->
 
+
+## Modelo Paramétrico
+
+## teste
+
+
+```{r}
+cens=ifelse(dados$Churn=='Yes',1,0)
+tempos=as.numeric(dados$tenure)
+
+#################################ajuste para os 3 possiveis modelos
+####exponencial weibull log normal
+
+ajust1 = survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                   dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                   dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                   dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                   dados$StreamingMovies+dados$Contract,dist='exponential')#### 
+alpha1 = exp(ajust1$coefficients[1])
+
+ajust2 = survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                   dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                   dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                   dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                   dados$StreamingMovies+dados$Contract,dist='weibull')
+alpha2 = exp(ajust2$coefficients[1])
+gama2 = 1/ajust2$scale
+
+ajust3 = survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                   dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                   dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                   dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                   dados$StreamingMovies+dados$Contract,dist='lognorm')
+
+ste = exp(-tempos/alpha1)#intercepto
+stw = exp(-(tempos/alpha2)^gama2) #alpha e gama
+stln = pnorm((-log(tempos)+3.306983)/1.06)#intercepto e scale
+ggplot()+
+  geom_line(aes(y=ste,x=tempos,color="exponential"))+
+  geom_line(aes(y=stw,x=tempos,color="weibull"))+
+  geom_line(aes(x=tempos,y=stln,color="lognormal"))+
+  scale_y_continuous('Probabilidade de sobrevivência')
+  theme_bw()
+
+
+```
+
+## olhando resíduos de cada uma das 3
+
+## exponencial
+```{r}
+res=((dados$tenure)*exp(-ajust1$linear.predictors))^ajust1$scale
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+
+```
+
+## weibull
+```{r}
+res=((dados$tenure)*exp(-ajust2$linear.predictors))^ajust2$scale
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+
+```
+
+## log normal
+```{r}
+res=-log(1-pnorm((log(dados$tenure)-ajust3$linear.predictors)/ajust3$scale))#melhor 
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+```
+
+## log normal 
+
+Como existe uma relação entre valor mensal pago e metodos de pagamentos, multiplas linhas,serviço de internet,etc(todos os componentes que são responsaveis pela fatura que é gerada por cada conta). Sabendo desta informação vamos ajustar dois possiveis modelos parametricos utilizando a log normal.
+```{r}
+
+ajustmensal=survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                      dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                      dados$Contract,dist='lognormal')
+
+
+
+ajustmensalnao=survreg(Surv(tempos+0.5,cens)~dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                         dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                         dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                         dados$StreamingMovies+dados$Contract,dist='lognorm')#####3 esse
+```
+## análise de resíduos para ambos os casos
+
+
+## Levando em consideração valor pago mensal
+```{r}
+res=-log(1-pnorm((log(dados$tenure)-ajustmensal$linear.predictors)/ajustmensal$scale))#melhor 
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+```
+
+## Considerando os itens que fazem parte da mensalidade
+```{r}
+res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+```
+
+## modelo ajustado pelo metodo backward
+
+Neste modelo consideramos como não significativos o genero, se existe dependentes, se a pessoa recebe boleto de forma digital ou impressa, serviço de telefone, streaming de TV e streaming de filmes.
+
+```{r}
+
+ajustmensalnao=survreg(Surv(tempos+0.5,cens)~
+                         dados$Partner+dados$PaymentMethod+
+                         dados$MultipleLines+dados$InternetService+dados$OnlineSecurity+
+                         dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+
+                         dados$Contract,dist='lognorm')
+```
+
+## Análise de resíduos
+```{r}
+res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+
+compara=-log(kp_est$surv)
+
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+
+
+
+
+### comentar possivel comportamento diferente para o comeco 
+#dos dados
+```
+
+## resíduos Martigale 
+```{r}
+cen=ifelse(dados$Churn=='Yes',1,0)
+m=cen-res
+d=sign(m)*sqrt(-2*(m+cen*log(cen-m)))
+#m martigale d deviance
+ggplot()+
+  geom_point(aes(x=dados$tenure,y=m),alpha=0.1)+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+#esta ok o M mais simetrico 
+#deviance talez ???
+```
+
+## resíduos deviance
+```{r}
+ggplot()+
+  geom_point(aes(x=dados$tenure,y=d),alpha=0.1)+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+
+
+```
+
+
 ## Modelo de Cox
 
 ## Especificação do Modelo
