@@ -205,6 +205,183 @@ Por último, vale destacar que, ao se usar apenas a Mensalidade nos modelos para
 \pagebreak
 
 # 3 - Ajuste de modelos paramétricos
+Vamos agora fazer os nossos ajustes atravês do modelo paramétrico. Vamos tomar como os 3 possiveis modelos a exponencial, weibull e log-normal e verificar a adequação de cada um dos modelos.Primeiramente vamos tomar o modelo completo em ambos os casos e aplicar o método de linearização das funções de sobrevivencia para cada modelo e observar se elas estão aproximadamente linear.
+
+Começando pelo modelo exponencial obtivemos o seguinte resultado:
+
+```{r}
+cens=ifelse(dados$Churn=='Yes',1,0)
+tempos=as.numeric(dados$tenure)
+#################################ajuste para os 3 possiveis modelos
+####exponencial weibull log normal
+ajust1 = survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                   dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                   dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                   dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                   dados$StreamingMovies+dados$Contract,dist='exponential')#### 
+alpha1 = exp(ajust1$coefficients[1])
+ajust2 = survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                   dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                   dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                   dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                   dados$StreamingMovies+dados$Contract,dist='weibull')
+alpha2 = exp(ajust2$coefficients[1])
+gama2 = 1/ajust2$scale
+ajust3 = survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                   dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                   dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                   dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                   dados$StreamingMovies+dados$Contract,dist='lognorm')
+res=((dados$tenure)*exp(-ajust1$linear.predictors))^ajust1$scale
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+compara=-log(kp_est$surv)
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')
+
+  
+```
+
+Podemos observar que o modelo exponencial não se mostra como sendo o adequado para o nosso problema.
+
+\pagebreak
+Vamos agora fazer a mesma análise para o modelo Weibull.
+```{r}
+res=((dados$tenure)*exp(-ajust2$linear.predictors))^ajust2$scale
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+compara=-log(kp_est$surv)
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')
+```
+
+Tambem foi possivel de se observar uma não adequação do modelo mas se comparada com o modelo exponencial ja se percebe uma pequena melhora.
+
+\pagebreak
+
+Por fim vamos fazer o mesmo processo de linearização da função de sobrevivencia só que agora para o modelo Log-Normal.
+```{r}
+res=-log(1-pnorm((log(dados$tenure)-ajust3$linear.predictors)/ajust3$scale))#melhor 
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+compara=-log(kp_est$surv)
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')
+```
+
+Com isso podemos observar que o modelo com a Log-Normal apesar de termos um certo desvio no final da reta esse foi o modelo que melhor se ajustou e portanto todas as analises a seguir vão estar seguindo o modelo parametrico com a Log-Normal.
+
+\pagebreak
+Como visto anteriormente sabemos que existe uma redundância entre as variáveis, onde a mensalidade pode ser quase totalmente descrita por algumas das outras variaveis existentes no modelos(PhoneService, MultipleLines, InternetService, OnlineSecurity, On-
+lineBackup, DeviceProtection, TechSupport, StreamingTV e StreamingMovies) e com esta informação vamos optar por fazer o teste de dois possiveis ajustes e verificar qual deles está mais adequado. Nos proximos dois modelos também vão estar em ambos ajustes aquelas variaveis que não são relacionadas com mensalidade.
+
+\vspace{50 pt}
+Nosso primeiro ajuste leva em consideração a mensalidade:
+```{r fig.height=4, fig.width=4}
+ajustmensal=survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
+                      dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                      dados$Contract,dist='lognormal')
+ajustmensalnao=survreg(Surv(tempos+0.5,cens)~dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
+                         dados$MultipleLines+dados$PhoneService+dados$InternetService+dados$OnlineSecurity+
+                         dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
+                         dados$StreamingMovies+dados$Contract,dist='lognorm')
+res=-log(1-pnorm((log(dados$tenure)-ajustmensal$linear.predictors)/ajustmensal$scale))#melhor 
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+compara=-log(kp_est$surv)
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')
+```
+\pagebreak
+
+Já no segundo ajuste levamos em consideração os fatores que são capazes de descrever a mensalidade.
+```{r fig.height=4, fig.width=4}
+res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+compara=-log(kp_est$surv)
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')
+
+```
+
+\vspace{80 pt}
+Com ambas as funções linearizadas podemos observar e constatar que o segundo ajuste está um pouco mais adequado e por isso vamos nos utilizar dos fatores que descrevem bem o valor pago de mensalidade ao inves de nos utilizarmos da mensalidade em si.
+
+\pagebreak
+Vamos agora tomar o nosso ajuste e atraves do modelo backward e selecionar quais variáveis são significativas.
+```{r fig.height=4, fig.width=4}
+summary(ajustmensalnao)
+ajustmensalnao=survreg(Surv(tempos+0.5,cens)~
+                         dados$Partner+dados$PaymentMethod+
+                         dados$MultipleLines+dados$InternetService+dados$OnlineSecurity+
+                         dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+
+                         dados$Contract,dist='lognorm')
+
+```
+Dado o que observamos foi feito então o modelo de seleção backward e removendo uma variavel não significativa de cada vez e recalculando o nosso modelo até chegarmos no nosso modelo final onde nossas variaveis significativas são: tem ou não parceiro, metodos de pagamento, se possui multiplas linhas de telefone, serviço de internet que o cliente possui, se o cliente possui serviço de segurança online, se possui backup, se possui serviço de proteção do telefone, suporte tecnico e tipo de contrato.
+
+```{r}
+res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
+kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
+compara=-log(kp_est$surv)
+ggplot()+
+  geom_point(aes(x=kp_est$time,y=compara),alpha=0.01)+
+  geom_line(aes(x=c(min(kp_est$time,compara),max(kp_est$time,compara)),
+                y=c(min(kp_est$time,compara),max(kp_est$time,compara))),
+            linetype='dashed')+
+  scale_x_continuous('')+
+  scale_y_continuous('')
+```
+
+Podemos observar que o modelo possui uma quebra no começo e que tambem apresenta o que aparenta ser dois comportamentos distintos um para o começo e outro mais para frente e isso indica que talvez fosse interessante fazermos um modelo de mistura para analisar de forma separada cada um desses comportamentos.
+\pagebreak
+
+Por fim vamos analisar agora os Resíduos Martingale e os Resíduos Deviance.
+
+Resíduos Martingale
+```{r fig.height=3, fig.width=3}
+cen=ifelse(dados$Churn=='Yes',1,0)
+m=cen-res
+d=sign(m)*sqrt(-2*(m+cen*log(cen-m)))
+#m martigale d deviance
+ggplot()+
+  geom_point(aes(x=dados$tenure,y=m),alpha=0.1)+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+```
+
+Resíduos Deviance
+```{r fig.height=3, fig.width=3}
+ggplot()+
+  geom_point(aes(x=dados$tenure,y=d),alpha=0.1)+
+  scale_x_continuous('')+
+  scale_y_continuous('')+
+  theme_bw()
+```
+Como a nossa quantidade de censuras é bem alta não é possivel de identificarmos aquele distribuição aproximadamente normal que os resíduos Deviance deveriam apresentar.
+
 
 \pagebreak
 
