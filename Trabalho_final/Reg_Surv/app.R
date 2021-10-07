@@ -65,33 +65,33 @@ ui <- fluidPage(
                       radioButtons(
                           inputId='Partner',
                           label='Partner',
-                          choiceNames = c('No','Yes'),
+                          choiceNames = paste(c('No','Yes'),' (',Partner,')'),
                           choiceValues = c(1:2)
                       ),
                       radioButtons(
                           inputId='PayMet',
                           label='PayMet',
-                          choiceNames = c('Bank transfer','Credit card','Electronic check','Mailed check'),
+                          choiceNames = paste(c('Bank transfer','Credit card','Electronic check','Mailed check'),' (',PayMet,')'),
                           choiceValues = c(1:4),
                           selected=3
                       ),
                       radioButtons(
                           inputId='Contr',
                           label='Contr',
-                          choiceNames = c('Month-to-month','One year','Two year'),
+                          choiceNames = paste(c('Month-to-month','One year','Two year'),' (',Contr,')'),
                           choiceValues = c(1:3)
                       ),
                       radioButtons(
                           inputId='MulLine',
                           label='MulLine',
-                          choiceNames = c('No phone service','No','Yes'),
+                          choiceNames = paste(c('No phone service','No','Yes'),' (',MulLine,')'),
                           choiceValues = c(1:3),
                           selected = 3
                       ),
                       radioButtons(
                           inputId='Net',
                           label='Net',
-                          choiceNames = c('No','DSL','Fiber optic'),
+                          choiceNames = paste(c('No','DSL','Fiber optic'),' (',Net,')'),
                           choiceValues = c(1:3),
                           selected= 3
                       )),
@@ -99,25 +99,25 @@ ui <- fluidPage(
                       radioButtons(
                           inputId='OnSec',
                           label='OnSec',
-                          choiceNames = c('No','Yes'),
+                          choiceNames = paste(c('No','Yes'),' (',OnSec,')'),
                           choiceValues = c(1:2)
                       ),
                       radioButtons(
                           inputId='OnBac',
                           label='OnBac',
-                          choiceNames = c('No','Yes'),
+                          choiceNames = paste(c('No','Yes'),' (',OnBac,')'),
                           choiceValues = c(1:2)
                       ),
                       radioButtons(
                           inputId='TecSup',
                           label='TecSup',
-                          choiceNames = c('No','Yes'),
+                          choiceNames = paste(c('No','Yes'),' (',TecSup,')'),
                           choiceValues = c(1:2)
                       ),
                       radioButtons(
                           inputId='DevProt',
                           label='DevProt',
-                          choiceNames = c('No','Yes'),
+                          choiceNames = paste(c('No','Yes'),' (',DevProt,')'),
                           choiceValues = c(1:2)
                       )
                       )),
@@ -191,7 +191,6 @@ server <- function(input, output) {
         x <- c(1:80)
         y <- 1-plnorm(x,lin_disc,scale)
         
-        
         plot=ggplot()+
             geom_line(aes(x=x,y=y))+
             scale_y_continuous('Probabilidade de sobrevivência',limits=c(0,1))+
@@ -219,7 +218,8 @@ server <- function(input, output) {
                                 fill='I.C. Kaplan-Meier'),
                             alpha=0.25)
         }
-    })
+        plot
         
+    })
 }
 shinyApp(ui = ui, server = server)
