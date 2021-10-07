@@ -381,7 +381,7 @@ ggplot()+
 
 ## Modelo Paramétrico
 
-## teste
+## Teste
 
 
 ```{r}
@@ -425,9 +425,10 @@ ggplot()+
 
 ```
 
-## olhando resíduos de cada uma das 3
+## Olhando resíduos de cada uma das 3
 
-## exponencial
+## Exponencial
+
 ```{r}
 res=((dados$tenure)*exp(-ajust1$linear.predictors))^ajust1$scale
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -445,7 +446,7 @@ ggplot()+
 
 ```
 
-## weibull
+## Weibull
 ```{r}
 res=((dados$tenure)*exp(-ajust2$linear.predictors))^ajust2$scale
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -463,7 +464,8 @@ ggplot()+
 
 ```
 
-## log normal
+## Log-normal
+
 ```{r}
 res=-log(1-pnorm((log(dados$tenure)-ajust3$linear.predictors)/ajust3$scale))#melhor 
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -480,9 +482,10 @@ ggplot()+
   theme_bw()
 ```
 
-## log normal 
+## Log normal 
 
-Como existe uma relação entre valor mensal pago e metodos de pagamentos, multiplas linhas,serviço de internet,etc(todos os componentes que são responsaveis pela fatura que é gerada por cada conta). Sabendo desta informação vamos ajustar dois possiveis modelos parametricos utilizando a log normal.
+Como existe uma relação entre valor mensal pago e métodos de pagamentos, multiplas linhas,serviço de internet,etc(todos os componentes que são responsaveis pela fatura que é gerada por cada conta). Sabendo desta informação vamos ajustar dois possíveis modelos paramétricos utilizando a log normal.
+
 ```{r}
 
 ajustmensal=survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
@@ -496,10 +499,12 @@ ajustmensalnao=survreg(Surv(tempos+0.5,cens)~dados$gender+dados$Partner+dados$De
                          dados$OnlineBackup+dados$DeviceProtection+dados$TechSupport+dados$StreamingTV+
                          dados$StreamingMovies+dados$Contract,dist='lognorm')#####3 esse
 ```
-## análise de resíduos para ambos os casos
+
+## Análise de resíduos para ambos os casos
 
 
 ## Levando em consideração valor pago mensal
+
 ```{r}
 res=-log(1-pnorm((log(dados$tenure)-ajustmensal$linear.predictors)/ajustmensal$scale))#melhor 
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -517,6 +522,7 @@ ggplot()+
 ```
 
 ## Considerando os itens que fazem parte da mensalidade
+
 ```{r}
 res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -533,7 +539,7 @@ ggplot()+
   theme_bw()
 ```
 
-## modelo ajustado pelo metodo backward
+## Modelo ajustado pelo metodo backward
 
 Neste modelo consideramos como não significativos o genero, se existe dependentes, se a pessoa recebe boleto de forma digital ou impressa, serviço de telefone, streaming de TV e streaming de filmes.
 
@@ -547,6 +553,7 @@ ajustmensalnao=survreg(Surv(tempos+0.5,cens)~
 ```
 
 ## Análise de resíduos
+
 ```{r}
 res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -569,7 +576,8 @@ ggplot()+
 #dos dados
 ```
 
-## resíduos Martigale 
+## Resíduos Martigale
+
 ```{r}
 cen=ifelse(dados$Churn=='Yes',1,0)
 m=cen-res
@@ -584,7 +592,8 @@ ggplot()+
 #deviance talez ???
 ```
 
-## resíduos deviance
+## Resíduos deviance
+
 ```{r}
 ggplot()+
   geom_point(aes(x=dados$tenure,y=d),alpha=0.1)+
