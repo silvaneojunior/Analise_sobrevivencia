@@ -396,6 +396,9 @@ ggplot()+
 
 Como a nossa quantidade de censuras é bem alta não é possivel identificarmos aquela distribuição aproximadamente Normal que os resíduos Deviance poderiam apresentar.
 
+Por fim, o resultado do ajuste pode ser acessado em uma aplicação hospedada na núvem e disponível no link a seguir:
+
+https://silvaneojunior.shinyapps.io/Reg_Surv/
 
 \pagebreak
 
