@@ -205,7 +205,8 @@ Por último, vale destacar que, ao se usar apenas a Mensalidade nos modelos para
 \pagebreak
 
 # 3 - Ajuste de modelos paramétricos
-Vamos agora fazer os nossos ajustes atravês do modelo paramétrico. Vamos tomar como os 3 possiveis modelos a exponencial, weibull e log-normal e verificar a adequação de cada um dos modelos.Primeiramente vamos tomar o modelo completo em ambos os casos e aplicar o método de linearização das funções de sobrevivencia para cada modelo e observar se elas estão aproximadamente linear.
+
+Vamos agora fazer os nossos ajustes atravês do modelo paramétrico. Vamos tomar como os 3 posséveis modelos a Exponencial, Weibull e Log-normal e verificar a adequação de cada um dos modelos. Primeiramente vamos tomar o modelo completo (usando todas as covariáveis) em cada caso e aplicar o método de linearização das funções de sobrevivência para cada modelo e observar se elas estão aproximadamente linear.
 
 Começando pelo modelo exponencial obtivemos o seguinte resultado:
 
@@ -263,11 +264,12 @@ ggplot()+
   scale_y_continuous('')
 ```
 
-Tambem foi possivel de se observar uma não adequação do modelo mas se comparada com o modelo exponencial ja se percebe uma pequena melhora.
+Também foi possével de se observar uma não adequação do modelo, mas se comparado ao modelo exponencial já se percebe uma pequena melhora.
 
 \pagebreak
 
-Por fim vamos fazer o mesmo processo de linearização da função de sobrevivencia só que agora para o modelo Log-Normal.
+Por fim vamos fazer o mesmo processo de linearização da função de sobrevivência só que agora para o modelo Log-Normal.
+
 ```{r}
 res=-log(1-pnorm((log(dados$tenure)-ajust3$linear.predictors)/ajust3$scale))#melhor 
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -281,14 +283,16 @@ ggplot()+
   scale_y_continuous('')
 ```
 
-Com isso podemos observar que o modelo com a Log-Normal apesar de termos um certo desvio no final da reta esse foi o modelo que melhor se ajustou e portanto todas as analises a seguir vão estar seguindo o modelo parametrico com a Log-Normal.
+Com isso podemos observar que o modelo com a Log-Normal, apesar de termos um certo desvio no final da reta, foi o modelo que melhor se ajustou e portanto todas as análises a seguir estarão seguindo o modelo paramétrico com a Log-Normal.
 
 \pagebreak
-Como visto anteriormente sabemos que existe uma redundância entre as variáveis, onde a mensalidade pode ser quase totalmente descrita por algumas das outras variaveis existentes no modelos(PhoneService, MultipleLines, InternetService, OnlineSecurity, On-
-lineBackup, DeviceProtection, TechSupport, StreamingTV e StreamingMovies) e com esta informação vamos optar por fazer o teste de dois possiveis ajustes e verificar qual deles está mais adequado. Nos proximos dois modelos também vão estar em ambos ajustes aquelas variaveis que não são relacionadas com mensalidade.
+
+Como visto anteriormente sabemos que existe uma redundância entre as variáveis, onde a mensalidade pode ser quase totalmente descrita por algumas das outras variaveis existentes no modelos (PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV e StreamingMovies) e com esta informação vamos optar por fazer o teste de dois possiveis ajustes e verificar qual deles está mais adequado. Nos próximos dois modelos também vão estar em ambos ajustes aquelas variaveis que não são relacionadas com mensalidade.
 
 \vspace{50 pt}
+
 Nosso primeiro ajuste leva em consideração a mensalidade:
+
 ```{r fig.height=4, fig.width=4}
 ajustmensal=survreg(Surv(tempos+0.5,cens)~dados$MonthlyCharges+
                       dados$gender+dados$Partner+dados$Dependents+dados$PaymentMethod+dados$PaperlessBilling+
@@ -308,9 +312,11 @@ ggplot()+
   scale_x_continuous('')+
   scale_y_continuous('')
 ```
+
 \pagebreak
 
 Já no segundo ajuste levamos em consideração os fatores que são capazes de descrever a mensalidade.
+
 ```{r fig.height=4, fig.width=4}
 res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
 kp_est=survfit(Surv(res,ifelse(dados$Churn=='Yes',1,0))~1)
@@ -326,10 +332,13 @@ ggplot()+
 ```
 
 \vspace{80 pt}
-Com ambas as funções linearizadas podemos observar e constatar que o segundo ajuste está um pouco mais adequado e por isso vamos nos utilizar dos fatores que descrevem bem o valor pago de mensalidade ao inves de nos utilizarmos da mensalidade em si.
+
+Com ambas as funções linearizadas podemos observar e constatar que o segundo ajuste está um pouco mais adequado e por isso vamos nos utilizar dos fatores que descrevem bem o valor pago de mensalidade ao invés de nos utilizarmos da mensalidade em si.
 
 \pagebreak
-Vamos agora tomar o nosso ajuste e atraves do modelo backward e selecionar quais variáveis são significativas.
+
+Vamos agora tomar o nosso ajuste e através do modelo Backward e selecionar quais variáveis são significativas.
+
 ```{r fig.height=4, fig.width=4}
 summary(ajustmensalnao)
 ajustmensalnao=survreg(Surv(tempos+0.5,cens)~
@@ -339,7 +348,8 @@ ajustmensalnao=survreg(Surv(tempos+0.5,cens)~
                          dados$Contract,dist='lognorm')
 
 ```
-Dado o que observamos foi feito então o modelo de seleção backward e removendo uma variavel não significativa de cada vez e recalculando o nosso modelo até chegarmos no nosso modelo final onde nossas variaveis significativas são: tem ou não parceiro, metodos de pagamento, se possui multiplas linhas de telefone, serviço de internet que o cliente possui, se o cliente possui serviço de segurança online, se possui backup, se possui serviço de proteção do telefone, suporte tecnico e tipo de contrato.
+
+Dado o que observamos foi feito então o modelo de seleção Backward e removendo uma variável não significativa de cada vez e recalculando o nosso modelo até chegarmos no nosso modelo final onde nossas variaveis significativas são: tem ou não parceiro, métodos de pagamento, se possui multiplas linhas de telefone, serviço de internet que o cliente possui, se o cliente possui serviço de segurança online, se possui backup, se possui serviço de proteção do telefone, suporte técnico e tipo de contrato.
 
 ```{r}
 res=-log(1-pnorm((log(dados$tenure)-ajustmensalnao$linear.predictors)/ajustmensalnao$scale))#melhor
@@ -354,12 +364,14 @@ ggplot()+
   scale_y_continuous('')
 ```
 
-Podemos observar que o modelo possui uma quebra no começo e que tambem apresenta o que aparenta ser dois comportamentos distintos um para o começo e outro mais para frente e isso indica que talvez fosse interessante fazermos um modelo de mistura para analisar de forma separada cada um desses comportamentos.
+Podemos observar que o modelo possui uma quebra no começo e que também apresenta o que aparenta ser dois comportamentos distintos um para o começo e outro mais para frente e isso indica que talvez fosse interessante fazermos um modelo de mistura para analisar de forma separada cada um desses comportamentos.
+
 \pagebreak
 
 Por fim vamos analisar agora os Resíduos Martingale e os Resíduos Deviance.
 
-Resíduos Martingale
+Resíduos Martingale:
+
 ```{r fig.height=3, fig.width=3}
 cen=ifelse(dados$Churn=='Yes',1,0)
 m=cen-res
@@ -372,7 +384,8 @@ ggplot()+
   theme_bw()
 ```
 
-Resíduos Deviance
+Resíduos Deviance:
+
 ```{r fig.height=3, fig.width=3}
 ggplot()+
   geom_point(aes(x=dados$tenure,y=d),alpha=0.1)+
@@ -380,7 +393,8 @@ ggplot()+
   scale_y_continuous('')+
   theme_bw()
 ```
-Como a nossa quantidade de censuras é bem alta não é possivel de identificarmos aquele distribuição aproximadamente normal que os resíduos Deviance deveriam apresentar.
+
+Como a nossa quantidade de censuras é bem alta não é possivel identificarmos aquela distribuição aproximadamente Normal que os resíduos Deviance poderiam apresentar.
 
 
 \pagebreak
